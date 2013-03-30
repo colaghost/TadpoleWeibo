@@ -124,7 +124,6 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case R.id.launcher_next:
-            mLauncher.moveNext(2);
             break;
         default:
             break;
