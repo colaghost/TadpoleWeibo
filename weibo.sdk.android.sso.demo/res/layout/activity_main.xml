@@ -39,15 +39,11 @@
         android:text="注销"
         android:visibility="invisible" />
 
-    <org.tadpoleweibo.widget.Launcher
+       <org.tadpoleweibo.widget.Launcher
         android:id="@+id/launcher"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#44000000"
-        android:paddingBottom="25dp"
-        android:paddingLeft="25dp"
-        android:paddingRight="70dp"
-        android:paddingTop="25dp" >
+        android:background="#44000000" >
     </org.tadpoleweibo.widget.Launcher>
 
 </RelativeLayout>

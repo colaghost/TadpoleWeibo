@@ -3,6 +3,7 @@ package com.weibo.sdk.android.demo;
 import java.text.SimpleDateFormat;
 
 import org.tadpoleweibo.widget.Launcher;
+import org.tadpoleweibo.widget.LauncherPage;
 
 import android.app.Activity;
 import android.content.Intent;
