@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -26,8 +27,6 @@ import com.weibo.sdk.android.demo.R;
 public class LauncherPage extends ViewGroup {
 
     static final String TAG = "Launcher";
-    static final int ROW_COUNT = 4;
-    private int mNumColums = 2;
 
     private int mPageDraPos = INVALID_POSITION;
     private int mPageDropPos = INVALID_POSITION;
@@ -39,11 +38,46 @@ public class LauncherPage extends ViewGroup {
     private int array[] = new int[] { 0, 1, 2, 3, 4, 5, 6, 7 };
     private int mPageIndex;
     private Launcher mLauncher;
+    private int mItemCount = 0;
+
+    public LauncherPage(Context context, int pageIndex, Launcher launcher) {
+        super(context, null, R.style.Tadpole_LauncherPage);
+
+        mPageIndex = pageIndex;
+        mLauncher = launcher;
+        mWindowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        resetDragParams();
+
+        Resources resource = getContext().getResources();
+        int paddingLeft = resource.getDimensionPixelOffset(R.dimen.launcher_page_padding_left);
+        int paddingTop = resource.getDimensionPixelOffset(R.dimen.launcher_page_padding_top);
+        int paddingRight = resource.getDimensionPixelOffset(R.dimen.launcher_page_padding_right);
+        int paddingBottom = resource.getDimensionPixelOffset(R.dimen.launcher_page_padding_bottom);
+
+        this.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
+
+        fillData();
+    }
+
+
+    private LauncherPageItemView getLauncherPageItemView(int position) {
+        final ListAdapter listAdapter = mLauncher.mListAdapter;
+        LauncherPageItemView itemView = new LauncherPageItemView(getContext());
+        View view = listAdapter.getView(position, null, null);
+        view.setBackgroundColor(Color.GRAY);
+        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+        itemView.addView(view);
+        itemView.setBackgroundColor(Color.RED);
+        return itemView;
+    }
 
     public void fillData() {
         final ListAdapter listAdapter = mLauncher.mListAdapter;
         final int pageItemCount = mLauncher.mPageItemCount;
 
+        for (int i = 0, len = getChildCount(); i < len; i++) {
+            getChildAt(i).clearAnimation();
+        }
         removeAllViews();
 
         if (listAdapter != null) {
@@ -57,13 +91,7 @@ public class LauncherPage extends ViewGroup {
 
             TLog.debug(TAG, "fillData start = %d end = %d", start, end);
             for (int i = start; i < end; i++) {
-                LaucherItemView itemView = new LaucherItemView(getContext());
-                View view = listAdapter.getView(i, null, null);
-                view.setBackgroundColor(Color.GRAY);
-                view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
-                itemView.addView(view);
-                itemView.setBackgroundColor(Color.RED);
-
+                LauncherPageItemView itemView = getLauncherPageItemView(i);
                 final int index = i;
                 itemView.setOnLongClickListener(new OnLongClickListener() {
                     @Override
@@ -77,7 +105,7 @@ public class LauncherPage extends ViewGroup {
                     }
                 });
                 this.addView(itemView);
-                this.requestLayout();
+                this.onLayoutInternal();
             }
         }
     }
@@ -85,24 +113,7 @@ public class LauncherPage extends ViewGroup {
 
     public void onDataUpdate() {
         fillData();
-    }
-
-    public LauncherPage(Context context, int pageIndex, Launcher launcher) {
-        super(context, null, R.style.Tadpole_LauncherPage);
-        mPageIndex = pageIndex;
-        mLauncher = launcher;
-        mWindowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-
-
-        Resources resource = getContext().getResources();
-        int paddingLeft = resource.getDimensionPixelOffset(R.dimen.launcher_page_padding_left);
-        int paddingTop = resource.getDimensionPixelOffset(R.dimen.launcher_page_padding_top);
-        int paddingRight = resource.getDimensionPixelOffset(R.dimen.launcher_page_padding_right);
-        int paddingBottom = resource.getDimensionPixelOffset(R.dimen.launcher_page_padding_bottom);
-
-        this.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
-
-        fillData();
+        onReset();
     }
 
     private int getRowSpacing() {
@@ -120,7 +131,7 @@ public class LauncherPage extends ViewGroup {
     private int getHitPosition(int x, int y) {
         Rect rect = new Rect();
         int location[] = null;
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < mItemCount; i++) {
             location = getLocationByPos(i);
             rect.set(location[0], location[1], location[0] + mFeatureMetrics.childW, location[1] + mFeatureMetrics.childH);
             if (rect.contains(x, y)) {
@@ -148,33 +159,58 @@ public class LauncherPage extends ViewGroup {
         return location;
     }
 
+
     void onDragging(int x, int y) {
         int hitPosition = getHitPosition(x, y);
         final int[] arr = array;
 
         // 非拖动元素所属该页
         if (mPageDraPos == INVALID_POSITION) {
-            mPageDraPos = 0;
             int[] fromLocation = null;
             int[] toLocation = null;
             Animation ani = null;
-            if (mLauncher.getCurrentItem() > mLauncher.draggingPage) {
-                mPageDraPos = 0;
+            if (mLauncher.getCurrentItem() > mLauncher.lastPageItem) {
+
+                // Launcher
+                int from = mPageIndex * mLauncher.mPageItemCount;
+                int to = from - 1;
+                mLauncher.mListAdapter.moveFromTo(from, to);
+                mLauncher.notifyDataUpdate(mPageIndex - 1);
+
+                // Cur Page
+                mPageDraPos = mPageDropPos = 0;
+                mLauncher.mDragPosition = mPageIndex * mLauncher.mPageItemCount + mPageDraPos;
+
                 fromLocation = getLocationByPos(0);
                 toLocation = getLocationPrevPageByPos(mLauncher.mPageItemCount - 1);
-                ani = getTranslateAnimation(fromLocation, toLocation);
 
-                mLauncher.attachToAniAndStartAni(getChildAt(mPageDraPos), getWindowLocationByPos(mPageDraPos), ani);
             } else {
-                mPageDraPos = mLauncher.mPageItemCount - 1;
 
+                // Launcher
+                int to = (mPageIndex + 1) * mLauncher.mPageItemCount;
+                int from = to - 1;
+                mLauncher.mListAdapter.moveFromTo(from, to);
+                mLauncher.notifyDataUpdate(mPageIndex + 1);
+
+                // Cur Page
+                mPageDraPos = mPageDropPos = mLauncher.mPageItemCount - 1;
                 fromLocation = getLocationByPos(mLauncher.mPageItemCount - 1);
                 toLocation = getLocationNextPageByPos(0);
-                ani = getTranslateAnimation(fromLocation, toLocation);
 
-                mLauncher.attachToAniAndStartAni(getChildAt(mPageDraPos), getLocationByPos(mPageDraPos), ani);
             }
+
+            ani = getTranslateAnimation(fromLocation, toLocation);
+            View view = getChildAt(mPageDraPos);
+            view.setVisibility(View.INVISIBLE);
+            View copyViewAni = mLauncher.copyViewInAniLayer(view, getWindowLocationByPos(mPageDraPos), mFeatureMetrics.childH, mFeatureMetrics.childW);
+            mLauncher.attachToAniAndStartAni(copyViewAni, ani, null);
+
         }
+
+        if (hitPosition >= getChildCount()) {
+            return;
+        }
+
 
         int realDragPostion = arr[mPageDraPos];
         //        Log.d(TAG, "dragging hitPosition = " + hitPosition + ", realDragPostion =" + realDragPostion);
@@ -214,21 +250,40 @@ public class LauncherPage extends ViewGroup {
         return hashMap;
     }
 
-    void onEndDrag() {
-        if (mHideView != null) {
-            if (mPageDropPos != INVALID_POSITION) {
-                mLauncher.dropPosition = mPageIndex * mLauncher.mPageItemCount + mPageDropPos;
-                int location[] = getLocationByPos(mPageDropPos);
-                mHideView.layout(location[0], location[1], location[0] + mFeatureMetrics.childW, location[1] + mFeatureMetrics.childH);
+    int onEndDrag() {
+        Log.d(TAG, "mHideView = " + mHideView + ", mPageDropPos = " + mPageDropPos);
+        int launcherDropPosition = INVALID_POSITION;
+        // 制造假得view，等待数据刷新.
+        if (mLauncher.mDragPosition != INVALID_POSITION) {
+            final View fakeView = getLauncherPageItemView(mLauncher.mDragPosition);
+            if (fakeView != null) {
+                putViewToPostion(fakeView, mPageDropPos);
             }
-            mHideView.setVisibility(View.VISIBLE);
-            mHideView = null;
+        }
+
+        // 设置当前释放
+        if (mPageDropPos != INVALID_POSITION) {
+            launcherDropPosition = mPageIndex * mLauncher.mPageItemCount + mPageDropPos;
         }
         resetDragParams();
+
+        return launcherDropPosition;
+    }
+
+    private void putViewToPostion(View view, int position) {
+        this.addView(view);
+        int location[] = getLocationByPos(position);
+        view.measure(MeasureSpec.makeMeasureSpec(mFeatureMetrics.childW, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(mFeatureMetrics.childH, MeasureSpec.EXACTLY));
+        view.layout(location[0], location[1], location[0] + mFeatureMetrics.childW, location[1] + mFeatureMetrics.childH);
     }
 
     private void resetDragParams() {
-        array = new int[] { 0, 1, 2, 3, 4, 5, 6, 7 };
+        mItemCount = mLauncher.mNumColumns * mLauncher.mNumRows;
+        array = new int[mItemCount];
+        for (int i = 0; i < mItemCount; i++) {
+            array[i] = i;
+        }
+
         mPageDraPos = INVALID_POSITION;
         mPageDropPos = INVALID_POSITION;
     }
@@ -240,7 +295,7 @@ public class LauncherPage extends ViewGroup {
         final int childH = mFeatureMetrics.childH;
         final int cSpace = mFeatureMetrics.cSpace;
         final int rSpace = mFeatureMetrics.rSpace;
-        final int numColums = mNumColums;
+        final int numColums = mLauncher.COL_COUNT;
 
         int v = position / numColums;  // 第几行
         int z = position % numColums;  // 第几列
@@ -262,7 +317,7 @@ public class LauncherPage extends ViewGroup {
     private void moveFromTo(final int viewPos, final int aniFromPos, final int aniToPos) {
         int[] fLocation = getLocationByPos(aniFromPos);
         final int[] tLocation = getLocationByPos(aniToPos);
-        final LaucherItemView view = (LaucherItemView) getChildAt(viewPos);
+        final LauncherPageItemView view = (LauncherPageItemView) getChildAt(viewPos);
 
         if (view == null) {
             return;
@@ -317,8 +372,8 @@ public class LauncherPage extends ViewGroup {
             rSpace = view.getRowSpacing();
             cSpace = view.getColumnSpacing();
 
-            childW = (measureWidth - pLeft - pRight - ((view.mNumColums - 1) * cSpace)) / view.mNumColums;
-            childH = (measureHeight - pTop - pBottom - (ROW_COUNT - 1) * rSpace) / ROW_COUNT;
+            childW = (measureWidth - pLeft - pRight - ((view.mLauncher.mNumColumns - 1) * cSpace)) / view.mLauncher.mNumColumns;
+            childH = (measureHeight - pTop - pBottom - (view.mLauncher.mNumRows - 1) * rSpace) / view.mLauncher.mNumRows;
 
             isCaculate = true;
         }
@@ -346,11 +401,15 @@ public class LauncherPage extends ViewGroup {
         }
     }
 
+    private boolean mIsInited = false;
+
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        Log.d(TAG, "onLayout pageIndex = " + mPageIndex);
         mFeatureMetrics.calculate(this);
-        onLayoutInternal();
+        if (mIsInited == false) {
+            onLayoutInternal();
+            mIsInited = true;
+        }
         super.setMeasuredDimension(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
     }
 
@@ -361,15 +420,14 @@ public class LauncherPage extends ViewGroup {
         final int childH = mFeatureMetrics.childH;
         final int cSpace = mFeatureMetrics.cSpace;
         final int rSpace = mFeatureMetrics.rSpace;
-        final int numColums = mNumColums;
-
+        final int numColums = mLauncher.mNumColumns;
 
         int v = 0;
         int z = 0;
         int xTmp, yTmp;
 
         int childCount = getChildCount();
-        Log.d(TAG, "childCount = " + childCount);
+        //        Log.d(TAG, "childCount = " + childCount);
 
         View childView = null;
         for (int i = 0; i < childCount; i++) {
@@ -431,4 +489,64 @@ public class LauncherPage extends ViewGroup {
         onLayoutInternal();
         resetDragParams();
     }
+
+    public void onDelete(int pageItemPos, final int launcherPageItemPos) {
+        Log.d("onDelete", "onDelete pageItemPos =  " + pageItemPos + ", launcherPageItemPos = " + launcherPageItemPos);
+
+        getChildAt(pageItemPos).setVisibility(View.INVISIBLE);
+        for (int i = mLauncher.mPageItemCount; i > pageItemPos; i--) {
+            System.out.println("onDelete Animation ");
+            movePrev(i, i);
+        }
+
+        int fromPos = (mPageIndex + 1) * mLauncher.mPageItemCount;
+
+        // 判断
+        if (mLauncher.getPageCount() <= (mPageIndex + 1) || fromPos >= mLauncher.mListAdapter.getCount()) {
+            // postDelayed让动画结束完
+            mLauncher.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mLauncher.mListAdapter.remove(launcherPageItemPos);
+                    mLauncher.mPageAdapter.notifyDataSetChanged();
+                }
+            }, Launcher.ANI_DURATION);
+            return;
+        }
+
+
+        final View view = getLauncherPageItemView(fromPos);
+        final View viewFroAni = getLauncherPageItemView(fromPos);
+        final int toPageItemPos = mLauncher.mPageItemCount - 1;
+
+        int[] toLocation = getLocationByPos(mLauncher.mPageItemCount - 1);
+        int[] fromLocation = getLocationNextPageByPos(0);
+
+        Animation ani = getTranslateAnimation(fromLocation, toLocation);
+
+        int[] fromWindowLocatioin = { 0, 0 };
+        System.arraycopy(fromLocation, 0, fromWindowLocatioin, 0, 2);
+        fromWindowLocatioin[1] += getStatusHeight((Activity) getContext());
+
+        mLauncher.addViewToAnimLayout(viewFroAni, fromWindowLocatioin, mFeatureMetrics.childH, mFeatureMetrics.childW);
+        mLauncher.attachToAniAndStartAni(viewFroAni, ani, new AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mLauncher.mListAdapter.remove(launcherPageItemPos);
+                putViewToPostion(view, toPageItemPos);
+                mLauncher.notifyDataUpdate();
+                mLauncher.mPageAdapter.notifyDataSetChanged();
+            }
+        });
+
+    }
+
 }

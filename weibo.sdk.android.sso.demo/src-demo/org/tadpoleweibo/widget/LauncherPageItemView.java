@@ -6,7 +6,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.LinearLayout;
 
-public class LaucherItemView extends LinearLayout {
+public class LauncherPageItemView extends LinearLayout {
 
     private static final String TAG = "LaucherItemView";
 
@@ -21,7 +21,7 @@ public class LaucherItemView extends LinearLayout {
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            LaucherItemView.this.clearAnimation();
+            LauncherPageItemView.this.clearAnimation();
             if (runnable != null) {
                 runnable.run();
                 runnable = null;
@@ -29,11 +29,11 @@ public class LaucherItemView extends LinearLayout {
         }
     };
 
-    public LaucherItemView(Context context, AttributeSet attrs) {
+    public LauncherPageItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public LaucherItemView(Context context) {
+    public LauncherPageItemView(Context context) {
         super(context);
     }
 

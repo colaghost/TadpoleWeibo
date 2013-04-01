@@ -1,9 +1,6 @@
 package org.tadpoleweibo.widget;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import org.tadpoleweibo.common.TLog;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,44 +12,59 @@ import android.support.v4.view.ViewPagerEX;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.weibo.sdk.android.demo.R;
+
 public class Launcher extends ViewPagerEX {
 
     static final int ANI_DURATION = 500;
-
-    protected static final String TAG = "Launcher";
+    static final String TAG = "Launcher";
     private static final int INVALID_POSITION = -1;
-    LancherListAdapter mListAdapter;
-    int stopCount = 0;
-    int dragPosition = INVALID_POSITION;
-    int dropPosition = INVALID_POSITION;
-    int draggingPage = INVALID_POSITION;
-    boolean isDragging = false;
 
+    static final int ROW_COUNT = 3;
+    static final int COL_COUNT = 1;
+
+    int mNumColumns = COL_COUNT;
+    int mNumRows = ROW_COUNT;
+
+    LauncherListAdapter mListAdapter;
+    int mEdgeStopCount = 0;
+    int mDragPosition = INVALID_POSITION;
+    int mDropPosition = INVALID_POSITION;
+    int mPageItemCount = ROW_COUNT * COL_COUNT;
+    PagerAdapter mPageAdapter;
+    ImageView mDragView = null;
+    WindowManager.LayoutParams mDragWinLP = null;
+
+
+    private int mLastX = 0;
+    private int mLastY = 0;
+
+    private boolean mIsDragging = false;
+    private ArrayList<LauncherPage> mLauncherPageList = new ArrayList<LauncherPage>();
     private WindowManager mWindowManager;
-    int mPageItemCount = 8;
     private DataSetObserver mDataSetObserver = new DataSetObserver() {
 
         @Override
         public void onChanged() {
             super.onChanged();
             Log.d(TAG, "onChanged");
-            Launcher.this.notifyDataUpdate();
         }
 
         @Override
         public void onInvalidated() {
             super.onInvalidated();
             Log.d(TAG, "onInvalidated");
-            Launcher.this.notifyDataUpdate();
         }
 
     };
@@ -69,23 +81,58 @@ public class Launcher extends ViewPagerEX {
 
     private void init() {
         mWindowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-        ArrayList<String> mStrList = new ArrayList<String>();
+        final ArrayList<String> mStrList = new ArrayList<String>();
         for (int i = 0; i < 23; i++) {
             mStrList.add("text + " + i);
         }
-        LancherListAdapter<String> test = new LancherListAdapter<String>(mStrList) {
+        LauncherListAdapter<String> test = new LauncherListAdapter<String>(mStrList) {
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                TextView tv = new TextView(getContext());
-                tv.setText(getData(position));
-                return tv;
+            public View getView(final int position, View convertView, ViewGroup parent) {
+
+                final View view = LayoutInflater.from(getContext()).inflate(R.layout.launche_page_item, null);
+                TextView textView = (TextView) view.findViewById(R.id.pageItemText);
+                View deleteBtnView = view.findViewById(R.id.pageItemDeleteBtn);
+
+                String item = mStrList.get(position);
+                textView.setText(item);
+
+                final View bg = view.findViewById(R.id.pageItemBg);
+                deleteBtnView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        delete(position);
+                    }
+                });
+
+                //                if (BoardPageItem.COLOR_BLUE.equals(item.color)) {
+                bg.setBackgroundResource(R.drawable.blue);
+                //                } else {
+                //                    bg.setBackgroundResource(R.drawable.red);
+                //                }
+
+                //                if (Configure.isEditMode) {
+                bg.getBackground().setAlpha(220);
+                //                    if (item.editable) {
+                deleteBtnView.setVisibility(View.VISIBLE);
+                //                    } else {
+                //                deleteBtnView.setVisibility(View.INVISIBLE);
+                //                    }
+                //                } else {
+                //                    bg.getBackground().setAlpha(255);
+                //                    deleteBtnView.setVisibility(View.INVISIBLE);
+                //                }
+
+                //                if (item.hide) {
+                //                    view.setVisibility(View.INVISIBLE);
+                //                }
+                return view;
             }
         };
         this.setDataAdapter(test);
     }
 
 
-    public void setDataAdapter(LancherListAdapter adapter) {
+    public void setDataAdapter(LauncherListAdapter adapter) {
         if (mListAdapter != null && mDataSetObserver != null) {
             mListAdapter.unregisterDataSetObserver(mDataSetObserver);
             mListAdapter = null;
@@ -93,53 +140,37 @@ public class Launcher extends ViewPagerEX {
         removeAllViews();
         mListAdapter = adapter;
         mListAdapter.registerDataSetObserver(mDataSetObserver);
+        mListAdapter.setLauncher(this);
         populateDataFromAdapter();
     }
 
-
-    private ArrayList<LauncherPage> mLauncherPageList = new ArrayList<LauncherPage>();
-
-
-    private void notifyDataUpdate() {
+    void notifyDataUpdate() {
         if (mLauncherPageList == null) {
             return;
         }
-
         for (int i = 0; i < mLauncherPageList.size(); i++) {
             mLauncherPageList.get(i).onDataUpdate();
         }
     }
 
+    void notifyDataUpdate(int pageIndex) {
+        LauncherPage page = mLauncherPageList.get(pageIndex);
+        page.onDataUpdate();
+    }
+
     private void populateDataFromAdapter() {
-        int pageCount = mListAdapter.getCount() / (mPageItemCount + 1) + 1;
+        int pageCount = (mListAdapter.getCount() - 1) / mPageItemCount + 1;
         for (int i = 0; i < pageCount; i++) {
             LauncherPage launcherPage = new LauncherPage(getContext(), i, Launcher.this);
             launcherPage.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
             mLauncherPageList.add(launcherPage);
         }
 
-        this.setOnPageChangeListener(new ViewPagerEX.OnPageChangeListener() {
-
-            @Override
-            public void onPageSelected(int arg0) {
-            }
-
-            @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
-                // TODO Auto-generated method stub
-
-            }
-        });
-
         this.setOffscreenPageLimit(4);
-        PagerAdapter pageAdapter = new PagerAdapter() {
+        mPageAdapter = new PagerAdapter() {
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
-                //                container.removeView((View) object);.
+                container.removeView((View) object);
             }
 
             @Override
@@ -160,26 +191,20 @@ public class Launcher extends ViewPagerEX {
                 return mLauncherPageList.size();
             }
         };
-        this.setAdapter(pageAdapter);
+        this.setAdapter(mPageAdapter);
     }
-
-    private View mHideView = null;
-    private ImageView mDragView = null;
-    private WindowManager.LayoutParams mDragWinLP = null;
-    private int lastX = 0;
-    private int lastY = 0;
 
 
     public void startDragging(View v, int index, int pageIndex) {
-        draggingPage = pageIndex;
-        isDragging = true;
-        dragPosition = index;
+        mIsDragging = true;
+        mDragPosition = index;
 
-        System.out.println("dragPosition = " + dragPosition);
+        lastPageItem = pageIndex;
+
+        System.out.println("dragPosition = " + mDragPosition);
 
         final int statusBarHeight = getStatusHeight((Activity) getContext());
 
-        mHideView = v;
         v.setVisibility(View.INVISIBLE);
         int locations[] = { 0, 0 };
         v.getLocationInWindow(locations);
@@ -205,27 +230,29 @@ public class Launcher extends ViewPagerEX {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (MotionEvent.ACTION_DOWN == ev.getAction()) {
-            lastX = (int) ev.getRawX();
-            lastY = (int) ev.getRawY();
+            mLastX = (int) ev.getRawX();
+            mLastY = (int) ev.getRawY();
         }
         if (MotionEvent.ACTION_MOVE == ev.getAction()) {
             if (mDragView != null) {
                 float xTemp = ev.getRawX();
                 float yTmep = ev.getRawY();
 
-                mDragWinLP.x += xTemp - lastX;
-                mDragWinLP.y += yTmep - lastY;
+                mDragWinLP.x += xTemp - mLastX;
+                mDragWinLP.y += yTmep - mLastY;
 
-                lastX = (int) (xTemp + 0.2f);
-                lastY = (int) yTmep;
+                mLastX = (int) (xTemp + 0.2f);
+                mLastY = (int) yTmep;
 
                 mWindowManager.updateViewLayout(mDragView, mDragWinLP);
-                dragging(lastX, lastY);
+                dragging(mLastX, mLastY);
             }
         }
 
         if (MotionEvent.ACTION_CANCEL == ev.getAction() || MotionEvent.ACTION_UP == ev.getAction()) {
-            endDragging();
+            if (mIsDragging) {
+                endDragging();
+            }
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -233,7 +260,7 @@ public class Launcher extends ViewPagerEX {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (isDragging) {
+        if (mIsDragging) {
             return false;
         }
         return super.onInterceptTouchEvent(ev);
@@ -251,135 +278,96 @@ public class Launcher extends ViewPagerEX {
 
         // 检测是否往下，还是往前
         if ((getWidth() - mDragWinLP.x - mDragWinLP.width) <= 0 && currentItem < mPageItemCount) {
-            stopCount++;
-            if (stopCount > 30) {
-                stopCount = 0;
-                setCurrentItem(currentItem + 1);
-                if (currentItem != draggingPage) {
-                    this.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mLauncherPageList.get(currentItem).onReset();
-                        }
-                    }, 200);
-                }
+            mEdgeStopCount++;
+            if (mEdgeStopCount > 30) {
+                mEdgeStopCount = 0;
+                lastPageItem = currentItem;
+                setCurrentItem(currentItem + 1, true);
             }
         } else if (mDragWinLP.x <= 0 && currentItem > 0) {
-            stopCount++;
-            if (stopCount > 30) {
-                stopCount = 0;
-                setCurrentItem(currentItem - 1);
-                if (currentItem != draggingPage) {
-                    this.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mLauncherPageList.get(currentItem).onReset();
-                        }
-                    }, 200);
-                }
+            mEdgeStopCount++;
+            if (mEdgeStopCount > 30) {
+                mEdgeStopCount = 0;
+                lastPageItem = currentItem;
+                setCurrentItem(currentItem - 1, true);
             }
         } else {
-            stopCount = 0;
+            mEdgeStopCount = 0;
         }
 
         mLauncherPageList.get(this.getCurrentItem()).onDragging(x, y);
     }
 
     public void endDragging() {
-        // 先执行Item，才能获取下落的位置
-        mLauncherPageList.get(this.getCurrentItem()).onEndDrag();
-        if (mDragView != null || mHideView != null) {
-            mWindowManager.removeView(mDragView);
-            mHideView.setVisibility(View.VISIBLE);
-            mDragView = null;
-            mHideView = null;
-            TLog.debug(TAG, "onSwapPosition f = %d, t = %d", dragPosition, dropPosition);
+        // 先执行当前Page，
+        mDropPosition = mLauncherPageList.get(this.getCurrentItem()).onEndDrag();
 
+        if (mDragView != null) {
+            mWindowManager.removeView(mDragView);
+            mDragView = null;
+            if (mDragPosition != mDropPosition) {
+                if (mDragPosition != INVALID_POSITION && mDropPosition != INVALID_POSITION) {
+                    mListAdapter.moveFromTo(mDragPosition, mDropPosition);
+                }
+            }
             this.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (dragPosition != dropPosition) {
-                        if (dragPosition != INVALID_POSITION && dropPosition != INVALID_POSITION) {
-                            mListAdapter.onSwapPosition(dragPosition, dropPosition);
-                        }
+                    for (int i = 0, len = mLauncherPageList.size(); i < len; i++) {
+                        mLauncherPageList.get(i).onDataUpdate();
                     }
 
-                    dragPosition = INVALID_POSITION;
-                    dropPosition = INVALID_POSITION;
-                    draggingPage = INVALID_POSITION;
+                    mDragPosition = INVALID_POSITION;
+                    mDropPosition = INVALID_POSITION;
+                    lastPageItem = INVALID_POSITION;
 
-                    stopCount = 0;
-                    isDragging = false;
+                    mEdgeStopCount = 0;
+                    mIsDragging = false;
 
                 }
             }, ANI_DURATION);
         }
     }
 
-    /**
-     * 
-     * @param activity
-     * @return > 0 success; <= 0 fail
-     */
-    public static int getStatusHeight(Activity activity) {
-        int statusHeight = 0;
-        Rect localRect = new Rect();
-        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(localRect);
-        statusHeight = localRect.top;
-        if (0 == statusHeight) {
-            Class<?> localClass;
-            try {
-                localClass = Class.forName("com.android.internal.R$dimen");
-                Object localObject = localClass.newInstance();
-                int i5 = Integer.parseInt(localClass.getField("status_bar_height").get(localObject).toString());
-                statusHeight = activity.getResources().getDimensionPixelSize(i5);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
+    public void delete(int launcherPageItemPos) {
+        int pageIndex = launcherPageItemPos / mPageItemCount;
+        int pageItemPos = launcherPageItemPos % mPageItemCount;
+
+        int totalItemCount = mListAdapter.getCount();
+        int totalPageCount = (totalItemCount - 2) / mPageItemCount + 1;
+
+        int pageCount = getPageCount();
+
+        Log.d(TAG, "delete totalItemCount = " + totalItemCount + ", pageCount = " + pageCount + ", totalPageCount = " + totalPageCount);
+
+        if (pageCount > totalPageCount) {
+            LauncherPage page = mLauncherPageList.remove(pageCount - 1);
+            page.onDelete(pageItemPos, launcherPageItemPos);
+
+            if (getCurrentItem() == totalPageCount) {
+                setCurrentItem(totalPageCount - 1, true);
             }
+
+        } else {
+            mLauncherPageList.get(pageIndex).onDelete(pageItemPos, launcherPageItemPos);
         }
-        return statusHeight;
     }
+
+    public int getPageCount() {
+        if (mPageAdapter != null) {
+            return mPageAdapter.getCount();
+        }
+        return 0;
+    }
+
+
 
     // -----------------------------------------------------------
     // 动画层
     // -----------------------------------------------------------
-
-    public void attachToAniAndStartAni(View childAt, int[] windowLocation, Animation animation) {
-        final View copyView = copyViewInAniLayer(childAt, windowLocation, childAt.getHeight(), childAt.getWidth());
-        childAt.setVisibility(View.INVISIBLE);
-        copyView.startAnimation(animation);
-        animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                copyView.clearAnimation();
-                if (aniViewGroup != null) {
-                    aniViewGroup.removeView(copyView);
-                }
-            }
-        });
-    }
-
     private ViewGroup aniViewGroup = null;
+
+    public int lastPageItem = INVALID_POSITION;
 
     public View copyViewInAniLayer(View view, int[] location, int height, int width) {
         if (aniViewGroup == null) {
@@ -435,4 +423,77 @@ public class Launcher extends ViewPagerEX {
         aniViewGroup.addView(view);
         return view;
     }
+
+    public void attachToAniAndStartAni(final View view, Animation animation, final AnimationListener listener) {
+        view.startAnimation(animation);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                if (listener != null) {
+                    listener.onAnimationStart(animation);
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                if (listener != null) {
+                    listener.onAnimationRepeat(animation);
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (listener != null) {
+                    listener.onAnimationEnd(animation);
+                }
+                view.clearAnimation();
+                if (aniViewGroup != null) {
+                    aniViewGroup.removeView(view);
+                }
+            }
+        });
+    }
+
+
+    // -----------------------------------------------------------
+    // 工具方法
+    // -----------------------------------------------------------
+
+    /**
+     * 
+     * @param activity
+     * @return > 0 success; <= 0 fail
+     */
+    public static int getStatusHeight(Activity activity) {
+        int statusHeight = 0;
+        Rect localRect = new Rect();
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(localRect);
+        statusHeight = localRect.top;
+        if (0 == statusHeight) {
+            Class<?> localClass;
+            try {
+                localClass = Class.forName("com.android.internal.R$dimen");
+                Object localObject = localClass.newInstance();
+                int i5 = Integer.parseInt(localClass.getField("status_bar_height").get(localObject).toString());
+                statusHeight = activity.getResources().getDimensionPixelSize(i5);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+        }
+        return statusHeight;
+    }
+
+
 }

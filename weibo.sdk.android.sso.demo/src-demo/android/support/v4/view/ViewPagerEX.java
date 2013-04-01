@@ -692,6 +692,8 @@ public class ViewPagerEX extends ViewGroup {
             duration = (int) ((pageDelta + 1) * 100);
         }
         duration = Math.min(duration, MAX_SETTLE_DURATION);
+        
+        duration = MAX_SETTLE_DURATION; // add by zenip
 
         mScroller.startScroll(sx, sy, dx, dy, duration);
         ViewCompat.postInvalidateOnAnimation(this);
