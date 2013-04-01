@@ -1,6 +1,7 @@
 package org.tadpoleweibo.widget;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.tadpoleweibo.common.TLog;
 
@@ -239,6 +240,10 @@ public class Launcher extends ViewPagerEX {
     }
 
     public void dragging(int x, int y) {
+        if (getScrollState() != SCROLL_STATE_IDLE) {
+            return;
+        }
+
         System.out.println("mDragWinLP.x = " + mDragWinLP.x);
         Log.d(TAG, "rightDistance = " + (mDragWinLP.x + mDragWinLP.width - getWidth()));
 
@@ -347,21 +352,39 @@ public class Launcher extends ViewPagerEX {
         return statusHeight;
     }
 
-    static int[] sLocation = { 0, 0 };
+    // -----------------------------------------------------------
+    // 动画层
+    // -----------------------------------------------------------
 
-    public void flyTo(View childAt, Animation animation) {
+    public void attachToAniAndStartAni(View childAt, int[] windowLocation, Animation animation) {
+        final View copyView = copyViewInAniLayer(childAt, windowLocation, childAt.getHeight(), childAt.getWidth());
         childAt.setVisibility(View.INVISIBLE);
-        childAt.startAnimation(animation);
+        copyView.startAnimation(animation);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                copyView.clearAnimation();
+                if (aniViewGroup != null) {
+                    aniViewGroup.removeView(copyView);
+                }
+            }
+        });
     }
 
     private ViewGroup aniViewGroup = null;
 
-    public View copyViewInAniLayer(View view, int height, int width) {
+    public View copyViewInAniLayer(View view, int[] location, int height, int width) {
         if (aniViewGroup == null) {
             aniViewGroup = createAnimLayout();
         }
-        int location[] = new int[2];
-        view.getLocationInWindow(location);
         ImageView imageView = new ImageView(getContext());
         view.destroyDrawingCache();
         view.setDrawingCacheEnabled(true);

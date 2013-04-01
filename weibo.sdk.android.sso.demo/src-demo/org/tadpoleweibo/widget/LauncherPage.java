@@ -142,6 +142,12 @@ public class LauncherPage extends ViewGroup {
         return location;
     }
 
+    int[] getWindowLocationByPos(int position) {
+        int[] location = getLocationByPos(position);
+        location[1] += getStatusHeight((Activity) getContext());
+        return location;
+    }
+
     void onDragging(int x, int y) {
         int hitPosition = getHitPosition(x, y);
         final int[] arr = array;
@@ -149,24 +155,24 @@ public class LauncherPage extends ViewGroup {
         // 非拖动元素所属该页
         if (mPageDraPos == INVALID_POSITION) {
             mPageDraPos = 0;
-            int []fromLocation = null;
-            int [] toLocation = null;
-            Animation  ani = null;
+            int[] fromLocation = null;
+            int[] toLocation = null;
+            Animation ani = null;
             if (mLauncher.getCurrentItem() > mLauncher.draggingPage) {
                 mPageDraPos = 0;
                 fromLocation = getLocationByPos(0);
                 toLocation = getLocationPrevPageByPos(mLauncher.mPageItemCount - 1);
                 ani = getTranslateAnimation(fromLocation, toLocation);
-                
-                mLauncher.flyTo(getChildAt(mPageDraPos), ani);
+
+                mLauncher.attachToAniAndStartAni(getChildAt(mPageDraPos), getWindowLocationByPos(mPageDraPos), ani);
             } else {
                 mPageDraPos = mLauncher.mPageItemCount - 1;
-                
+
                 fromLocation = getLocationByPos(mLauncher.mPageItemCount - 1);
                 toLocation = getLocationNextPageByPos(0);
                 ani = getTranslateAnimation(fromLocation, toLocation);
-                
-                mLauncher.flyTo(getChildAt(mPageDraPos), ani);
+
+                mLauncher.attachToAniAndStartAni(getChildAt(mPageDraPos), getLocationByPos(mPageDraPos), ani);
             }
         }
 

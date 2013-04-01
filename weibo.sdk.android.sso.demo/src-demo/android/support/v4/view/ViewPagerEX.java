@@ -2559,4 +2559,8 @@ public class ViewPagerEX extends ViewGroup {
             a.recycle();
         }
     }
+    
+    protected int getScrollState(){
+       return mScrollState; 
+    }
 }
