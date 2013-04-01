@@ -44,14 +44,15 @@ public abstract class LauncherListAdapter<T> extends LauncherAdapter {
     @Override
     public void moveFromTo(int from, int to) {
         TLog.debug(TAG, "onMoveFromTo from = %d, to = %d", from, to);
-        
+
         T item = mData.remove(from);
         mData.add(to, item);
-        
+
     }
 
     @Override
     public void remove(int position) {
+        TLog.debug(TAG, "remove position = %d", position);
         mData.remove(position);
         notifyDataSetChanged();
     }

@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
+import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -26,7 +27,7 @@ import com.weibo.sdk.android.demo.R;
 
 public class LauncherPage extends ViewGroup {
 
-    static final String TAG = "Launcher";
+    static final String TAG = "LauncherPage";
 
     private int mPageDraPos = INVALID_POSITION;
     private int mPageDropPos = INVALID_POSITION;
@@ -39,6 +40,8 @@ public class LauncherPage extends ViewGroup {
     private int mPageIndex;
     private Launcher mLauncher;
     private int mItemCount = 0;
+
+    private int mLastPageItemPos = 0;
 
     public LauncherPage(Context context, int pageIndex, Launcher launcher) {
         super(context, null, R.style.Tadpole_LauncherPage);
@@ -89,6 +92,8 @@ public class LauncherPage extends ViewGroup {
                 end = listAdapter.getCount();
             }
 
+            mLastPageItemPos = end - mPageIndex * pageItemCount - 1;
+
             TLog.debug(TAG, "fillData start = %d end = %d", start, end);
             for (int i = start; i < end; i++) {
                 LauncherPageItemView itemView = getLauncherPageItemView(i);
@@ -99,7 +104,7 @@ public class LauncherPage extends ViewGroup {
                         mHideView = v;
                         mLauncher.startDragging(v, index, mPageIndex);
                         // covert by pageIndex;
-                        mPageDraPos = index - mPageIndex * mLauncher.mPageItemCount;
+                        mPageDraPos = mPageDropPos = index - mPageIndex * mLauncher.mPageItemCount;
 
                         return false;
                     }
@@ -179,7 +184,7 @@ public class LauncherPage extends ViewGroup {
 
                 // Cur Page
                 mPageDraPos = mPageDropPos = 0;
-                mLauncher.mDragPosition = mPageIndex * mLauncher.mPageItemCount + mPageDraPos;
+
 
                 fromLocation = getLocationByPos(0);
                 toLocation = getLocationPrevPageByPos(mLauncher.mPageItemCount - 1);
@@ -196,8 +201,10 @@ public class LauncherPage extends ViewGroup {
                 mPageDraPos = mPageDropPos = mLauncher.mPageItemCount - 1;
                 fromLocation = getLocationByPos(mLauncher.mPageItemCount - 1);
                 toLocation = getLocationNextPageByPos(0);
-
             }
+
+
+            mLauncher.mDropPosition = mPageIndex * mLauncher.mPageItemCount + mPageDraPos;
 
             ani = getTranslateAnimation(fromLocation, toLocation);
             View view = getChildAt(mPageDraPos);
@@ -224,14 +231,14 @@ public class LauncherPage extends ViewGroup {
         // move next
         if (hitPosition < realDragPostion) {
             for (int i = hitPosition; i < realDragPostion; i++) {
-                moveNext(posToViewPos.get(i), i);
+                moveNext(posToViewPos.get(i), i, null);
                 arr[posToViewPos.get(i)] += 1;
             }
         }
         // move prev
         else {
             for (int i = hitPosition; i > realDragPostion; i--) {
-                movePrev(posToViewPos.get(i), i);
+                movePrev(posToViewPos.get(i), i, null);
                 arr[posToViewPos.get(i)] -= 1;
             }
         }
@@ -251,7 +258,7 @@ public class LauncherPage extends ViewGroup {
     }
 
     int onEndDrag() {
-        Log.d(TAG, "mHideView = " + mHideView + ", mPageDropPos = " + mPageDropPos);
+        Log.d(TAG, "mLauncher.mDragPosition = " + mLauncher.mDragPosition + ", mPageDropPos = " + mPageDropPos);
         int launcherDropPosition = INVALID_POSITION;
         // 制造假得view，等待数据刷新.
         if (mLauncher.mDragPosition != INVALID_POSITION) {
@@ -306,15 +313,15 @@ public class LauncherPage extends ViewGroup {
         return new int[] { xTmp, yTmp };
     }
 
-    public void moveNext(int viewPos, int aniFromPos) {
-        moveFromTo(viewPos, aniFromPos, aniFromPos + 1);
+    public void moveNext(int viewPos, int aniFromPos, AnimationListener listener) {
+        moveFromTo(viewPos, aniFromPos, aniFromPos + 1, listener);
     }
 
-    public void movePrev(int viewPos, int aniFromPos) {
-        moveFromTo(viewPos, aniFromPos, aniFromPos - 1);
+    public void movePrev(int viewPos, int aniFromPos, AnimationListener listener) {
+        moveFromTo(viewPos, aniFromPos, aniFromPos - 1, listener);
     }
 
-    private void moveFromTo(final int viewPos, final int aniFromPos, final int aniToPos) {
+    private void moveFromTo(final int viewPos, final int aniFromPos, final int aniToPos, AnimationListener listener) {
         int[] fLocation = getLocationByPos(aniFromPos);
         final int[] tLocation = getLocationByPos(aniToPos);
         final LauncherPageItemView view = (LauncherPageItemView) getChildAt(viewPos);
@@ -334,6 +341,7 @@ public class LauncherPage extends ViewGroup {
         view.setEndRunnable(runnable);
 
         Animation transAni = getTranslateAnimation(fLocation, tLocation);
+        view.setAnimationListener(listener);
         view.startAnimation(transAni);
     }
 
@@ -490,30 +498,84 @@ public class LauncherPage extends ViewGroup {
         resetDragParams();
     }
 
-    public void onDelete(int pageItemPos, final int launcherPageItemPos) {
-        Log.d("onDelete", "onDelete pageItemPos =  " + pageItemPos + ", launcherPageItemPos = " + launcherPageItemPos);
+    public void onDelete(int pageItemPos, final int launcherPageItemPos, final Runnable deleteCallback) {
+        Log.d(TAG, "onDelete  mLastPageItemPos = " + mLastPageItemPos + ", click pageItemPos =  " + pageItemPos + ", launcherPageItemPos = " + launcherPageItemPos);
+        final View v = getChildAt(pageItemPos);
 
-        getChildAt(pageItemPos).setVisibility(View.INVISIBLE);
-        for (int i = mLauncher.mPageItemCount; i > pageItemPos; i--) {
-            System.out.println("onDelete Animation ");
-            movePrev(i, i);
-        }
+        v.setVisibility(View.INVISIBLE);
+        Animation dimissAni = getDismissAnimation();
+        dimissAni.setAnimationListener(new AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                v.clearAnimation();
+                v.setVisibility(View.INVISIBLE);
+            }
+        });
+        v.startAnimation(dimissAni);
+
+
+        boolean isNeedDragFromNextPage = true;
+
+        Log.d(TAG, "onDelete mPageIndex = " + mPageIndex + ",  mLauncher.mPageItemCount = " + mLauncher.mPageItemCount);
 
         int fromPos = (mPageIndex + 1) * mLauncher.mPageItemCount;
 
-        // 判断
-        if (mLauncher.getPageCount() <= (mPageIndex + 1) || fromPos >= mLauncher.mListAdapter.getCount()) {
-            // postDelayed让动画结束完
-            mLauncher.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mLauncher.mListAdapter.remove(launcherPageItemPos);
-                    mLauncher.mPageAdapter.notifyDataSetChanged();
-                }
-            }, Launcher.ANI_DURATION);
+        Log.d(TAG, "onDelete fromPos = " + fromPos + ", mLauncher.getPageCount() = " + mLauncher.getPageCount() + ", mLauncher.mListAdapter.getCount() =  " + mLauncher.mListAdapter.getCount());
+        if ((mLauncher.getPageCount() <= (mPageIndex + 1)) || (fromPos > (mLauncher.mListAdapter.getCount() - 1))) {
+            isNeedDragFromNextPage = false;
+        }
+
+        // 无动画
+        boolean hasAnimation = false;
+        // 有动画
+        for (int i = mLastPageItemPos; i > pageItemPos; i--) {
+            hasAnimation = true;
+            if ((i == pageItemPos + 1) && isNeedDragFromNextPage == false) {
+                movePrev(i, i, new AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        Log.d(TAG, "onDelete finish with inner animation ");
+                        mLauncher.mListAdapter.remove(launcherPageItemPos);
+                        mLauncher.notifyDataUpdate();
+                        if (deleteCallback != null) {
+                            deleteCallback.run();
+                        }
+                    }
+                });
+            } else {
+                movePrev(i, i, null);
+            }
+        }
+
+        if (hasAnimation == false && isNeedDragFromNextPage == false) {
+            Log.d(TAG, "onDelete finish without animation");
+            mLauncher.mListAdapter.remove(launcherPageItemPos);
+            mLauncher.notifyDataUpdate();
+            if (deleteCallback != null) {
+                deleteCallback.run();
+            }
             return;
         }
 
+        if (isNeedDragFromNextPage == false) {
+            return;
+        }
 
         final View view = getLauncherPageItemView(fromPos);
         final View viewFroAni = getLauncherPageItemView(fromPos);
@@ -540,13 +602,21 @@ public class LauncherPage extends ViewGroup {
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                Log.d(TAG, "onDelete finish with outer animation ");
                 mLauncher.mListAdapter.remove(launcherPageItemPos);
                 putViewToPostion(view, toPageItemPos);
                 mLauncher.notifyDataUpdate();
-                mLauncher.mPageAdapter.notifyDataSetChanged();
+                if (deleteCallback != null) {
+                    deleteCallback.run();
+                }
             }
         });
-
     }
 
-}
+    public Animation getDismissAnimation() {
+        ScaleAnimation scaleAni = new ScaleAnimation(1, 0, 1, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        scaleAni.setDuration(Launcher.ANI_DURATION - 200);
+        return scaleAni;
+    }
+
+};

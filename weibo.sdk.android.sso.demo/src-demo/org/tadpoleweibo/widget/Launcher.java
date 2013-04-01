@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -32,7 +33,7 @@ public class Launcher extends ViewPagerEX {
     private static final int INVALID_POSITION = -1;
 
     static final int ROW_COUNT = 3;
-    static final int COL_COUNT = 1;
+    static final int COL_COUNT = 3;
 
     int mNumColumns = COL_COUNT;
     int mNumRows = ROW_COUNT;
@@ -68,6 +69,7 @@ public class Launcher extends ViewPagerEX {
         }
 
     };
+    private boolean isHandlingDelete = false;
 
     public Launcher(Context context) {
         super(context);
@@ -166,7 +168,7 @@ public class Launcher extends ViewPagerEX {
             mLauncherPageList.add(launcherPage);
         }
 
-        this.setOffscreenPageLimit(4);
+        this.setOffscreenPageLimit(mLauncherPageList.size());
         mPageAdapter = new PagerAdapter() {
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
@@ -257,12 +259,24 @@ public class Launcher extends ViewPagerEX {
         return super.dispatchTouchEvent(ev);
     }
 
-
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
+    public boolean onTouchEvent(MotionEvent ev) {
         if (mIsDragging) {
             return false;
         }
+        return super.onTouchEvent(ev);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (isHandlingDelete == true) {
+            return true;
+        }
+
+        if (mIsDragging) {
+            return false;
+        }
+
         return super.onInterceptTouchEvent(ev);
     }
 
@@ -271,13 +285,14 @@ public class Launcher extends ViewPagerEX {
             return;
         }
 
-        System.out.println("mDragWinLP.x = " + mDragWinLP.x);
-        Log.d(TAG, "rightDistance = " + (mDragWinLP.x + mDragWinLP.width - getWidth()));
 
         final int currentItem = getCurrentItem();
 
+        System.out.println("mDragWinLP.x = " + mDragWinLP.x);
+        Log.d(TAG, "rightDistance = " + (getWidth() - mDragWinLP.x - mDragWinLP.width));
+
         // 检测是否往下，还是往前
-        if ((getWidth() - mDragWinLP.x - mDragWinLP.width) <= 0 && currentItem < mPageItemCount) {
+        if ((getWidth() - mDragWinLP.x - mDragWinLP.width) <= 0 && currentItem < getPageCount()) {
             mEdgeStopCount++;
             if (mEdgeStopCount > 30) {
                 mEdgeStopCount = 0;
@@ -333,24 +348,26 @@ public class Launcher extends ViewPagerEX {
         int pageIndex = launcherPageItemPos / mPageItemCount;
         int pageItemPos = launcherPageItemPos % mPageItemCount;
 
-        int totalItemCount = mListAdapter.getCount();
-        int totalPageCount = (totalItemCount - 2) / mPageItemCount + 1;
+        final int totalPageCountAfterReduce = (mListAdapter.getCount() - 2) / mPageItemCount + 1;
+        final int pageCount = getPageCount();
+        Log.d(TAG, "totalPageCountAfterReduce = " + totalPageCountAfterReduce);
 
-        int pageCount = getPageCount();
+        isHandlingDelete = true;
 
-        Log.d(TAG, "delete totalItemCount = " + totalItemCount + ", pageCount = " + pageCount + ", totalPageCount = " + totalPageCount);
-
-        if (pageCount > totalPageCount) {
-            LauncherPage page = mLauncherPageList.remove(pageCount - 1);
-            page.onDelete(pageItemPos, launcherPageItemPos);
-
-            if (getCurrentItem() == totalPageCount) {
-                setCurrentItem(totalPageCount - 1, true);
+        // 删除item
+        mLauncherPageList.get(pageIndex).onDelete(pageItemPos, launcherPageItemPos, new Runnable() {
+            @Override
+            public void run() {
+                isHandlingDelete = false;
+                if (pageCount > totalPageCountAfterReduce) {
+                    if (getCurrentItem() == totalPageCountAfterReduce) {
+                        setCurrentItem(totalPageCountAfterReduce - 1, true);
+                    }
+                    mLauncherPageList.remove(pageCount - 1);
+                    mPageAdapter.notifyDataSetChanged();
+                }
             }
-
-        } else {
-            mLauncherPageList.get(pageIndex).onDelete(pageItemPos, launcherPageItemPos);
-        }
+        });
     }
 
     public int getPageCount() {

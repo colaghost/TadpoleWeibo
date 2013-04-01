@@ -13,14 +13,23 @@ public class LauncherPageItemView extends LinearLayout {
     private AnimationListener mAniListener = new Animation.AnimationListener() {
         @Override
         public void onAnimationStart(Animation animation) {
+            if (mAnimationListener != null) {
+                mAnimationListener.onAnimationStart(animation);
+            }
         }
 
         @Override
         public void onAnimationRepeat(Animation animation) {
+            if (mAnimationListener != null) {
+                mAnimationListener.onAnimationRepeat(animation);
+            }
         }
 
         @Override
         public void onAnimationEnd(Animation animation) {
+            if (mAnimationListener != null) {
+                mAnimationListener.onAnimationEnd(animation);
+            }
             LauncherPageItemView.this.clearAnimation();
             if (runnable != null) {
                 runnable.run();
@@ -59,5 +68,11 @@ public class LauncherPageItemView extends LinearLayout {
     @Override
     public void clearAnimation() {
         super.clearAnimation();
+    }
+
+    private AnimationListener mAnimationListener;
+
+    public void setAnimationListener(AnimationListener listener) {
+        mAnimationListener = listener;
     }
 }
