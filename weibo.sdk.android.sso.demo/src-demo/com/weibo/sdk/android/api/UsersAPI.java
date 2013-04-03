@@ -9,6 +9,7 @@ import com.weibo.sdk.android.net.RequestListener;
  */
 public class UsersAPI extends WeiboAPI {
 	public UsersAPI(Oauth2AccessToken accessToken) {
+	    
         super(accessToken);
     }
 
