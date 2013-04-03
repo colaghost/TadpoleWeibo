@@ -128,20 +128,21 @@ containing a value of this type.
         public static final int weibosdk_title_logo=0x7f020023;
     }
     public static final class id {
-        public static final int apiCancel=0x7f0a0003;
-        public static final int auth=0x7f0a0000;
-        public static final int launcher=0x7f0a0004;
+        public static final int apiCancel=0x7f0a0004;
+        public static final int auth=0x7f0a0001;
+        public static final int launcher=0x7f0a0000;
         public static final int launcher_next=0x7f0a0009;
         public static final int menu_settings=0x7f0a0008;
         public static final int pageItemBg=0x7f0a0005;
         public static final int pageItemDeleteBtn=0x7f0a0007;
         public static final int pageItemText=0x7f0a0006;
-        public static final int show=0x7f0a0002;
-        public static final int sso=0x7f0a0001;
+        public static final int show=0x7f0a0003;
+        public static final int sso=0x7f0a0002;
     }
     public static final class layout {
-        public static final int activity_main=0x7f030000;
-        public static final int launche_page_item=0x7f030001;
+        public static final int activity_launcher=0x7f030000;
+        public static final int activity_main=0x7f030001;
+        public static final int launche_page_item=0x7f030002;
     }
     public static final class menu {
         public static final int activity_main=0x7f090000;

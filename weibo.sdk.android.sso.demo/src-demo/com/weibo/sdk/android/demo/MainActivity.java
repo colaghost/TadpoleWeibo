@@ -3,7 +3,6 @@ package com.weibo.sdk.android.demo;
 import java.text.SimpleDateFormat;
 
 import org.tadpoleweibo.widget.Launcher;
-import org.tadpoleweibo.widget.LauncherPage;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -25,6 +24,7 @@ import com.weibo.sdk.android.WeiboException;
 import com.weibo.sdk.android.keep.AccessTokenKeeper;
 import com.weibo.sdk.android.sso.SsoHandler;
 import com.weibo.sdk.android.util.Utility;
+import com.xiaotingzhong.app.LauncherActivity;
 
 /**
  * 
@@ -33,7 +33,7 @@ import com.weibo.sdk.android.util.Utility;
 public class MainActivity extends Activity {
 
     private Weibo mWeibo;
-    private static final String CONSUMER_KEY = "966056985";// 替换为开发者的appkey，例如"1646212860";
+    private static final String CONSUMER_KEY = "4196388314";// 替换为开发者的appkey，例如"1646212860";
     private static final String REDIRECT_URL = "http://www.sina.com";
     private Button authBtn, ssoBtn, cancelBtn;
     private TextView mText;
@@ -152,6 +152,10 @@ public class MainActivity extends Activity {
                 cancelBtn.setVisibility(View.VISIBLE);
                 AccessTokenKeeper.keepAccessToken(MainActivity.this, accessToken);
                 Toast.makeText(MainActivity.this, "认证成功", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, LauncherActivity.class);
+                MainActivity.this.startActivity(intent);
             }
         }
 

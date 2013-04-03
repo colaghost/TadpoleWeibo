@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -32,7 +31,7 @@ public class Launcher extends ViewPagerEX {
     static final String TAG = "Launcher";
     private static final int INVALID_POSITION = -1;
 
-    static final int ROW_COUNT = 3;
+    static final int ROW_COUNT = 6;
     static final int COL_COUNT = 3;
 
     int mNumColumns = COL_COUNT;
@@ -83,54 +82,6 @@ public class Launcher extends ViewPagerEX {
 
     private void init() {
         mWindowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-        final ArrayList<String> mStrList = new ArrayList<String>();
-        for (int i = 0; i < 23; i++) {
-            mStrList.add("text + " + i);
-        }
-        LauncherListAdapter<String> test = new LauncherListAdapter<String>(mStrList) {
-            @Override
-            public View getView(final int position, View convertView, ViewGroup parent) {
-
-                final View view = LayoutInflater.from(getContext()).inflate(R.layout.launche_page_item, null);
-                TextView textView = (TextView) view.findViewById(R.id.pageItemText);
-                View deleteBtnView = view.findViewById(R.id.pageItemDeleteBtn);
-
-                String item = mStrList.get(position);
-                textView.setText(item);
-
-                final View bg = view.findViewById(R.id.pageItemBg);
-                deleteBtnView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        delete(position);
-                    }
-                });
-
-                //                if (BoardPageItem.COLOR_BLUE.equals(item.color)) {
-                bg.setBackgroundResource(R.drawable.blue);
-                //                } else {
-                //                    bg.setBackgroundResource(R.drawable.red);
-                //                }
-
-                //                if (Configure.isEditMode) {
-                bg.getBackground().setAlpha(220);
-                //                    if (item.editable) {
-                deleteBtnView.setVisibility(View.VISIBLE);
-                //                    } else {
-                //                deleteBtnView.setVisibility(View.INVISIBLE);
-                //                    }
-                //                } else {
-                //                    bg.getBackground().setAlpha(255);
-                //                    deleteBtnView.setVisibility(View.INVISIBLE);
-                //                }
-
-                //                if (item.hide) {
-                //                    view.setVisibility(View.INVISIBLE);
-                //                }
-                return view;
-            }
-        };
-        this.setDataAdapter(test);
     }
 
 
@@ -170,8 +121,20 @@ public class Launcher extends ViewPagerEX {
 
         this.setOffscreenPageLimit(mLauncherPageList.size());
         mPageAdapter = new PagerAdapter() {
+
+            @Override
+            public int getItemPosition(Object object) {
+                int index = mLauncherPageList.indexOf(object);
+                if (index > -1) {
+                    return index;
+                } else {
+                    return PagerAdapter.POSITION_NONE;
+                }
+            }
+
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
+                Log.d(TAG, "destroyItem position = " + position);
                 container.removeView((View) object);
             }
 
@@ -190,6 +153,7 @@ public class Launcher extends ViewPagerEX {
 
             @Override
             public int getCount() {
+                System.out.println("getCount = " + mLauncherPageList.size());
                 return mLauncherPageList.size();
             }
         };
@@ -354,6 +318,8 @@ public class Launcher extends ViewPagerEX {
 
         isHandlingDelete = true;
 
+        final Launcher me = this;
+
         // 删除item
         mLauncherPageList.get(pageIndex).onDelete(pageItemPos, launcherPageItemPos, new Runnable() {
             @Override
@@ -362,9 +328,19 @@ public class Launcher extends ViewPagerEX {
                 if (pageCount > totalPageCountAfterReduce) {
                     if (getCurrentItem() == totalPageCountAfterReduce) {
                         setCurrentItem(totalPageCountAfterReduce - 1, true);
+                        me.postDelayed(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                mLauncherPageList.remove(pageCount - 1);
+                                mPageAdapter.notifyDataSetChanged();
+                            }
+                        }, 500);
+
+                    } else {
+                        mLauncherPageList.remove(pageCount - 1);
+                        mPageAdapter.notifyDataSetChanged();
                     }
-                    mLauncherPageList.remove(pageCount - 1);
-                    mPageAdapter.notifyDataSetChanged();
                 }
             }
         });
