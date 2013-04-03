@@ -229,6 +229,35 @@ public class Launcher extends ViewPagerEX {
     }
 
 
+    int mTmpDragCenterX = 0;
+    int mTmpDragCenterY = 0;
+
+    public void handlerDragViewMove(float eventX, float eventY) {
+        mDragWinLP.x += eventX - mLastX;
+        mDragWinLP.y += eventY - mLastY;
+
+        mTmpDragCenterX = mDragWinLP.x + mDragWinLP.width / 2;
+        mTmpDragCenterY = mDragWinLP.y + getStatusHeight((Activity) getContext()) + mDragWinLP.height / 2;
+
+        if (mTmpDragCenterX > eventX) {
+            mDragWinLP.x -= 1;
+        } else if (mTmpDragCenterX < eventY) {
+            mDragWinLP.x += 1;
+        }
+
+        if (mTmpDragCenterY > eventY) {
+            mDragWinLP.y -= 1;
+        } else if (mTmpDragCenterY < eventY) {
+            mDragWinLP.y += 1;
+        }
+
+        mLastX = (int) eventX;
+        mLastY = (int) eventY;
+
+        mWindowManager.updateViewLayout(mDragView, mDragWinLP);
+    }
+
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (MotionEvent.ACTION_DOWN == ev.getAction()) {
@@ -239,14 +268,7 @@ public class Launcher extends ViewPagerEX {
             if (mDragView != null) {
                 float xTemp = ev.getRawX();
                 float yTmep = ev.getRawY();
-
-                mDragWinLP.x += xTemp - mLastX;
-                mDragWinLP.y += yTmep - mLastY;
-
-                mLastX = (int) (xTemp + 0.2f);
-                mLastY = (int) yTmep;
-
-                mWindowManager.updateViewLayout(mDragView, mDragWinLP);
+                handlerDragViewMove(xTemp, yTmep);
                 dragging(mLastX, mLastY);
             }
         }
@@ -475,6 +497,7 @@ public class Launcher extends ViewPagerEX {
     // -----------------------------------------------------------
     // 工具方法
     // -----------------------------------------------------------
+
 
     /**
      * 

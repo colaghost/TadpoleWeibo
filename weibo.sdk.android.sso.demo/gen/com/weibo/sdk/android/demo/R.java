@@ -9,85 +9,28 @@ package com.weibo.sdk.android.demo;
 
 public final class R {
     public static final class array {
-        public static final int api_types=0x7f050000;
-        public static final int examples=0x7f050001;
+        public static final int api_types=0x7f040000;
+        public static final int examples=0x7f040001;
     }
     public static final class attr {
-        /**  if true the alpha value of the children views is decreased as they scroll out of the screen. Default is false because of performance issues 
-         <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int animate_alpha=0x7f010005;
-        /**  Duration of animation when user releases the over scroll. Default is 400 ms. 
-         <p>Must be an integer value, such as "<code>100</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int overscroll_animation_duration=0x7f010004;
-        /**  Determines the amount of rotation during over scroll. Maximum rotation angle is 90 degrees divided by thisÏ value. Default is 2 
-         <p>Must be a floating point value, such as "<code>1.2</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int overscroll_rotation=0x7f010000;
-        /** 
-        determines the maximum amount of translation along the z-axis during the overscroll. 
-        Default is 150.
-        
-         <p>Must be an integer value, such as "<code>100</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int overscroll_translation=0x7f010001;
-        /**  Controls maximum rotation during swipe. Maximum rotation angle is 90 degrees divided by this value. Default is 3. 
-         <p>Must be a floating point value, such as "<code>1.2</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int swipe_rotation=0x7f010002;
-        /**  Maximum z-translation during swipe. Default = 100. 
-         <p>Must be an integer value, such as "<code>100</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int swipe_translation=0x7f010003;
     }
     public static final class color {
-        public static final int weibosdk_dialog_title_blue=0x7f060002;
-        public static final int weibosdk_text_num_gray=0x7f060001;
-        public static final int weibosdk_transparent=0x7f060000;
+        public static final int weibosdk_dialog_title_blue=0x7f050002;
+        public static final int weibosdk_text_num_gray=0x7f050001;
+        public static final int weibosdk_transparent=0x7f050000;
     }
     public static final class dimen {
-        public static final int launcher_page_padding_bottom=0x7f070006;
-        public static final int launcher_page_padding_left=0x7f070003;
-        public static final int launcher_page_padding_right=0x7f070005;
-        public static final int launcher_page_padding_top=0x7f070004;
-        public static final int padding_large=0x7f070002;
-        public static final int padding_medium=0x7f070001;
-        public static final int padding_small=0x7f070000;
-        public static final int weibosdk_dialog_bottom_margin=0x7f07000a;
-        public static final int weibosdk_dialog_left_margin=0x7f070007;
-        public static final int weibosdk_dialog_right_margin=0x7f070009;
-        public static final int weibosdk_dialog_top_margin=0x7f070008;
+        public static final int launcher_page_padding_bottom=0x7f060006;
+        public static final int launcher_page_padding_left=0x7f060003;
+        public static final int launcher_page_padding_right=0x7f060005;
+        public static final int launcher_page_padding_top=0x7f060004;
+        public static final int padding_large=0x7f060002;
+        public static final int padding_medium=0x7f060001;
+        public static final int padding_small=0x7f060000;
+        public static final int weibosdk_dialog_bottom_margin=0x7f06000a;
+        public static final int weibosdk_dialog_left_margin=0x7f060007;
+        public static final int weibosdk_dialog_right_margin=0x7f060009;
+        public static final int weibosdk_dialog_top_margin=0x7f060008;
     }
     public static final class drawable {
         public static final int bg_btn=0x7f020000;
@@ -108,24 +51,23 @@ containing a value of this type.
         public static final int icon=0x7f02000f;
         public static final int icon_delwords=0x7f020010;
         public static final int image_background=0x7f020011;
-        public static final int page_background=0x7f020012;
-        public static final int red=0x7f020013;
-        public static final int rootblock_btn_remove=0x7f020014;
-        public static final int title_logo=0x7f020015;
-        public static final int weibosdk_bg_btn=0x7f020016;
-        public static final int weibosdk_bg_content=0x7f020017;
-        public static final int weibosdk_bg_delwords=0x7f020018;
-        public static final int weibosdk_bg_delwords_nor=0x7f020019;
-        public static final int weibosdk_bg_delwords_sel=0x7f02001a;
-        public static final int weibosdk_bg_title=0x7f02001b;
-        public static final int weibosdk_close_normal=0x7f02001c;
-        public static final int weibosdk_close_press=0x7f02001d;
-        public static final int weibosdk_close_selector=0x7f02001e;
-        public static final int weibosdk_del_pic=0x7f02001f;
-        public static final int weibosdk_dialog_bg=0x7f020020;
-        public static final int weibosdk_icon_delwords=0x7f020021;
-        public static final int weibosdk_image_background=0x7f020022;
-        public static final int weibosdk_title_logo=0x7f020023;
+        public static final int red=0x7f020012;
+        public static final int rootblock_btn_remove=0x7f020013;
+        public static final int title_logo=0x7f020014;
+        public static final int weibosdk_bg_btn=0x7f020015;
+        public static final int weibosdk_bg_content=0x7f020016;
+        public static final int weibosdk_bg_delwords=0x7f020017;
+        public static final int weibosdk_bg_delwords_nor=0x7f020018;
+        public static final int weibosdk_bg_delwords_sel=0x7f020019;
+        public static final int weibosdk_bg_title=0x7f02001a;
+        public static final int weibosdk_close_normal=0x7f02001b;
+        public static final int weibosdk_close_press=0x7f02001c;
+        public static final int weibosdk_close_selector=0x7f02001d;
+        public static final int weibosdk_del_pic=0x7f02001e;
+        public static final int weibosdk_dialog_bg=0x7f02001f;
+        public static final int weibosdk_icon_delwords=0x7f020020;
+        public static final int weibosdk_image_background=0x7f020021;
+        public static final int weibosdk_title_logo=0x7f020022;
     }
     public static final class id {
         public static final int apiCancel=0x7f0a0003;
@@ -147,28 +89,26 @@ containing a value of this type.
         public static final int activity_main=0x7f090000;
     }
     public static final class string {
-        public static final int app_name=0x7f040001;
-        public static final int hello=0x7f040000;
-        public static final int menu_settings=0x7f040003;
-        public static final int page_text=0x7f040002;
-        public static final int testcontent=0x7f040015;
-        public static final int title_activity_main=0x7f040004;
-        public static final int weibosdk_app_name=0x7f040009;
-        public static final int weibosdk_attention=0x7f040005;
-        public static final int weibosdk_cancel=0x7f040008;
-        public static final int weibosdk_close=0x7f04000c;
-        public static final int weibosdk_comment=0x7f040012;
-        public static final int weibosdk_del_pic=0x7f040011;
-        public static final int weibosdk_delete_all=0x7f040006;
-        public static final int weibosdk_fav=0x7f040014;
-        public static final int weibosdk_forward=0x7f040013;
-        public static final int weibosdk_ok=0x7f040007;
-        public static final int weibosdk_photo=0x7f04000b;
-        public static final int weibosdk_please_login=0x7f04000e;
-        public static final int weibosdk_send=0x7f04000a;
-        public static final int weibosdk_send_failed=0x7f040010;
-        public static final int weibosdk_send_sucess=0x7f04000f;
-        public static final int weibosdk_share_dialog_title=0x7f04000d;
+        public static final int app_name=0x7f070000;
+        public static final int menu_settings=0x7f070001;
+        public static final int testcontent=0x7f070013;
+        public static final int title_activity_main=0x7f070002;
+        public static final int weibosdk_app_name=0x7f070007;
+        public static final int weibosdk_attention=0x7f070003;
+        public static final int weibosdk_cancel=0x7f070006;
+        public static final int weibosdk_close=0x7f07000a;
+        public static final int weibosdk_comment=0x7f070010;
+        public static final int weibosdk_del_pic=0x7f07000f;
+        public static final int weibosdk_delete_all=0x7f070004;
+        public static final int weibosdk_fav=0x7f070012;
+        public static final int weibosdk_forward=0x7f070011;
+        public static final int weibosdk_ok=0x7f070005;
+        public static final int weibosdk_photo=0x7f070009;
+        public static final int weibosdk_please_login=0x7f07000c;
+        public static final int weibosdk_send=0x7f070008;
+        public static final int weibosdk_send_failed=0x7f07000e;
+        public static final int weibosdk_send_sucess=0x7f07000d;
+        public static final int weibosdk_share_dialog_title=0x7f07000b;
     }
     public static final class style {
         public static final int AppTheme=0x7f080000;
@@ -176,130 +116,4 @@ containing a value of this type.
         public static final int Tadpole_LauncherPage=0x7f080002;
         public static final int Theme_Tadpole=0x7f080003;
     }
-    public static final class styleable {
-        /** Attributes that can be used with a ViewPager3D.
-           <p>Includes the following attributes:</p>
-           <table>
-           <colgroup align="left" />
-           <colgroup align="left" />
-           <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #ViewPager3D_animate_alpha com.weibo.sdk.android.demo:animate_alpha}</code></td><td> if true the alpha value of the children views is decreased as they scroll out of the screen.</td></tr>
-           <tr><td><code>{@link #ViewPager3D_overscroll_animation_duration com.weibo.sdk.android.demo:overscroll_animation_duration}</code></td><td> Duration of animation when user releases the over scroll.</td></tr>
-           <tr><td><code>{@link #ViewPager3D_overscroll_rotation com.weibo.sdk.android.demo:overscroll_rotation}</code></td><td> Determines the amount of rotation during over scroll.</td></tr>
-           <tr><td><code>{@link #ViewPager3D_overscroll_translation com.weibo.sdk.android.demo:overscroll_translation}</code></td><td>
-        determines the maximum amount of translation along the z-axis during the overscroll.</td></tr>
-           <tr><td><code>{@link #ViewPager3D_swipe_rotation com.weibo.sdk.android.demo:swipe_rotation}</code></td><td> Controls maximum rotation during swipe.</td></tr>
-           <tr><td><code>{@link #ViewPager3D_swipe_translation com.weibo.sdk.android.demo:swipe_translation}</code></td><td> Maximum z-translation during swipe.</td></tr>
-           </table>
-           @see #ViewPager3D_animate_alpha
-           @see #ViewPager3D_overscroll_animation_duration
-           @see #ViewPager3D_overscroll_rotation
-           @see #ViewPager3D_overscroll_translation
-           @see #ViewPager3D_swipe_rotation
-           @see #ViewPager3D_swipe_translation
-         */
-        public static final int[] ViewPager3D = {
-            0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003,
-            0x7f010004, 0x7f010005
-        };
-        /**
-          <p>
-          @attr description
-           if true the alpha value of the children views is decreased as they scroll out of the screen. Default is false because of performance issues 
-
-
-          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          <p>This is a private symbol.
-          @attr name android:animate_alpha
-        */
-        public static final int ViewPager3D_animate_alpha = 5;
-        /**
-          <p>
-          @attr description
-           Duration of animation when user releases the over scroll. Default is 400 ms. 
-
-
-          <p>Must be an integer value, such as "<code>100</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          <p>This is a private symbol.
-          @attr name android:overscroll_animation_duration
-        */
-        public static final int ViewPager3D_overscroll_animation_duration = 4;
-        /**
-          <p>
-          @attr description
-           Determines the amount of rotation during over scroll. Maximum rotation angle is 90 degrees divided by thisÏ value. Default is 2 
-
-
-          <p>Must be a floating point value, such as "<code>1.2</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          <p>This is a private symbol.
-          @attr name android:overscroll_rotation
-        */
-        public static final int ViewPager3D_overscroll_rotation = 0;
-        /**
-          <p>
-          @attr description
-          
-        determines the maximum amount of translation along the z-axis during the overscroll. 
-        Default is 150.
-        
-
-
-          <p>Must be an integer value, such as "<code>100</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          <p>This is a private symbol.
-          @attr name android:overscroll_translation
-        */
-        public static final int ViewPager3D_overscroll_translation = 1;
-        /**
-          <p>
-          @attr description
-           Controls maximum rotation during swipe. Maximum rotation angle is 90 degrees divided by this value. Default is 3. 
-
-
-          <p>Must be a floating point value, such as "<code>1.2</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          <p>This is a private symbol.
-          @attr name android:swipe_rotation
-        */
-        public static final int ViewPager3D_swipe_rotation = 2;
-        /**
-          <p>
-          @attr description
-           Maximum z-translation during swipe. Default = 100. 
-
-
-          <p>Must be an integer value, such as "<code>100</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          <p>This is a private symbol.
-          @attr name android:swipe_translation
-        */
-        public static final int ViewPager3D_swipe_translation = 3;
-    };
 }
