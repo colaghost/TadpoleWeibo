@@ -12,7 +12,6 @@ import android.support.v4.view.ViewPagerEX;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +20,6 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import com.weibo.sdk.android.demo.R;
 
 public class Launcher extends ViewPagerEX {
 
@@ -33,6 +29,7 @@ public class Launcher extends ViewPagerEX {
 
     static final int ROW_COUNT = 6;
     static final int COL_COUNT = 3;
+    static final int OFFSET_LIMIT = 2;
 
     int mNumColumns = COL_COUNT;
     int mNumRows = ROW_COUNT;
@@ -119,7 +116,7 @@ public class Launcher extends ViewPagerEX {
             mLauncherPageList.add(launcherPage);
         }
 
-        this.setOffscreenPageLimit(mLauncherPageList.size());
+        this.setOffscreenPageLimit(OFFSET_LIMIT);
         mPageAdapter = new PagerAdapter() {
 
             @Override

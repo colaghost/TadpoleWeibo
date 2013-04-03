@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pageItemBg"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:background="@drawable/blue" >
 
-    <RelativeLayout
-        android:id="@+id/pageItemBg"
+    <org.tadpoleweibo.widget.AsyncImageView
+        android:id="@+id/imgview_image"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_centerInParent="true"
-        android:background="@drawable/blue"
-        android:gravity="center" >
+        android:src="@drawable/weibosdk_bg_btn" />
 
-        <TextView
-            android:id="@+id/pageItemText"
-            android:layout_width="115dp"
-            android:layout_height="110dp"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:textColor="#ffffff"
-            android:textSize="18sp" >
-        </TextView>
+    <TextView
+        android:id="@+id/txtview_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/weibosdk_text_num_gray"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:lines="1"
+        android:text="正在加载"
+        android:textColor="#ffffff"
+        android:textSize="12sp" >
+    </TextView>
 
-        <ImageView
-            android:id="@+id/pageItemDeleteBtn"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
-            android:src="@drawable/rootblock_btn_remove" />
-    </RelativeLayout>
+    <ImageView
+        android:id="@+id/pageItemDeleteBtn"
+        android:layout_width="23dp"
+        android:layout_height="23dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:padding="4dp"
+        android:src="@drawable/rootblock_btn_remove" />
 
 </RelativeLayout>

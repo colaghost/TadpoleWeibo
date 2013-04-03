@@ -135,6 +135,10 @@ public class HttpManager {
 		}
 	}
 	
+	
+	
+	
+	
 	private static HttpClient getNewHttpClient() {
 		try {
 			KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());

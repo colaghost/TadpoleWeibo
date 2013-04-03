@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.tadpole.R;
 import org.tadpoleweibo.common.TLog;
 
 import android.app.Activity;
@@ -15,6 +16,7 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -23,11 +25,11 @@ import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 
-import com.weibo.sdk.android.demo.R;
-
 public class LauncherPage extends ViewGroup {
 
     static final String TAG = "LauncherPage";
+
+    static final Rect sRect = new Rect();
 
     private int mPageDraPos = INVALID_POSITION;
     private int mPageDropPos = INVALID_POSITION;
@@ -160,7 +162,7 @@ public class LauncherPage extends ViewGroup {
 
     int[] getWindowLocationByPos(int position) {
         int[] location = getLocationByPos(position);
-        location[1] += getStatusHeight((Activity) getContext());
+        location[1] += getStatusHeight((Activity) getContext()) + mFeatureMetrics.titleBarHeight;
         return location;
     }
 
@@ -384,9 +386,20 @@ public class LauncherPage extends ViewGroup {
             childH = (measureHeight - pTop - pBottom - (view.mLauncher.mNumRows - 1) * rSpace) / view.mLauncher.mNumRows;
 
             isCaculate = true;
+
+
+
+            Activity act = (Activity) view.getContext();
+            Window window = act.getWindow();
+            window.getDecorView().getWindowVisibleDisplayFrame(sRect);
+            statusBarHeight = sRect.top;
+
+            int contentViewTop = window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
+            titleBarHeight = contentViewTop - statusBarHeight;
+
         }
 
-        int pLeft, pRight, pTop, pBottom, rSpace, cSpace, childW, childH;
+        int pLeft, pRight, pTop, pBottom, rSpace, cSpace, childW, childH, titleBarHeight, statusBarHeight;
 
         public void print() {
             JSONObject jsonObj = new JSONObject();
@@ -588,7 +601,7 @@ public class LauncherPage extends ViewGroup {
 
         int[] fromWindowLocatioin = { 0, 0 };
         System.arraycopy(fromLocation, 0, fromWindowLocatioin, 0, 2);
-        fromWindowLocatioin[1] += getStatusHeight((Activity) getContext());
+        fromWindowLocatioin[1] += getStatusHeight((Activity) getContext()) + mFeatureMetrics.titleBarHeight;
 
         mLauncher.addViewToAnimLayout(viewFroAni, fromWindowLocatioin, mFeatureMetrics.childH, mFeatureMetrics.childW);
         mLauncher.attachToAniAndStartAni(viewFroAni, ani, new AnimationListener() {

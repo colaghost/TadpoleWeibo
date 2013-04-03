@@ -2,6 +2,7 @@ package com.weibo.sdk.android.demo;
 
 import java.text.SimpleDateFormat;
 
+import org.tadpole.R;
 import org.tadpoleweibo.widget.Launcher;
 
 import android.app.Activity;
@@ -107,6 +108,7 @@ public class MainActivity extends Activity {
             cancelBtn.setVisibility(View.VISIBLE);
             String date = new java.text.SimpleDateFormat("yyyy/MM/dd hh:mm:ss").format(new java.util.Date(MainActivity.accessToken.getExpiresTime()));
             mText.setText("access_token 仍在有效期内,无需再次登录: \naccess_token:" + MainActivity.accessToken.getToken() + "\n有效期：" + date);
+            startLauncherActivity();
         } else {
             mText.setText("使用SSO登录前，请检查手机上是否已经安装新浪微博客户端，目前仅3.0.0及以上微博客户端版本支持SSO；如果未安装，将自动转为Oauth2.0进行认证");
         }
@@ -132,6 +134,13 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void startLauncherActivity() {
+        Intent intent = new Intent();
+        intent.setClass(MainActivity.this, LauncherActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     class AuthDialogListener implements WeiboAuthListener {
 
         @Override
@@ -153,9 +162,7 @@ public class MainActivity extends Activity {
                 AccessTokenKeeper.keepAccessToken(MainActivity.this, accessToken);
                 Toast.makeText(MainActivity.this, "认证成功", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this, LauncherActivity.class);
-                MainActivity.this.startActivity(intent);
+                MainActivity.this.startLauncherActivity();
             }
         }
 

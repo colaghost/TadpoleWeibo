@@ -3,6 +3,8 @@ package com.xiaotingzhong.app;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.tadpole.R;
+import org.tadpoleweibo.widget.AsyncImageView;
 import org.tadpoleweibo.widget.Launcher;
 import org.tadpoleweibo.widget.LauncherListAdapter;
 
@@ -16,10 +18,14 @@ import android.widget.TextView;
 
 import com.weibo.sdk.android.WeiboException;
 import com.weibo.sdk.android.api.AccountAPI;
+import com.weibo.sdk.android.api.ApiFactory;
+import com.weibo.sdk.android.api.FriendshipsAPI;
 import com.weibo.sdk.android.api.UsersAPI;
 import com.weibo.sdk.android.api.response.Account;
-import com.weibo.sdk.android.api.response.UsersShow;
-import com.weibo.sdk.android.demo.R;
+import com.weibo.sdk.android.api.response.User;
+import com.weibo.sdk.android.api.response.builder.FriendShipsBuilder;
+import com.weibo.sdk.android.api.response.builder.UserBuilder;
+import com.weibo.sdk.android.demo.MainActivity;
 import com.weibo.sdk.android.keep.AccessTokenKeeper;
 import com.weibo.sdk.android.net.RequestListener;
 
@@ -31,6 +37,8 @@ public class LauncherActivity extends Activity {
 
     static final String TAG = "LauncherActivity";
 
+    static final int FILL_LAUNCHER_DATA = 1;
+
     private Launcher mLauncher;
 
     @Override
@@ -41,23 +49,26 @@ public class LauncherActivity extends Activity {
         fetchUid();
     }
 
-    public void fillLauncherData(final ArrayList<UsersShow> userList) {
-
+    public void fillLauncherData(final ArrayList<User> userList) {
         final LauncherActivity me = this;
         this.runOnUiThread(new Runnable() {
-
             @Override
             public void run() {
-
-                LauncherListAdapter<UsersShow> test = new LauncherListAdapter<UsersShow>(userList) {
+                LauncherListAdapter<User> test = new LauncherListAdapter<User>(userList) {
                     @Override
                     public View getView(final int position, View convertView, ViewGroup parent) {
 
                         final View view = LayoutInflater.from(me).inflate(R.layout.launche_page_item, null);
-                        TextView textView = (TextView) view.findViewById(R.id.pageItemText);
+                        TextView textView = (TextView) view.findViewById(R.id.txtview_name);
+                        AsyncImageView imageView = (AsyncImageView) view.findViewById(R.id.imgview_image);
                         View deleteBtnView = view.findViewById(R.id.pageItemDeleteBtn);
-                        UsersShow item = userList.get(position);
+
+                        User item = userList.get(position);
+
                         textView.setText(item.screen_name);
+                        imageView.setImageURL(item.profile_image_url);
+
+
                         final View bg = view.findViewById(R.id.pageItemBg);
                         deleteBtnView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -91,7 +102,6 @@ public class LauncherActivity extends Activity {
                     }
                 };
                 mLauncher.setDataAdapter(test);
-
             }
         });
     }
@@ -118,7 +128,9 @@ public class LauncherActivity extends Activity {
         });
     }
 
-    public void fetchUserInfo(int uid) {
+    private ArrayList<User> mUserList = new ArrayList<User>();
+
+    public void fetchUserInfo(final int uid) {
         new UsersAPI(AccessTokenKeeper.readAccessToken(this)).show(uid, new RequestListener() {
 
             @Override
@@ -132,10 +144,35 @@ public class LauncherActivity extends Activity {
             @Override
             public void onComplete(String response) {
                 Log.i(TAG, "response = " + response);
-                UsersShow usersShow = UsersShow.fromResponse(response);
-                ArrayList<UsersShow> list = new ArrayList<UsersShow>();
-                list.add(usersShow);
-                LauncherActivity.this.fillLauncherData(list);
+                User usersShow = UserBuilder.fromResponse(response);
+                mUserList.add(usersShow);
+
+                LauncherActivity.this.fetchUserFriends(uid);
+            }
+        });
+    }
+
+    public void fetchUserFriends(int uid) {
+        ApiFactory.getFriendShipsAPI(this).friends(uid, 50, 0, true, new RequestListener() {
+
+            @Override
+            public void onIOException(IOException e) {
+            }
+
+            @Override
+            public void onError(WeiboException e) {
+            }
+
+            @Override
+            public void onComplete(String response) {
+                try {
+                    ArrayList<User> list = FriendShipsBuilder.fromFriends(response);
+                    mUserList.addAll(list);
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                LauncherActivity.this.fillLauncherData(mUserList);
             }
         });
     }

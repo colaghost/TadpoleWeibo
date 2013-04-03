@@ -3,6 +3,7 @@ package com.weibo.sdk.android;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.tadpole.R;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -35,7 +36,6 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
-import com.weibo.sdk.android.demo.R;
 import com.weibo.sdk.android.util.Utility;
 /**
  * 用来显示用户认证界面的dialog，封装了一个webview，通过redirect地址中的参数来获取accesstoken
