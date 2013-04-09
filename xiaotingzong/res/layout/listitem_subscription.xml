@@ -1,52 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="-1"
-    android:layout_height="@7F060014"
-    android:background="@android:0106000B"
-    android:minHeight="@7F060014"
-    android:orientation="0" >
+    android:layout_width="fill_parent"
+    android:layout_height="@dimen/list_item_size_large"
+    android:background="@android:color/white"
+    android:minHeight="@dimen/list_item_size_large"
+    android:orientation="horizontal" >
 
     <org.tadpoleweibo.widget.AsyncImageView
-        android:id="@7F05001C"
+        android:id="@+id/asyncimgview_"
         android:layout_width="36.0dip"
         android:layout_height="36.0dip"
-        android:layout_gravity="0x00000013"
-        android:layout_marginLeft="@7F060007"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/padding_medium"
         android:adjustViewBounds="false"
-        android:scaleType="1"
-        android:src="@7F02000B" >
+        android:scaleType="centerCrop"
+        android:src="@drawable/weibosdk_close_selector" >
     </org.tadpoleweibo.widget.AsyncImageView>
 
     <TextView
-        android:id="@7F05001D"
-        android:layout_width="-2"
-        android:layout_height="-1"
-        android:layout_marginLeft="@7F060007"
+        android:id="@id/txtview_screen_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_medium"
         android:layout_weight="1.0"
-        android:gravity="0x00000010"
-        android:textAppearance="@7F0A0009"
-        android:textColor="@7F09000B" >
+        android:gravity="center_vertical"
+        android:text="loading"
+        android:textAppearance="@style/TextAppearance.Medium"
+        android:textColor="@color/weibosdk_text_num_gray" >
     </TextView>
 
     <ImageView
-        android:layout_width="-2"
-        android:layout_height="-1"
-        android:layout_gravity="0x00000015"
-        android:paddingBottom="@7F060006"
-        android:paddingTop="@7F060006"
-        android:scaleType="1"
-        android:src="@7F02002F" >
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingBottom="@dimen/padding_small"
+        android:paddingTop="@dimen/padding_small"
+        android:scaleType="fitXY"
+        android:src="@drawable/social_split_line" >
     </ImageView>
 
     <ImageButton
-        android:id="@7F05000F"
-        android:layout_width="@7F060014"
-        android:layout_height="@7F060014"
-        android:layout_gravity="0x00000015"
-        android:background="@android:0106000D"
+        android:id="@+id/imgbtn_add"
+        style="@style/Tadpole.ImageButton"
+        android:layout_width="@dimen/padding_medium"
+        android:layout_height="@dimen/padding_medium"
+        android:layout_gravity="center_vertical"
         android:padding="20.0dip"
-        android:scaleType="1"
-        android:src="@7F020014" >
+        android:scaleType="fitXY"
+        android:src="@drawable/icon_addmsg" >
     </ImageButton>
 
 </LinearLayout>

@@ -31,23 +31,23 @@
         android:orientation="vertical" >
 
         <ImageButton
-            style="@style/Tadpole.ImageButton"
+            style="@style/Tadpole.ImageButton.Launcher"
             android:src="@drawable/selector_rootblock_icon_add" >
         </ImageButton>
 
         <ImageButton
-            style="@style/Tadpole.ImageButton"
+            style="@style/Tadpole.ImageButton.Launcher"
             android:src="@drawable/selector_rootblock_icon_add" >
         </ImageButton>
 
         <ImageButton
-            style="@style/Tadpole.ImageButton"
+            style="@style/Tadpole.ImageButton.Launcher"
             android:src="@drawable/selector_rootblock_icon_add" >
         </ImageButton>
 
         <ImageButton
-            android:id="@+id/imgbutton_add"
-            style="@style/Tadpole.ImageButton"
+            android:id="@+id/imgbtn_add"
+            style="@style/Tadpole.ImageButton.Launcher"
             android:src="@drawable/selector_rootblock_icon_add" >
         </ImageButton>
     </LinearLayout>

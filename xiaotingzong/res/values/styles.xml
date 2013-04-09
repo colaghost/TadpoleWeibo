@@ -5,17 +5,37 @@
     <style name="Tadpole"></style>
 
     <style name="Tadpole.LauncherPage">
-        <item name="android:paddingBottom">25dp</item>
-        <item name="android:paddingLeft">25dp</item>
-        <item name="android:paddingRight">70dp</item>
-        <item name="android:paddingTop">25dp</item>
+        <item name="android:paddingBottom">@dimen/launcher_page_padding_bottom</item>
+        <item name="android:paddingLeft">@dimen/launcher_page_padding_left</item>
+        <item name="android:paddingRight">@dimen/launcher_page_padding_right</item>
+        <item name="android:paddingTop">@dimen/launcher_page_padding_top</item>
     </style>
-
+    <!--  -->
     <style name="Tadpole.ImageButton">
         <item name="android:background">@android:color/transparent</item>
+        <item name="android:contentDescription">hello world</item>
+    </style>
+
+    <style name="Tadpole.ImageButton.Launcher" parent="Tadpole.ImageButton">
         <item name="android:layout_width">36dp</item>
         <item name="android:layout_height">36dp</item>
-        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginBottom">@dimen/launcher_page_padding_bottom</item>
+    </style>
+
+    <style name="TextAppearance.Small" parent="Tadpole">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+    </style>
+
+    <style name="TextAppearance.Medium" parent="Tadpole">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+    </style>
+
+    <style name="TextAppearance.Large" parent="Tadpole">
+        <item name="android:textSize">42sp</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
 </resources>

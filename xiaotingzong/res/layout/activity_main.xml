@@ -39,7 +39,7 @@
         android:text="注销"
         android:visibility="invisible" />
 
-       <org.tadpoleweibo.widget.Launcher
+    <org.tadpoleweibo.widget.Launcher
         android:id="@+id/launcher"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

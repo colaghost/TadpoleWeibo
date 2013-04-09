@@ -1,7 +1,8 @@
 package org.tadpoleweibo.widget;
 
+import org.tadpole.R;
+
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -11,12 +12,11 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 
 public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callback {
     static final String TAG = "MarqueeTextSurfaceView";
-    private int drawableWidth = 0;
+    private int mDrawableWidth = 0;
     private boolean forward = true;
     private boolean isSurfaceValid = false;
     private Drawable mDrawable;
@@ -26,145 +26,113 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
     private MyThread myThread;
     private float xOffset = 0.0F;
 
-    public SurfaceImageView(Context paramContext) {
-        super(paramContext);
+    public SurfaceImageView(Context context) {
+        super(context);
         init();
     }
 
-    public SurfaceImageView(Context paramContext, AttributeSet paramAttributeSet) {
-        super(paramContext, paramAttributeSet);
+    public SurfaceImageView(Context context, AttributeSet attr) {
+        super(context, attr);
         init();
     }
 
-    public SurfaceImageView(Context paramContext, AttributeSet paramAttributeSet, int paramInt) {
-        super(paramContext, paramAttributeSet, paramInt);
+    public SurfaceImageView(Context context, AttributeSet attr, int style) {
+        super(context, attr, style);
         init();
     }
 
-    private void handlerDrawInternal(Canvas paramCanvas) {
-        if (paramCanvas == null)
-            ;
-        int i;
-        do {
+    private void handlerDrawInternal(Canvas canvas) {
+        if (canvas == null || mDrawable == null) {
             return;
-            i = this.mHolder.getSurfaceFrame().width();
-        } while (this.mDrawable == null);
-        this.matrix.reset();
-        if (this.forward) {
-            this.xOffset = (0.8F + this.xOffset);
-            if (this.xOffset > this.drawableWidth - i)
-                this.forward = false;
         }
-        while (true) {
-            this.matrix.postTranslate(-this.xOffset, 0.0F);
-            paramCanvas.setMatrix(this.matrix);
-            this.mDrawable.draw(paramCanvas);
-            break;
-            this.xOffset -= 0.8F;
-            if (this.xOffset >= 0.0F)
-                continue;
-            this.forward = true;
+        int width = mHolder.getSurfaceFrame().width();
+        matrix.reset();
+        if (forward) {
+            xOffset += 0.8f;
+            if (xOffset > (mDrawableWidth - width)) {
+                forward = false;
+            }
+        } else {
+            xOffset -= 0.8f;
+            if (xOffset < 0) {
+                forward = true;
+            }
         }
+        matrix.postTranslate(-xOffset, 0.0F);
+        canvas.setMatrix(matrix);
+        mDrawable.draw(canvas);
     }
 
     public void init() {
-        this.mDrawable = getContext().getResources().getDrawable(2130837537);
-        this.mHolder = getHolder();
-        this.mHolder.addCallback(this);
-        this.myThread = new MyThread(this.mHolder);
-        this.mHolder.setFormat(-2);
+        mHolder = getHolder();
+        mHolder.addCallback(this);
+        myThread = new MyThread(mHolder);
+        mDrawable = getContext().getResources().getDrawable(R.drawable.rootblock_default_bg);
     }
 
-    public void setBitmapDrawable(BitmapDrawable paramBitmapDrawable) {
-        this.mDrawable = paramBitmapDrawable;
+    public void setBitmapDrawable(BitmapDrawable drawable) {
+        mDrawable = drawable;
     }
 
     public void startScroll() {
-        if (!this.isSurfaceValid)
-            ;
-        while (true) {
+        if (!isSurfaceValid)
             return;
-            this.myThread.canRun = true;
-            if (this.myThread.isAlive())
-                continue;
-            this.myThread = new MyThread(this.mHolder);
-            this.myThread.start();
+        myThread.canRun = true;
+        if (!myThread.isAlive()) {
+            myThread = new MyThread(mHolder);
+            myThread.start();
         }
+
     }
 
     public void stopScroll() {
-        this.myThread.canRun = false;
+        myThread.canRun = false;
     }
 
-    public void surfaceChanged(SurfaceHolder paramSurfaceHolder, int paramInt1, int paramInt2, int paramInt3) {
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Log.d("MarqueeTextSurfaceView", "surfaceChanged");
-        paramSurfaceHolder.setFixedSize(paramInt2, paramInt3);
+        holder.setFixedSize(width, height);
+
     }
 
-    public void surfaceCreated(SurfaceHolder paramSurfaceHolder) {
+    public void surfaceCreated(SurfaceHolder holder) {
         Log.d("MarqueeTextSurfaceView", "surfaceCreated");
-        this.isSurfaceValid = true;
+        isSurfaceValid = true;
         startScroll();
-        if (this.mDrawable != null) {
-            this.drawableWidth = this.mDrawable.getIntrinsicWidth();
-            this.mDrawable.setBounds(new Rect(0, 0, this.drawableWidth, paramSurfaceHolder.getSurfaceFrame().height()));
+        if (mDrawable != null) {
+            // scale drawable to fit view height;
+            int drawableHeight = mDrawable.getIntrinsicHeight();
+            int drawableWidth = mDrawable.getIntrinsicWidth();
+            int height = holder.getSurfaceFrame().height();
+            mDrawableWidth = (int) (1.0f * height * drawableWidth / drawableHeight);
+            mDrawable.setBounds(new Rect(0, 0, mDrawableWidth, height));
         }
     }
 
-    public void surfaceDestroyed(SurfaceHolder paramSurfaceHolder) {
+    public void surfaceDestroyed(SurfaceHolder holder) {
         Log.d("MarqueeTextSurfaceView", "surfaceDestroyed");
-        this.isSurfaceValid = false;
+        isSurfaceValid = false;
     }
 
     class MyThread extends Thread {
         public boolean canRun = true;
-        private SurfaceHolder holder;
+        private SurfaceHolder mHolder;
 
         public MyThread(SurfaceHolder holder) {
-            this.holder = holder;
+            mHolder = holder;
         }
 
         public void run() {
-            Canvas localCanvas = null;
-            while (true) {
-                if ((!this.canRun) || (!SurfaceImageView.this.isSurfaceValid))
-                    ;
+            Canvas canvas = null;
+            while (canRun && isSurfaceValid) {
+                canvas = mHolder.lockCanvas();
+                handlerDrawInternal(canvas);
+                mHolder.unlockCanvasAndPost(canvas);
                 try {
-                    SurfaceImageView.this.xOffset = 0.0F;
-                    localCanvas = this.holder.lockCanvas();
-                    SurfaceImageView.this.handlerDrawInternal(localCanvas);
-                    try {
-                        localCanvas = this.holder.lockCanvas();
-                        SurfaceImageView.this.handlerDrawInternal(localCanvas);
-                        if (localCanvas != null)
-                            this.holder.unlockCanvasAndPost(localCanvas);
-                        try {
-                            Thread.sleep(40L);
-                        } catch (InterruptedException localInterruptedException) {
-                            localInterruptedException.printStackTrace();
-                        }
-                        continue;
-                    } catch (Exception localException2) {
-                        while (true) {
-                            localException2.printStackTrace();
-                            if (localCanvas == null)
-                                continue;
-                            this.holder.unlockCanvasAndPost(localCanvas);
-                        }
-                    } finally {
-                        if (localCanvas != null)
-                            this.holder.unlockCanvasAndPost(localCanvas);
-                    }
-                } catch (Exception localException1) {
-                    while (true) {
-                        localException1.printStackTrace();
-                        if (localCanvas == null)
-                            continue;
-                        this.holder.unlockCanvasAndPost(localCanvas);
-                    }
-                } finally {
-                    if (localCanvas != null)
-                        this.holder.unlockCanvasAndPost(localCanvas);
+                    Thread.sleep(40);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
                 }
             }
         }

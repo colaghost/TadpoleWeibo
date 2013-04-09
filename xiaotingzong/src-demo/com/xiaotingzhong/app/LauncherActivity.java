@@ -1,16 +1,23 @@
 package com.xiaotingzhong.app;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.tadpole.R;
+import org.tadpoleweibo.widget.AsyncImageView;
+import org.tadpoleweibo.widget.Launcher;
+import org.tadpoleweibo.widget.LauncherListAdapter;
+import org.tadpoleweibo.widget.SurfaceImageView;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
 import com.weibo.sdk.android.WeiboException;
 import com.weibo.sdk.android.api.UsersAPI;
 import com.weibo.sdk.android.api.response.User;
@@ -19,13 +26,6 @@ import com.weibo.sdk.android.keep.AccessTokenKeeper;
 import com.weibo.sdk.android.net.RequestListener;
 import com.xiaotingzhong.app.storage.FriendsCacheMgr;
 import com.xiaotingzhong.app.storage.SubscriptionMgr;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import org.tadpoleweibo.widget.AsyncImageView;
-import org.tadpoleweibo.widget.Launcher;
-import org.tadpoleweibo.widget.LauncherListAdapter;
-import org.tadpoleweibo.widget.SurfaceImageView;
 
 public class LauncherActivity extends Activity {
     static final String TAG = "LauncherActivity";
@@ -35,47 +35,45 @@ public class LauncherActivity extends Activity {
     private ArrayList<User> mUserList = new ArrayList();
 
     public void fetchUserFriends(int uid) {
-        SubscriptionMgr localSubscriptionMgr = new SubscriptionMgr(this, uid);
-        fillLauncherData(new FriendsCacheMgr(this, uid).getFriendsByUids(localSubscriptionMgr.getSubscriptedUids()));
+        SubscriptionMgr subscriptionMgr = new SubscriptionMgr(this, uid);
+        fillLauncherData(new FriendsCacheMgr(this, uid).getFriendsByUids(subscriptionMgr.getSubscriptedUids()));
     }
 
     public void fetchUserInfo(final int uid) {
         new UsersAPI(AccessTokenKeeper.readAccessToken(this)).show(uid, new RequestListener() {
-            public void onComplete(String paramString) {
-                Log.i("LauncherActivity", "response = " + paramString);
-                User localUser = UserBuilder.fromResponse(paramString);
-                LauncherActivity.this.mUserList.add(localUser);
-                LauncherActivity.this.fetchUserFriends(uid);
+            public void onComplete(String response) {
+                User localUser = UserBuilder.fromResponse(response);
+                mUserList.add(localUser);
+                fetchUserFriends(uid);
             }
 
-            public void onError(WeiboException paramWeiboException) {
+            public void onError(WeiboException weiboE) {
             }
 
-            public void onIOException(IOException paramIOException) {
+            public void onIOException(IOException e) {
             }
         });
     }
 
-    public void fillLauncherData(final ArrayList<User> paramArrayList) {
+    public void fillLauncherData(final ArrayList<User> userList) {
         final LauncherActivity me = this;
         runOnUiThread(new Runnable() {
             public void run() {
-                LauncherListAdapter<User> adapter = new LauncherListAdapter(paramArrayList) {
-                    public View getView(int paramInt, View paramView, ViewGroup paramViewGroup) {
-                        View localView1 = LayoutInflater.from(me).inflate(2130903043, null);
-                        TextView localTextView = (TextView) localView1.findViewById(2131034138);
-                        AsyncImageView localAsyncImageView = (AsyncImageView) localView1.findViewById(2131034137);
-                        View localView2 = localView1.findViewById(2131034139);
-                        User localUser = (User) paramArrayList.get(paramInt);
-                        localTextView.setText(localUser.screen_name);
-                        localAsyncImageView.setImageURL(localUser.profile_image_url);
-                        localView1.findViewById(2131034136);
-                        localView2.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View paramView) {
+                LauncherListAdapter<User> adapter = new LauncherListAdapter<User>(userList) {
+                    public View getView(int postion, View convertView, ViewGroup parent) {
+                        View v = LayoutInflater.from(me).inflate(R.layout.launche_page_item, null);
+                        TextView txtview = (TextView) v.findViewById(R.id.txtview_screen_name);
+                        AsyncImageView asyncImageView = (AsyncImageView) v.findViewById(R.id.asyncimgview_profile);
+                        View btnDel = v.findViewById(2131034139);
+                        User user = (User) userList.get(postion);
+                        txtview.setText(user.screen_name);
+                        asyncImageView.setImageURL(user.profile_image_url);
+                        btnDel.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View view) {
                                 //                LauncherActivity.2.1.this.delete(this.val$position);
                             }
                         });
-                        return localView1;
+                        return v;
                     }
                 };
                 LauncherActivity.this.mLauncher.setDataAdapter(adapter);
@@ -83,18 +81,17 @@ public class LauncherActivity extends Activity {
         });
     }
 
-    public void onCreate(Bundle paramBundle) {
-        super.onCreate(paramBundle);
-        getWindow().setFlags(16777216, 16777216);
-        setContentView(2130903040);
-        this.mLauncher = ((Launcher) findViewById(2131034125));
-        this.mImgViewBg = ((SurfaceImageView) findViewById(2131034124));
-        this.mImgBtnAdd = ((ImageButton) findViewById(2131034127));
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        setContentView(R.layout.activity_launcher);
+        this.mLauncher = ((Launcher) findViewById(R.id.launcher));
+        this.mImgViewBg = ((SurfaceImageView) findViewById(R.id.surfaceimgview_bg));
+        this.mImgBtnAdd = ((ImageButton) findViewById(R.id.imgbtn_add));
         this.mImgBtnAdd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View paramView) {
-                Intent localIntent = new Intent();
-                localIntent.setClass(paramView.getContext(), SubscriptionActivity.class);
-                LauncherActivity.this.startActivity(localIntent);
+                Intent intent = new Intent();
+                //                localIntent.setClass(paramView.getContext(), SubscriptionActivity.class);
+                //                LauncherActivity.this.startActivity(localIntent);
             }
         });
         fetchUserInfo(XTZApplication.curUid);
