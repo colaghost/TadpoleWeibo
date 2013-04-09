@@ -6,20 +6,19 @@ import android.widget.ListAdapter;
 
 public class PageListView<T> extends AbsPageListView<T>
 {
-  private AbsPageListView.OnLoadPageListListener<T> mLoadPageListener = null;
 
-  public PageListView(Context paramContext)
+  public PageListView(Context context)
   {
-    super(paramContext);
+    super(context);
   }
 
-  public PageListView(Context paramContext, AttributeSet paramAttributeSet)
+  public PageListView(Context context, AttributeSet attr)
   {
-    super(paramContext, paramAttributeSet);
+    super(context, attr);
   }
 
-  public void setAdapter(ListAdapter paramListAdapter)
+  public void setAdapter(ListAdapter adapter)
   {
-    super.setAdapter(paramListAdapter);
+    super.setAdapter(adapter);
   }
 }

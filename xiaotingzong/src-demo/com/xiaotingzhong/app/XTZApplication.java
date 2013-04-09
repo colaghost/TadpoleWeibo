@@ -1,11 +1,15 @@
 package com.xiaotingzhong.app;
 
+import com.weibo.sdk.android.api.response.User;
+
 import android.app.Application;
 import android.content.res.Configuration;
 
 public class XTZApplication extends Application {
     public static XTZApplication app;
-    public static int curUid;
+
+    public int curUid;
+    protected User curUser;
 
     public void onConfigurationChanged(Configuration paramConfiguration) {
         super.onConfigurationChanged(paramConfiguration);

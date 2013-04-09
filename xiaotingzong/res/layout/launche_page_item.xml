@@ -4,20 +4,19 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <org.tadpoleweibo.widget.AsyncImageView
+    <org.tadpoleweibo.widget.AsyncRoundImageView
         android:id="@+id/asyncimgview_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:scaleType="centerCrop" >
-    </org.tadpoleweibo.widget.AsyncImageView>
+    </org.tadpoleweibo.widget.AsyncRoundImageView>
 
     <TextView
         android:id="@+id/txtview_screen_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@color/weibosdk_dialog_title_blue"
+        android:background="@color/weibosdk_text_num_gray"
         android:ellipsize="end"
         android:gravity="center"
         android:lines="1"

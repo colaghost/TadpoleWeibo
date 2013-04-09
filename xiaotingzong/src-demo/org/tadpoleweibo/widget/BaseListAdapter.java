@@ -24,25 +24,25 @@ public abstract class BaseListAdapter<T, V extends View> extends BaseAdapter {
     }
 
     public int getCount() {
-        if (this.mList != null)
-            ;
-        for (int i = this.mList.size();; i = 0)
-            return i;
+        if (this.mList == null) {
+            return 0;
+        }
+        return mList.size();
     }
 
-    public Object getItem(int postion) {
-        return mList.get(postion);
+    public Object getItem(int position) {
+        return mList.get(position);
     }
 
-    public T getItemData(int postion) {
+    public T getItemData(int position) {
         if (this.mList == null) {
             return null;
         }
-        return mList.get(postion);
+        return mList.get(position);
     }
 
-    public long getItemId(int postion) {
-        return postion;
+    public long getItemId(int position) {
+        return position;
     }
 
     protected LayoutInflater getLayoutInflater() {

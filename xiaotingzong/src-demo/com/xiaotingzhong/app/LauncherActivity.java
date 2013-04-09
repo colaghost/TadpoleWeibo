@@ -3,16 +3,14 @@ package com.xiaotingzhong.app;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.json.JSONObject;
 import org.tadpole.R;
-import org.tadpoleweibo.widget.AsyncImageView;
+import org.tadpoleweibo.widget.AsyncRoundImageView;
 import org.tadpoleweibo.widget.Launcher;
 import org.tadpoleweibo.widget.LauncherListAdapter;
 import org.tadpoleweibo.widget.SurfaceImageView;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.audiofx.AcousticEchoCanceler;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,10 +32,15 @@ import com.xiaotingzhong.app.storage.SubscriptionMgr;
 
 public class LauncherActivity extends Activity {
     static final String TAG = "LauncherActivity";
+
+    static final int REQUEST_CODE_SUBSCRIPT = 1;
+
     private ImageButton mImgBtnAdd;
     private SurfaceImageView mImgViewBg;
     private Launcher mLauncher;
     private ArrayList<User> mUserList = new ArrayList();
+
+    private LauncherListAdapter<User> mLauncherAdapter = null;
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -46,21 +49,41 @@ public class LauncherActivity extends Activity {
         this.mImgViewBg = ((SurfaceImageView) findViewById(R.id.surfaceimgview_bg));
         this.mImgBtnAdd = ((ImageButton) findViewById(R.id.imgbtn_add));
         this.mImgBtnAdd.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View paramView) {
+            public void onClick(View v) {
                 Intent intent = new Intent();
-                //                localIntent.setClass(paramView.getContext(), SubscriptionActivity.class);
-                //                LauncherActivity.this.startActivity(localIntent);
+                intent.setClass(v.getContext(), SubscriptionActivity.class);
+                LauncherActivity.this.startActivityForResult(intent, REQUEST_CODE_SUBSCRIPT);
             }
         });
+
+        final LauncherActivity me = this;
+        mLauncherAdapter = new LauncherListAdapter<User>(mUserList) {
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = LayoutInflater.from(me).inflate(R.layout.launche_page_item, null);
+                TextView txtview = (TextView) v.findViewById(R.id.txtview_screen_name);
+                AsyncRoundImageView asyncImageView = (AsyncRoundImageView) v.findViewById(R.id.asyncimgview_profile);
+                View btnDel = v.findViewById(R.id.imgview_delete);
+                User user = (User) mUserList.get(position);
+                txtview.setText(user.screen_name);
+                asyncImageView.setImageURL(user.profile_image_url);
+
+                btnDel.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        //                LauncherActivity.2.1.this.delete(this.val$position);
+                    }
+                });
+                return v;
+            }
+        };
+
+        mLauncher.setDataAdapter(mLauncherAdapter);
+
         getUid();
     }
 
-    public void fetchUserFriends(int uid) {
-        Log.d(TAG, "fetchUserFriends " + mUserList.size());
-
-        SubscriptionMgr subscriptionMgr = new SubscriptionMgr(this, uid);
-        ArrayList<User> usrLst = new FriendsCacheMgr(this, uid).getFriendsByUids(subscriptionMgr.getSubscriptedUids());
-        mUserList.addAll(usrLst);
+    public void fetchUserFriends() {
+        SubscriptionMgr subscriptionMgr = new SubscriptionMgr(this, XTZApplication.app.curUid);
+        ArrayList<User> usrLst = new FriendsCacheMgr(this, XTZApplication.app.curUid).getFriendsByUids(subscriptionMgr.getSubscriptedUids());
         fillLauncherData(usrLst);
     }
 
@@ -76,8 +99,8 @@ public class LauncherActivity extends Activity {
 
             @Override
             public void onComplete(String response) {
-                XTZApplication.curUid = Account.fromGetUid(response).uid;
-                fetchUserInfo(XTZApplication.curUid);
+                XTZApplication.app.curUid = Account.fromGetUid(response).uid;
+                fetchUserInfo(XTZApplication.app.curUid);
             }
         });
     }
@@ -86,9 +109,15 @@ public class LauncherActivity extends Activity {
         Log.d(TAG, "fetchUserInfo " + mUserList.size());
         new UsersAPI(AccessTokenKeeper.readAccessToken(this)).show(uid, new RequestListener() {
             public void onComplete(String response) {
-                User user = UserBuilder.fromResponse(response);
-                mUserList.add(user);
-                fetchUserFriends(uid);
+                User user = null;
+                try {
+                    user = UserBuilder.fromResponse(response);
+                    XTZApplication.app.curUser = user;
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                fetchUserFriends();
             }
 
             public void onError(WeiboException weiboE) {
@@ -101,33 +130,58 @@ public class LauncherActivity extends Activity {
     }
 
     public void fillLauncherData(final ArrayList<User> userList) {
+        userList.add(0, XTZApplication.app.curUser);
+        Log.d(TAG, "fillLauncherData " + userList.size());
+        mUserList = userList;
+        mLauncherAdapter.setList(mUserList);
 
         final LauncherActivity me = this;
         runOnUiThread(new Runnable() {
+            @Override
             public void run() {
-                LauncherListAdapter<User> adapter = new LauncherListAdapter<User>(userList) {
-                    public View getView(int postion, View convertView, ViewGroup parent) {
-                        View v = LayoutInflater.from(me).inflate(R.layout.launche_page_item, null);
-                        TextView txtview = (TextView) v.findViewById(R.id.txtview_screen_name);
-                        AsyncImageView asyncImageView = (AsyncImageView) v.findViewById(R.id.asyncimgview_profile);
-                        View btnDel = v.findViewById(R.id.imgview_delete);
-                        User user = (User) userList.get(postion);
-                        txtview.setText(user.screen_name);
-
-                        asyncImageView.setImageURL(user.profile_image_url);
-
-                        btnDel.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View view) {
-                                //                LauncherActivity.2.1.this.delete(this.val$position);
-                            }
-                        });
-                        return v;
-                    }
-                };
-                LauncherActivity.this.mLauncher.setDataAdapter(adapter);
+                mLauncherAdapter.notifyDataSetChanged();
             }
         });
+
+        //        runOnUiThread(new Runnable() {
+        //            public void run() {
+        //                LauncherListAdapter<User> adapter = new LauncherListAdapter<User>(userList) {
+        //                    public View getView(int postion, View convertView, ViewGroup parent) {
+        //                        View v = LayoutInflater.from(me).inflate(R.layout.launche_page_item, null);
+        //                        TextView txtview = (TextView) v.findViewById(R.id.txtview_screen_name);
+        //                        AsyncRoundImageView asyncImageView = (AsyncRoundImageView) v.findViewById(R.id.asyncimgview_profile);
+        //                        View btnDel = v.findViewById(R.id.imgview_delete);
+        //                        User user = (User) userList.get(postion);
+        //                        txtview.setText(user.screen_name);
+        //                        asyncImageView.setImageURL(user.profile_image_url);
+        //
+        //                        btnDel.setOnClickListener(new View.OnClickListener() {
+        //                            public void onClick(View view) {
+        //                                //                LauncherActivity.2.1.this.delete(this.val$position);
+        //                            }
+        //                        });
+        //                        return v;
+        //                    }
+        //                };
+        //                LauncherActivity.this.mLauncher.setDataAdapter(adapter);
+        //            }
+        //        });
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+        case REQUEST_CODE_SUBSCRIPT:
+            fetchUserFriends();
+            break;
+
+        default:
+            break;
+        }
+
+    }
 
 }

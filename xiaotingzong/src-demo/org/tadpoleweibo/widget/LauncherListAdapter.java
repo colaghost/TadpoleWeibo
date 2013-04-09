@@ -1,5 +1,6 @@
 package org.tadpoleweibo.widget;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.tadpoleweibo.common.TLog;
@@ -10,8 +11,20 @@ public abstract class LauncherListAdapter<T> extends LauncherAdapter {
     private List<T> mData = null;
     private Launcher mLauncher = null;
 
-    public LauncherListAdapter(List<T> data) {
-        mData = data;
+    public LauncherListAdapter(List<T> list) {
+        if (list == null) {
+            mData = new ArrayList<T>();
+        } else {
+            mData = list;
+        }
+    }
+
+    public void setList(List<T> list) {
+        if (list == null) {
+            mData = new ArrayList<T>();
+        } else {
+            mData = list;
+        }
     }
 
     void setLauncher(Launcher launcher) {
@@ -44,7 +57,6 @@ public abstract class LauncherListAdapter<T> extends LauncherAdapter {
     @Override
     public void moveFromTo(int from, int to) {
         TLog.debug(TAG, "onMoveFromTo from = %d, to = %d", from, to);
-
         T item = mData.remove(from);
         mData.add(to, item);
 

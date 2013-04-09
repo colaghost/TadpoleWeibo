@@ -126,13 +126,17 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
         public void run() {
             Canvas canvas = null;
             while (canRun && isSurfaceValid) {
-                canvas = mHolder.lockCanvas();
-                handlerDrawInternal(canvas);
-                mHolder.unlockCanvasAndPost(canvas);
                 try {
-                    Thread.sleep(40);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
+                    canvas = mHolder.lockCanvas();
+                    handlerDrawInternal(canvas);
+                    mHolder.unlockCanvasAndPost(canvas);
+                    try {
+                        Thread.sleep(40);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }

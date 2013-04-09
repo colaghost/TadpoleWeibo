@@ -55,12 +55,14 @@ public class Launcher extends ViewPagerEX {
         @Override
         public void onChanged() {
             super.onChanged();
+            notifyDataUpdate();
             Log.d(TAG, "onChanged");
         }
 
         @Override
         public void onInvalidated() {
             super.onInvalidated();
+            notifyDataUpdate();
             Log.d(TAG, "onInvalidated");
         }
 

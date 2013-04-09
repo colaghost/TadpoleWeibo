@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        style="@style/Tadpole.TopBar"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/imgbtn_left"
+            style="@style/Tadpole.ImageButton.TopBar"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/tostart" >
+        </ImageButton>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="好友列表"
+            android:textAppearance="@style/TextAppearance.Large"
+            android:textColor="@android:color/white" >
+        </TextView>
+
+        <ImageButton
+            android:id="@+id/imgbtn_right"
+            style="@style/Tadpole.ImageButton.TopBar"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/selector_rootblock_add_toolbar_added" >
+        </ImageButton>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/edittext_search"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/list_item_size"
+        android:layout_margin="@dimen/padding_medium"
+        android:background="@drawable/bg_edittext_search"
+        android:hint="搜索你感兴趣的微博"
+        android:paddingLeft="@dimen/padding_small" >
+    </EditText>
+
+    <org.tadpoleweibo.widget.PageListView
+        android:id="@+id/listview_friends"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </org.tadpoleweibo.widget.PageListView>
+
+</LinearLayout>

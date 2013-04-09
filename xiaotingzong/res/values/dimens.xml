@@ -16,9 +16,6 @@
     <dimen name="bottom_bar_size">60dp</dimen>
     <dimen name="bottom_bar_size_medium">80dp</dimen>
 
-    <!-- Content -->
-    <dimen name="bottom_bar_size">60dp</dimen>
-
     <!-- Seekbar Thumb -->
     <dimen name="seekbar_thumb_size_medium">8dp</dimen>
     <dimen name="seekbar_thumb_padding_medium">14dp</dimen>
@@ -29,11 +26,5 @@
     <!-- ListView -->
     <dimen name="list_item_size">45dp</dimen>
     <dimen name="list_item_size_large">60dp</dimen>
-
-    <!-- padding or margin -->
-    <dimen name="padding_small">8dp</dimen>
-    <dimen name="padding_medium">12dp</dimen>
-    <dimen name="padding_large">16dp</dimen>
-    
 
 </resources>

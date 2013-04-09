@@ -1,18 +1,11 @@
 package org.tadpoleweibo.widget;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public abstract class AbsPageListView<T> extends PullToRefreshListView implements OnScrollListener {
@@ -46,13 +39,13 @@ public abstract class AbsPageListView<T> extends PullToRefreshListView implement
         super.setAdapter(adapter);
     }
 
-    public void setOnLoadPageListListener(OnLoadPageListListener<T> paramOnLoadPageListListener) {
-        this.mLoadPageListener = paramOnLoadPageListListener;
+    public void setOnLoadPageListListener(OnLoadPageListListener<T> listener) {
+        this.mLoadPageListener = listener;
     }
 
     public void setPageList(PageList<T> pageList) {
         PageListViewAdapter finalAdapter = this.mAdapter;
-        if (finalAdapter != null) {
+        if (finalAdapter != null && pageList != null) {
             finalAdapter.setList(pageList.records);
             this.mTotalCount = pageList.totalCount;
             this.mNextStartIndex += pageList.records.size();

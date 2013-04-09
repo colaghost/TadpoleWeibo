@@ -10,6 +10,13 @@
         <item name="android:paddingRight">@dimen/launcher_page_padding_right</item>
         <item name="android:paddingTop">@dimen/launcher_page_padding_top</item>
     </style>
+
+    <style name="Tadpole.TopBar">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/top_bar_size</item>
+        <item name="android:background">@color/weibosdk_text_num_gray</item>
+    </style>
+
     <!--  -->
     <style name="Tadpole.ImageButton">
         <item name="android:background">@android:color/transparent</item>
@@ -23,18 +30,24 @@
         <item name="android:layout_marginBottom">@dimen/launcher_page_padding_bottom</item>
     </style>
 
+    <style name="Tadpole.ImageButton.TopBar" parent="Tadpole.ImageButton">
+        <item name="android:layout_width">36dp</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
     <style name="TextAppearance.Small" parent="Tadpole">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
     <style name="TextAppearance.Medium" parent="Tadpole">
-        <item name="android:textSize">28sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
     <style name="TextAppearance.Large" parent="Tadpole">
-        <item name="android:textSize">42sp</item>
+        <item name="android:textSize">22sp</item>
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 

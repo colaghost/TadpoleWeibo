@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.json.JSONObject;
 import org.tadpoleweibo.common.FileUtil;
 
+
 public class SubscriptionMgr extends BaseUserFileCache {
     static final String SUBSCRIPT_DIR = "subscript";
     private File mSubscriptDir = null;
@@ -16,27 +17,25 @@ public class SubscriptionMgr extends BaseUserFileCache {
     }
 
     public ArrayList<Integer> getSubscriptedUids() {
-        ArrayList lst = new ArrayList();
+        ArrayList<Integer> uidLst = new ArrayList<Integer>();
         File[] files = this.mSubscriptDir.listFiles();
-        int i = files.length;
-        for (int j = 0;; j++) {
-            if (j >= i)
-                return lst;
-            lst.add(Integer.valueOf(Integer.valueOf(files[j].getName()).intValue()));
+        for (File f : files) {
+            uidLst.add(Integer.valueOf(f.getName()));
         }
+        return uidLst;
     }
 
-    public boolean isSubscripted(int paramInt) {
-        return new File(this.mSubscriptDir.getAbsolutePath() + File.separator + paramInt).exists();
+    public boolean isSubscripted(int uid) {
+        return new File(this.mSubscriptDir.getAbsolutePath() + File.separator + uid).exists();
     }
 
-    public void subscript(int paramInt) {
+    public void subscript(int uid) {
         SubsriptItem localSubsriptItem = new SubsriptItem();
-        FileUtil.writeFile(this.mSubscriptDir.getAbsolutePath() + File.separator + paramInt, localSubsriptItem.toJSONBytes(), false);
+        FileUtil.writeFile(this.mSubscriptDir.getAbsolutePath() + File.separator + uid, localSubsriptItem.toJSONBytes(), false);
     }
 
-    public void unSubscript(int paramInt) {
-        FileUtil.delete(this.mSubscriptDir.getAbsolutePath() + File.separator + paramInt);
+    public void unSubscript(int uid) {
+        FileUtil.delete(this.mSubscriptDir.getAbsolutePath() + File.separator + uid);
     }
 
     public static final class SubsriptItem {

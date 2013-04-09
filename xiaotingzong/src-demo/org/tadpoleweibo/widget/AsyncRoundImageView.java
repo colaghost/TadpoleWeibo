@@ -9,43 +9,83 @@ import java.util.concurrent.TimeUnit;
 import org.tadpole.R;
 import org.tadpoleweibo.widget.image.ImageHelper;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-public class AsyncImageView extends ImageView {
+public class AsyncRoundImageView extends ImageView {
     static ThreadPoolExecutor sExecutor = new ThreadPoolExecutor(5, 6, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(100), new RejectedExecutionHandler() {
         @Override
         public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
         }
     });
 
-
     private Future<?> mFuture;
-
     private boolean mDisableUsingImageUri = false;;
     private Uri mImageUri;
+    private int mCornerRadius = 10;
+    private Paint mMaskPaint = new Paint(1);
+    private Path mMaskPath;
 
 
     public void setAsyncEnable(boolean b) {
         mDisableUsingImageUri = !b;
     }
 
-    public AsyncImageView(Context context) {
+    public AsyncRoundImageView(Context context) {
         super(context);
+        init();
     }
 
-    public AsyncImageView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public AsyncRoundImageView(Context context, AttributeSet attr) {
+        super(context, attr);
+        init();
     }
 
-    public AsyncImageView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public AsyncRoundImageView(Context context, AttributeSet attr, int style) {
+        super(context, attr, style);
+        init();
+    }
+
+    private void generateMaskPath(int width, int height) {
+        this.mMaskPath = new Path();
+        this.mMaskPath.addRoundRect(new RectF(0.0F, 0.0F, width, height), this.mCornerRadius, this.mCornerRadius, Path.Direction.CW);
+        this.mMaskPath.setFillType(Path.FillType.INVERSE_WINDING);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        if ((w != oldw) || (h != oldh))
+            generateMaskPath(w, h);
+
+    }
+
+    @TargetApi(11)
+    private void init() {
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        this.mMaskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+    }
+
+    protected void onDraw(Canvas canvas) {
+        if (canvas.isOpaque())
+            canvas.saveLayerAlpha(0.0F, 0.0F, canvas.getWidth(), canvas.getHeight(), 255, 4);
+        super.onDraw(canvas);
+        if (this.mMaskPath != null)
+            canvas.drawPath(this.mMaskPath, this.mMaskPaint);
     }
 
     @Override
@@ -56,7 +96,7 @@ public class AsyncImageView extends ImageView {
         }
 
         final Uri curImageUri = mImageUri;
-        final AsyncImageView me = this;
+        final AsyncRoundImageView me = this;
         setImageResource(android.R.drawable.ic_menu_gallery);
         if (uri == null || (!uri.equals(curImageUri))) {
 
@@ -93,7 +133,8 @@ public class AsyncImageView extends ImageView {
     }
 
     public void setImageURL(final String profile_image_url) {
-        final AsyncImageView me = this;
+        this.setImageResource(R.drawable.close_selector);
+        final AsyncRoundImageView me = this;
         if (profile_image_url != null) {
 
             BitmapDrawable bd = ImageHelper.getCacheBitmap(profile_image_url);
@@ -122,13 +163,11 @@ public class AsyncImageView extends ImageView {
         @Override
         public boolean handleMessage(Message msg) {
             if (msg.what == 1) {
-                AsyncImageView.this.setImageDrawable((BitmapDrawable) msg.obj);
-                AsyncImageView.this.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.alpha_in));
+                AsyncRoundImageView.this.setImageDrawable((BitmapDrawable) msg.obj);
+                AsyncRoundImageView.this.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.alpha_in));
             }
             return false;
         }
     });
-
-
 
 }

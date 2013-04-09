@@ -398,7 +398,7 @@ public class FileUtil {
 
     public static boolean writeFile(String filePath, byte[] data, boolean append) {
         File file = new File(filePath);
-        return writeFile(filePath, data, append);
+        return writeFile(file, data, append);
     }
 
 }

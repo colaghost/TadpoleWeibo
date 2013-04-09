@@ -28,6 +28,8 @@
         </activity>
         <activity android:name="com.xiaotingzhong.app.LauncherActivity" >
         </activity>
+        <activity android:name="com.xiaotingzhong.app.SubscriptionActivity" >
+        </activity>
         <activity android:name=".APITypeListActivity" >
         </activity>
         <activity android:name="com.weibo.sdk.android.demo.ShareActivity" >
