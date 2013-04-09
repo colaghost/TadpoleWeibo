@@ -258,7 +258,6 @@ public class ImageHelper {
             Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
             return new BitmapDrawable(res, bitmap);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;

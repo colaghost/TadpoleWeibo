@@ -27,7 +27,7 @@
     </TextView>
 
     <ImageView
-        android:id="@+id/deleteBtn"
+        android:id="@+id/imgview_delete"
         android:layout_width="21.0dip"
         android:layout_height="21.0dip"
         android:background="@android:color/black"
