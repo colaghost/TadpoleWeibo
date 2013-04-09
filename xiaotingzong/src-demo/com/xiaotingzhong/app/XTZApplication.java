@@ -1,36 +1,34 @@
 package com.xiaotingzhong.app;
 
-import com.weibo.sdk.android.api.response.Account;
-
 import android.app.Application;
 import android.content.res.Configuration;
+import com.xiaotingzhong.app.storage.WeiboCache;
 
-public class XTZApplication extends Application {
+public class XTZApplication extends Application
+{
+  public static XTZApplication app;
+  public static int curUid;
+  public static WeiboCache sWeiboCache;
 
-    public Account curLoginAccount = null;
+  public void onConfigurationChanged(Configuration paramConfiguration)
+  {
+    super.onConfigurationChanged(paramConfiguration);
+  }
 
-    public static XTZApplication application;
+  public void onCreate()
+  {
+    super.onCreate();
+    app = this;
+    sWeiboCache = new WeiboCache(this);
+  }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        application = this;
-    }
+  public void onLowMemory()
+  {
+    super.onLowMemory();
+  }
 
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-    }
-
-
+  public void onTerminate()
+  {
+    super.onTerminate();
+  }
 }

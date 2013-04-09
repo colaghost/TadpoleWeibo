@@ -21,12 +21,6 @@ import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import cn.Ragnarok.BlurFilter;
-import cn.Ragnarok.HDRFilter;
-import cn.Ragnarok.LomoFilter;
-import cn.Ragnarok.OilFilter;
-import cn.Ragnarok.SoftGlowFilter;
-
 import com.weibo.sdk.android.WeiboException;
 import com.weibo.sdk.android.net.NetStateManager;
 import com.weibo.sdk.android.util.Utility;
@@ -262,7 +256,6 @@ public class ImageHelper {
         try {
             byte[] data = openUrl(url);
             Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-            bitmap = LomoFilter.changeToLomo(bitmap);
             return new BitmapDrawable(res, bitmap);
         } catch (Exception e) {
             // TODO Auto-generated catch block

@@ -1,38 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/pageItemBg"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/blue" >
+    xmlns:tadpole="http://schemas.android.com/apk/res/org.tadpole"
+    android:id="@7F050018"
+    android:layout_width="-2"
+    android:layout_height="-2" >
 
     <org.tadpoleweibo.widget.AsyncImageView
-        android:id="@+id/imgview_image"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:src="@drawable/weibosdk_bg_btn" />
+        android:id="@7F050019"
+        android:layout_width="-1"
+        android:layout_height="-1"
+        android:scaleType="6"
+        tadpole:roundHeight="5.0dip"
+        tadpole:roundWidth="5.0dip" >
+    </org.tadpoleweibo.widget.AsyncImageView>
 
     <TextView
-        android:id="@+id/txtview_name"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:id="@7F05001A"
+        android:layout_width="-1"
+        android:layout_height="-2"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@color/weibosdk_text_num_gray"
-        android:ellipsize="end"
-        android:gravity="center"
+        android:background="@7F090003"
+        android:ellipsize="3"
+        android:gravity="0x00000011"
         android:lines="1"
         android:text="正在加载"
-        android:textColor="#ffffff"
-        android:textSize="12sp" >
+        android:textColor="#FFFFFFFF"
+        android:textSize="12.0sp" >
     </TextView>
 
     <ImageView
-        android:id="@+id/pageItemDeleteBtn"
-        android:layout_width="23dp"
-        android:layout_height="23dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:padding="4dp"
-        android:src="@drawable/rootblock_btn_remove" />
+        android:id="@7F05001B"
+        android:layout_width="21.0dip"
+        android:layout_height="21.0dip"
+        android:background="@7F090003"
+        android:padding="2.0dip"
+        android:src="@7F020020"
+        android:visibility="1" >
+    </ImageView>
 
 </RelativeLayout>

@@ -11,4 +11,11 @@
         <item name="android:paddingTop">25dp</item>
     </style>
 
+    <style name="Tadpole.ImageButton">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:layout_width">36dp</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
 </resources>

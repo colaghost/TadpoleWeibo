@@ -1,7 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <org.tadpoleweibo.widget.SurfaceImageView
+            android:id="@+id/surfaceimgview_bg"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:src="@drawable/rootblock_default_bg" >
+        </org.tadpoleweibo.widget.SurfaceImageView>
+    </LinearLayout>
 
     <org.tadpoleweibo.widget.Launcher
         android:id="@+id/launcher"
@@ -9,5 +21,35 @@
         android:layout_height="fill_parent"
         android:background="#44000000" >
     </org.tadpoleweibo.widget.Launcher>
+
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="@dimen/launcher_page_padding_right"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical" >
+
+        <ImageButton
+            style="@style/Tadpole.ImageButton"
+            android:src="@drawable/selector_rootblock_icon_add" >
+        </ImageButton>
+
+        <ImageButton
+            style="@style/Tadpole.ImageButton"
+            android:src="@drawable/selector_rootblock_icon_add" >
+        </ImageButton>
+
+        <ImageButton
+            style="@style/Tadpole.ImageButton"
+            android:src="@drawable/selector_rootblock_icon_add" >
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/imgbutton_add"
+            style="@style/Tadpole.ImageButton"
+            android:src="@drawable/selector_rootblock_icon_add" >
+        </ImageButton>
+    </LinearLayout>
 
 </RelativeLayout>

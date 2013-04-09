@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="-1"
+    android:layout_height="@7F060014"
+    android:background="@android:0106000B"
+    android:minHeight="@7F060014"
+    android:orientation="0" >
+
+    <org.tadpoleweibo.widget.AsyncImageView
+        android:id="@7F05001C"
+        android:layout_width="36.0dip"
+        android:layout_height="36.0dip"
+        android:layout_gravity="0x00000013"
+        android:layout_marginLeft="@7F060007"
+        android:adjustViewBounds="false"
+        android:scaleType="1"
+        android:src="@7F02000B" >
+    </org.tadpoleweibo.widget.AsyncImageView>
+
+    <TextView
+        android:id="@7F05001D"
+        android:layout_width="-2"
+        android:layout_height="-1"
+        android:layout_marginLeft="@7F060007"
+        android:layout_weight="1.0"
+        android:gravity="0x00000010"
+        android:textAppearance="@7F0A0009"
+        android:textColor="@7F09000B" >
+    </TextView>
+
+    <ImageView
+        android:layout_width="-2"
+        android:layout_height="-1"
+        android:layout_gravity="0x00000015"
+        android:paddingBottom="@7F060006"
+        android:paddingTop="@7F060006"
+        android:scaleType="1"
+        android:src="@7F02002F" >
+    </ImageView>
+
+    <ImageButton
+        android:id="@7F05000F"
+        android:layout_width="@7F060014"
+        android:layout_height="@7F060014"
+        android:layout_gravity="0x00000015"
+        android:background="@android:0106000D"
+        android:padding="20.0dip"
+        android:scaleType="1"
+        android:src="@7F020014" >
+    </ImageButton>
+
+</LinearLayout>
