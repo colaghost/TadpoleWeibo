@@ -269,7 +269,7 @@ public class ImageHelper {
             return new BitmapDrawable(res, bitmap);
         } catch (Exception e) {
             e.printStackTrace();
-            
+
             cache.deleteFromDish(hash);
         }
         return null;

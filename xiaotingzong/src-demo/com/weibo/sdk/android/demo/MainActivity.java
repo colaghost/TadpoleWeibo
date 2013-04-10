@@ -1,12 +1,15 @@
 package com.weibo.sdk.android.demo;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 import org.tadpole.R;
+import org.tadpoleweibo.common.ActivityUtil;
 import org.tadpoleweibo.widget.Launcher;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.audiofx.AcousticEchoCanceler;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -22,10 +25,17 @@ import com.weibo.sdk.android.Weibo;
 import com.weibo.sdk.android.WeiboAuthListener;
 import com.weibo.sdk.android.WeiboDialogError;
 import com.weibo.sdk.android.WeiboException;
+import com.weibo.sdk.android.api.AccountAPI;
+import com.weibo.sdk.android.api.UsersAPI;
+import com.weibo.sdk.android.api.response.Account;
+import com.weibo.sdk.android.api.response.User;
+import com.weibo.sdk.android.api.response.builder.UserBuilder;
 import com.weibo.sdk.android.keep.AccessTokenKeeper;
+import com.weibo.sdk.android.net.RequestListener;
 import com.weibo.sdk.android.sso.SsoHandler;
 import com.weibo.sdk.android.util.Utility;
 import com.xiaotingzhong.app.LauncherActivity;
+import com.xiaotingzhong.app.XTZApplication;
 
 /**
  * 
@@ -51,6 +61,9 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        System.out.println("isFullscreen = " + new ActivityUtil(this).isFullscreen());
+
         mWeibo = Weibo.getInstance(CONSUMER_KEY, REDIRECT_URL);
 
         authBtn = (Button) findViewById(R.id.auth);
@@ -117,29 +130,7 @@ public class MainActivity extends Activity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case R.id.launcher_next:
-            break;
-        default:
-            break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void startLauncherActivity() {
-        Intent intent = new Intent();
-        intent.setClass(MainActivity.this, LauncherActivity.class);
-        startActivity(intent);
-        finish();
-    }
 
     class AuthDialogListener implements WeiboAuthListener {
 
@@ -195,4 +186,56 @@ public class MainActivity extends Activity {
         }
     }
 
+
+    public void startLauncherActivity() {
+        getUid();
+    }
+
+    public void getUid() {
+        new AccountAPI(AccessTokenKeeper.readAccessToken(this)).getUid(new RequestListener() {
+            @Override
+            public void onIOException(IOException e) {
+            }
+
+            @Override
+            public void onError(WeiboException e) {
+            }
+
+            @Override
+            public void onComplete(String response) {
+                Account ac;
+                try {
+                    ac = Account.fromGetUid(response);
+                    fetchUserInfo(ac.uid);
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+    public void fetchUserInfo(final int uid) {
+        final MainActivity me = this;
+        new UsersAPI(AccessTokenKeeper.readAccessToken(this)).show(uid, new RequestListener() {
+            public void onComplete(String response) {
+                User user = null;
+                try {
+                    user = UserBuilder.fromResponse(response);
+                    XTZApplication.app.curUser = user;
+                    LauncherActivity.start(me, uid, user);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            public void onError(WeiboException weiboE) {
+            }
+
+            public void onIOException(IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
 }

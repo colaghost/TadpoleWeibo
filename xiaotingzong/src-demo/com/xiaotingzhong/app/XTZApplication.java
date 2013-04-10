@@ -9,7 +9,7 @@ public class XTZApplication extends Application {
     public static XTZApplication app;
 
     public int curUid;
-    protected User curUser;
+    public User curUser;
 
     public void onConfigurationChanged(Configuration paramConfiguration) {
         super.onConfigurationChanged(paramConfiguration);

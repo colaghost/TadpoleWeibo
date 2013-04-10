@@ -1,5 +1,7 @@
 package org.tadpoleweibo.widget;
 
+import org.tadpole.R;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.AbsListView.OnScrollListener;
@@ -41,6 +43,11 @@ public abstract class AbsPageListView<T> extends PullToRefreshListView implement
         this.mAdapter = ((PageListViewAdapter) adapter);
         super.setAdapter(adapter);
         setOnRefreshListener(this);
+
+        ListView listView = (ListView) this.getRefreshableView();
+        listView.setDividerHeight(1);
+        listView.setDivider(getResources().getDrawable(R.drawable.divider));
+        listView.setVerticalScrollBarEnabled(false);
     }
 
     @Override

@@ -15,9 +15,13 @@ public class ImageDiskCache {
     public ImageDiskCache(String dirPath) {
         mDirPath = dirPath;
         if (mDirPath == null) {
-            mDirPath = getSDPath() + "/imageCache/";
-            System.out.println("mDirPath = " + mDirPath);
-            FileUtil.createDir(mDirPath);
+            mDirPath = getSDPath() + "/xxxx/";
+
+            System.out.println("ImageDiskCache = " + mDirPath);
+            File file = new File(mDirPath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
         }
     }
 
@@ -26,6 +30,9 @@ public class ImageDiskCache {
     }
 
     public void writeToDisk(String key, byte[] bitmapBytes) {
+
+        System.out.println("mDirPath = " + mDirPath + key);
+
         boolean succ = FileUtil.createFile(mDirPath + key);
         if (succ) {
             FileUtil.writeFile(mDirPath + key, bitmapBytes, false);
