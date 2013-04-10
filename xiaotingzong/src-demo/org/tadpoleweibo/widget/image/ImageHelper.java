@@ -48,6 +48,9 @@ public class ImageHelper {
 
     static final String TAG = "ImageHelper";
 
+
+    private static ImageDiskCache cache = new ImageDiskCache(null);
+
     private static final String[] PROJECTIONS = { MediaStore.Images.ImageColumns._ID, MediaStore.Images.ImageColumns.DISPLAY_NAME, MediaStore.Images.ImageColumns.DATA,
             MediaStore.Images.ImageColumns.LATITUDE, MediaStore.Images.ImageColumns.SIZE, MediaStore.Images.ImageColumns.TITLE };
 
@@ -253,12 +256,21 @@ public class ImageHelper {
     }
 
     private static BitmapDrawable getBitmapDrawable(Resources res, String url) {
+        String hash = url.hashCode() + "";
         try {
-            byte[] data = openUrl(url);
+            byte[] data = null;
+            if (cache.hasCache(hash)) {
+                data = cache.readFromDisk(hash);
+            } else {
+                data = openUrl(url);
+                cache.writeToDisk(hash, data);
+            }
             Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
             return new BitmapDrawable(res, bitmap);
         } catch (Exception e) {
             e.printStackTrace();
+            
+            cache.deleteFromDish(hash);
         }
         return null;
     }

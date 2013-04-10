@@ -5,10 +5,13 @@ import android.util.AttributeSet;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
-public abstract class AbsPageListView<T> extends PullToRefreshListView implements OnScrollListener {
+public abstract class AbsPageListView<T> extends PullToRefreshListView implements OnScrollListener, OnRefreshListener2<ListView> {
     private static final String TAG = "PageListView";
     private PageListViewAdapter<T> mAdapter;
     private OnLoadPageListListener<T> mLoadPageListener = null;
@@ -37,6 +40,16 @@ public abstract class AbsPageListView<T> extends PullToRefreshListView implement
     public void setAdapter(ListAdapter adapter) {
         this.mAdapter = ((PageListViewAdapter) adapter);
         super.setAdapter(adapter);
+        setOnRefreshListener(this);
+    }
+
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+        mLoadPageListener.onRefreshToGetNew(maxResult);
+    }
+
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
     }
 
     public void setOnLoadPageListListener(OnLoadPageListListener<T> listener) {

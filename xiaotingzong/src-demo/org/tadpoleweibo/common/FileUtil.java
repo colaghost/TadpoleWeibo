@@ -354,6 +354,21 @@ public class FileUtil {
         return new String(buffer);
     }
 
+
+    /***
+     * @param path 文件路径
+     * @return 返回字节数
+     * @throws IOException
+     *             发生文件不存在或者读取错误的情况下
+     */
+    public static byte[] readFile(String path) throws IOException {
+        InputStream is = new FileInputStream(path);
+        byte[] buffer = new byte[is.available()];
+        is.read(buffer);
+        is.close();
+        return buffer;
+    }
+
     public static long getDirSizeByPath(String path) {
         File dir = new File(path);
         if (dir.exists()) {
