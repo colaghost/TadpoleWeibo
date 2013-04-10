@@ -100,6 +100,27 @@ public class Launcher extends ViewPagerEX {
         if (mLauncherPageList == null) {
             return;
         }
+
+        if (mPageAdapter != null) {
+            int newPageCount = (mListAdapter.getCount() - 1) / mPageItemCount + 1;
+            // pages increase
+            if (newPageCount > mLauncherPageList.size()) {
+                LauncherPage lPage = new LauncherPage(getContext(), newPageCount - 1, this);
+                mLauncherPageList.add(lPage);
+
+            }
+            // pages unincrease
+            else if (newPageCount < mLauncherPageList.size()) {
+                if (getCurrentItem() == newPageCount) {
+                    this.setCurrentItem(newPageCount - 1, false);
+                }
+                Log.d(TAG, "notifyDataUpdate remove pageIndex = " + (newPageCount - 1));
+                mLauncherPageList.remove(newPageCount);
+            }
+            mPageAdapter.notifyDataSetChanged();
+        }
+
+        // Update All Page
         for (int i = 0; i < mLauncherPageList.size(); i++) {
             mLauncherPageList.get(i).onDataUpdate();
         }
@@ -120,7 +141,6 @@ public class Launcher extends ViewPagerEX {
 
         this.setOffscreenPageLimit(OFFSET_LIMIT);
         mPageAdapter = new PagerAdapter() {
-
             @Override
             public int getItemPosition(Object object) {
                 int index = mLauncherPageList.indexOf(object);

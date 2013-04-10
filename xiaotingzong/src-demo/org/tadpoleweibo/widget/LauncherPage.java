@@ -96,7 +96,7 @@ public class LauncherPage extends ViewGroup {
 
             mLastPageItemPos = end - mPageIndex * pageItemCount - 1;
 
-            TLog.debug(TAG, "fillData start = %d end = %d", start, end);
+            TLog.debug(TAG, "fillData start = %d end = %d mPageIndex =", start, end, mPageIndex);
             for (int i = start; i < end; i++) {
                 LauncherPageItemView itemView = getLauncherPageItemView(i);
                 final int index = i;
