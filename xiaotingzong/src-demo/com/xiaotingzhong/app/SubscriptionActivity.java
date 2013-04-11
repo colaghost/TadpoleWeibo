@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.tadpole.R;
-import org.tadpoleweibo.widget.AbsPageListView;
 import org.tadpoleweibo.widget.PageList;
 import org.tadpoleweibo.widget.PageListView;
 import org.tadpoleweibo.widget.PageListViewAdapter;
@@ -23,8 +22,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.weibo.sdk.android.WeiboException;
-import com.weibo.sdk.android.api.ApiFactory;
 import com.weibo.sdk.android.api.response.User;
 import com.weibo.sdk.android.net.RequestListener;
 import com.xiaotingzhong.app.storage.FriendsCacheMgr;
@@ -48,12 +47,20 @@ public class SubscriptionActivity extends Activity {
     }
 
 
+    public static void startForResult(Activity activity, User user, int requestCode) {
+        Intent intent = new Intent();
+        intent.putExtra(USER, user);
+        intent.setClass(activity, SubscriptionActivity.class);
+        activity.startActivityForResult(intent, requestCode);
+    }
+
     private EditText mEditTxtSearch = null;
-    private PageList<User> mFriendsPageListTotal = null;
     private ImageButton mImgBtnLeft = null;
     private ImageButton mImgBtnRight = null;
-    private PageListViewAdapter<User> mPageAdapter = null;
-    private PageListView<User> mListFriends = null;
+
+    private ArrayList<User> mListFriendsAll = null;
+    private PageListViewAdapter<User> mAdapterFriends = null;
+    private PageListView<User> mListViewFriends = null;
 
     private User mUserSelf = null;
 
@@ -99,31 +106,27 @@ public class SubscriptionActivity extends Activity {
             }
         });
 
-        this.mPageAdapter = new SubscriptFriendListAdapter(this);
-        this.mListFriends = ((PageListView<User>) findViewById(R.id.listview_friends));
-        this.mListFriends.setOnLoadPageListListener(new AbsPageListView.OnLoadPageListListener() {
-            public PageList<User> onLoadNext(int startItemIndex, int maxResult) {
-                Log.d("SubscriptionActivity", "mPageListViewWeibo onLoadNext startItemIndex = " + startItemIndex);
+        this.mAdapterFriends = new SubscriptFriendListAdapter(this, mUserSelf);
+        this.mListViewFriends = ((PageListView<User>) findViewById(R.id.listview_friends));
+        this.mListViewFriends.setOnRefreshListener(new OnRefreshListener2<ListView>() {
+
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 me.fetchFriendsPreferCache(mUserSelf.id);
-                return null;
             }
 
-            public PageList<User> onRefreshToGetNew(int maxResult) {
-                Log.d("SubscriptionActivity", "mPageListViewWeibo onRefreshToGetNew");
-                me.loadFriendsFromRemote();
-                return null;
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
             }
         });
-        this.mListFriends.setAdapter(this.mPageAdapter);
-
-
+        this.mListViewFriends.setAdapter(this.mAdapterFriends);
         // TODO 将这些设置转移到xml配置文件。
-        ListView listView = (ListView) this.mListFriends.getRefreshableView();
+        ListView listView = (ListView) this.mListViewFriends.getRefreshableView();
         listView.setDividerHeight(1);
         listView.setDivider(getResources().getDrawable(R.drawable.divider));
         listView.setVerticalScrollBarEnabled(false);
 
-        this.mListFriends.doLoad();
+        me.fetchFriendsPreferCache(mUserSelf.id);
     }
 
     /**
@@ -138,9 +141,9 @@ public class SubscriptionActivity extends Activity {
             public void run() {
                 FriendsCacheMgr friendMgr = new FriendsCacheMgr(me, uid);
                 try {
-                    PageList<User> pageList = friendMgr.getFriendsFromCache();
-                    if (pageList != null) {
-                        onFriendListLoad(pageList, false);
+                    ArrayList<User> list = friendMgr.getFriendsFromCache();
+                    if (list != null) {
+                        onFriendListLoad(list, false);
                         Log.d("SubscriptionActivity", "loadFromCache");
                         return;
                     }
@@ -155,14 +158,14 @@ public class SubscriptionActivity extends Activity {
 
     public void loadFriendsFromRemote() {
         Log.d("SubscriptionActivity", "loadFromRemote ");
-        ApiFactory.getFriendShipsAPI(this).friends(mUserSelf.id, 200, 0, true, new RequestListener() {
+        XTZApplication.getFriendshipsAPI().friends(mUserSelf.id, 200, 0, true, new RequestListener() {
             public void onComplete(String response) {
                 try {
                     final PageList pageList = new FriendsCacheMgr(getApplicationContext(), mUserSelf.id).saveAndGetFriends(response);
                     Log.d("SubscriptionActivity", "pageList.size = " + pageList.records.size());
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            onFriendListLoad(pageList, false);
+                            onFriendListLoad(pageList.records, false);
                         }
                     });
                     return;
@@ -174,7 +177,7 @@ public class SubscriptionActivity extends Activity {
             public void onError(WeiboException we) {
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        mListFriends.onRefreshComplete();
+                        mListViewFriends.onRefreshComplete();
                     }
                 });
             }
@@ -182,7 +185,7 @@ public class SubscriptionActivity extends Activity {
             public void onIOException(IOException e) {
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        mListFriends.onRefreshComplete();
+                        mListViewFriends.onRefreshComplete();
                     }
                 });
             }
@@ -190,47 +193,40 @@ public class SubscriptionActivity extends Activity {
     }
 
 
-    public void onFriendListLoad(final PageList<User> pageList, final boolean isSearch) {
+    public void onFriendListLoad(final ArrayList<User> list, final boolean isSearch) {
         runOnUiThread(new Runnable() {
             public void run() {
                 if (isSearch) {
-                    mListFriends.setPullToRefreshOverScrollEnabled(false);
+                    mListViewFriends.setPullToRefreshOverScrollEnabled(false);
                 } else {
-                    mFriendsPageListTotal = pageList;
+                    mListFriendsAll = list;
                 }
-                while (true) {
-                    mListFriends.setPageList(pageList);
-                    mListFriends.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(SubscriptionActivity.this, R.anim.list_anim_layout));
-                    mListFriends.onRefreshComplete();
-                    mListFriends.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-                    return;
-                }
+                mAdapterFriends.setList(list);
+                mListViewFriends.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(SubscriptionActivity.this, R.anim.list_anim_layout));
+                mListViewFriends.onRefreshComplete();
+                mListViewFriends.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
             }
         });
     }
 
     public void searchFriend(String str) {
         Log.d("SubscriptionActivity", "searchFriend searchKey = " + str);
-        PageList<User> pageList;
+        ArrayList<User> userList;
         if ((str == null) || ("".equals(str))) {
-            pageList = this.mFriendsPageListTotal;
-            this.mListFriends.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-            onFriendListLoad(pageList, true);
+            userList = this.mListFriendsAll;
+            this.mListViewFriends.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+            onFriendListLoad(userList, true);
             return;
         }
-
-
-        this.mListFriends.setMode(PullToRefreshBase.Mode.DISABLED);
-        List<User> list = this.mPageAdapter.getList();
+        this.mListViewFriends.setMode(PullToRefreshBase.Mode.DISABLED);
+        List<User> list = this.mAdapterFriends.getList();
         ArrayList<User> newList = new ArrayList<User>();
         for (User user : list) {
             if (user.screen_name.toLowerCase().indexOf(str.toLowerCase()) != -1) {
                 newList.add(user);
             }
         }
-        pageList = new PageList<User>();
-        pageList.records = newList;
-        pageList.totalCount = list.size();
-        onFriendListLoad(pageList, true);
+        onFriendListLoad(newList, true);
     }
+
 }

@@ -3,32 +3,18 @@ package org.tadpoleweibo.widget.image;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
 import java.util.WeakHashMap;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.weibo.sdk.android.WeiboException;
-import com.weibo.sdk.android.net.NetStateManager;
-import com.weibo.sdk.android.util.Utility;
-
-import HaoRan.ImageFilter.Image;
-import HaoRan.ImageFilter.YCBCrLinearFilter;
-import HaoRan.ImageFilter.YCBCrLinearFilter.Range;
-import HaoRan.ImageFilter.ZoomBlurFilter;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
@@ -38,11 +24,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.WindowManager;
+
+import com.weibo.sdk.android.WeiboException;
+import com.weibo.sdk.android.net.NetStateManager;
 
 public class ImageHelper {
 

@@ -20,6 +20,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class Launcher extends ViewPagerEX {
 
@@ -43,6 +44,17 @@ public class Launcher extends ViewPagerEX {
     ImageView mDragView = null;
     WindowManager.LayoutParams mDragWinLP = null;
 
+    private OnItemClickListener mOnItemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener l) {
+        mOnItemClickListener = l;
+    }
+
+    void onItemClickListener(View v, int position, long itemId) {
+        if (mOnItemClickListener != null) {
+            mOnItemClickListener.onItemClick(null, v, position, itemId);
+        }
+    }
 
     private int mLastX = 0;
     private int mLastY = 0;

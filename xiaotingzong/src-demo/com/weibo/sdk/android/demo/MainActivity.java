@@ -9,11 +9,8 @@ import org.tadpoleweibo.widget.Launcher;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.audiofx.AcousticEchoCanceler;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -29,7 +26,6 @@ import com.weibo.sdk.android.api.AccountAPI;
 import com.weibo.sdk.android.api.UsersAPI;
 import com.weibo.sdk.android.api.response.Account;
 import com.weibo.sdk.android.api.response.User;
-import com.weibo.sdk.android.api.response.builder.UserBuilder;
 import com.weibo.sdk.android.keep.AccessTokenKeeper;
 import com.weibo.sdk.android.net.RequestListener;
 import com.weibo.sdk.android.sso.SsoHandler;
@@ -222,7 +218,7 @@ public class MainActivity extends Activity {
             public void onComplete(String response) {
                 User user = null;
                 try {
-                    user = UserBuilder.fromResponse(response);
+                    user = User.fromResponse(response);
                     XTZApplication.app.curUser = user;
                     LauncherActivity.start(me, uid, user);
                 } catch (Exception e) {

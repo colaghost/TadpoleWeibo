@@ -36,7 +36,7 @@
     </LinearLayout>
 
     <org.tadpoleweibo.widget.PageListView
-        android:id="@+id/listview_status"
+        android:id="@+id/listview_statuses"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
     </org.tadpoleweibo.widget.PageListView>

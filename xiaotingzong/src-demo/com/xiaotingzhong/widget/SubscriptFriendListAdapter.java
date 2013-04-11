@@ -19,9 +19,9 @@ public class SubscriptFriendListAdapter extends PageListViewAdapter<User> {
 
     private SubscriptionMgr subscriptMgr = null;;
 
-    public SubscriptFriendListAdapter(Activity act) {
+    public SubscriptFriendListAdapter(Activity act, User user) {
         super(act);
-        subscriptMgr = new SubscriptionMgr(act, XTZApplication.app.curUid);
+        subscriptMgr = new SubscriptionMgr(act, user.id);
     }
 
     @Override

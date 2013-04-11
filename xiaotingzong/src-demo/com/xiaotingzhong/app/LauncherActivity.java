@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -22,7 +23,7 @@ import com.weibo.sdk.android.api.response.User;
 import com.xiaotingzhong.app.storage.FriendsCacheMgr;
 import com.xiaotingzhong.app.storage.SubscriptionMgr;
 
-public class LauncherActivity extends Activity {
+public class LauncherActivity extends Activity implements AdapterView.OnItemClickListener {
     static final String TAG = "LauncherActivity";
     static final int REQUEST_CODE_SUBSCRIPT = 1;
 
@@ -54,8 +55,10 @@ public class LauncherActivity extends Activity {
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        // populate extra
 
+        final LauncherActivity me = this;
+
+        // populate extra
         Intent intent = getIntent();
         Bundle extra = intent.getExtras();
         mUidSelf = extra.getInt(UID);
@@ -68,13 +71,10 @@ public class LauncherActivity extends Activity {
         this.mImgBtnAdd = ((ImageButton) findViewById(R.id.imgbtn_add));
         this.mImgBtnAdd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(v.getContext(), SubscriptionActivity.class);
-                LauncherActivity.this.startActivityForResult(intent, REQUEST_CODE_SUBSCRIPT);
+                SubscriptionActivity.startForResult(me, mUserSelf, REQUEST_CODE_SUBSCRIPT);
             }
         });
 
-        final LauncherActivity me = this;
         mLauncherAdapter = new LauncherListAdapter<User>(mUserList) {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v = LayoutInflater.from(me).inflate(R.layout.launche_page_item, null);
@@ -93,15 +93,15 @@ public class LauncherActivity extends Activity {
             }
         };
         mLauncher.setDataAdapter(mLauncherAdapter);
-
+        mLauncher.setOnItemClickListener(this);
         // fetchUserInfo
         fetchUserFriends();
     }
 
     public void fetchUserFriends() {
         SubscriptionMgr subscriptionMgr = new SubscriptionMgr(this, mUidSelf);
-        ArrayList<User> usrLst = new FriendsCacheMgr(this, mUidSelf).getFriendsByUids(subscriptionMgr.getSubscriptedUids());
-        fillLauncherData(usrLst);
+        ArrayList<User> userList = new FriendsCacheMgr(this, mUidSelf).getFriendsByUids(subscriptionMgr.getSubscriptedUids());
+        fillLauncherData(userList);
     }
 
     public void fillLauncherData(final ArrayList<User> userList) {
@@ -129,6 +129,13 @@ public class LauncherActivity extends Activity {
             break;
         }
 
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        User user = mUserList.get(position);
+        Log.d(TAG, "onItemClick = " + user.id);
+        StatusesActivity.start(this, user);
     }
 
 }

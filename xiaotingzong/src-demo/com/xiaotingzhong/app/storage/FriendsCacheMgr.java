@@ -12,7 +12,6 @@ import org.tadpoleweibo.widget.PageList;
 import android.content.Context;
 
 import com.weibo.sdk.android.api.response.User;
-import com.weibo.sdk.android.api.response.builder.UserBuilder;
 
 public class FriendsCacheMgr extends BaseUserFileCache {
     private File mFriendsDir = null;
@@ -28,7 +27,7 @@ public class FriendsCacheMgr extends BaseUserFileCache {
             String str = this.mFriendsDir.getAbsolutePath() + File.separator + uid;
             User user = null;
             try {
-                user = UserBuilder.fromResponse(FileUtil.readFile(new File(str)));
+                user = User.fromResponse(FileUtil.readFile(new File(str)));
                 iList.add(user);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -39,21 +38,16 @@ public class FriendsCacheMgr extends BaseUserFileCache {
         return iList;
     }
 
-    public PageList<User> getFriendsFromCache() throws Exception {
+    public ArrayList<User> getFriendsFromCache() throws Exception {
         File[] friendFiles = this.mFriendsDir.listFiles();
         if (friendFiles.length == 0) {
             return null;
         } else {
             ArrayList<User> iList = new ArrayList<User>();
             for (File f : friendFiles) {
-                iList.add(UserBuilder.fromResponse(FileUtil.readFile(f)));
+                iList.add(User.fromResponse(FileUtil.readFile(f)));
             }
-            PageList<User> pageList = new PageList<User>();
-            pageList.records = iList;
-            pageList.totalCount = iList.size();
-            pageList.nextStartIndex = 0;
-            pageList.prevPage = 0;
-            return pageList;
+            return iList;
         }
 
     }
@@ -68,7 +62,7 @@ public class FriendsCacheMgr extends BaseUserFileCache {
         ArrayList<User> iList = new ArrayList<User>();
         for (int i = 0, len = jr.length(); i < len; i++) {
             joTmp = jr.getJSONObject(i);
-            User user = UserBuilder.fromResponse(joTmp);
+            User user = User.fromResponse(joTmp);
             iList.add(user);
             String str = path + File.separator + user.id;
             System.out.println("str = " + str);

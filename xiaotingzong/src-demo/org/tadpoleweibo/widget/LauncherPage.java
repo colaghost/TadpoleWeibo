@@ -65,14 +65,22 @@ public class LauncherPage extends ViewGroup {
     }
 
 
-    private LauncherPageItemView getLauncherPageItemView(int position) {
+    private LauncherPageItemView getLauncherPageItemView(final int position) {
         final ListAdapter listAdapter = mLauncher.mListAdapter;
         LauncherPageItemView itemView = new LauncherPageItemView(getContext());
         View view = listAdapter.getView(position, null, null);
+        final long itemId = listAdapter.getItemId(position);
+
         view.setBackgroundColor(Color.GRAY);
         view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
         itemView.addView(view);
         itemView.setBackgroundColor(Color.RED);
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLauncher.onItemClickListener(v, position, itemId);
+            }
+        });
         return itemView;
     }
 

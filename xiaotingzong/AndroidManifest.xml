@@ -35,6 +35,10 @@
             android:name="com.xiaotingzhong.app.SubscriptionActivity"
             android:theme="@style/Theme.Tadpole" >
         </activity>
+        <activity
+            android:name="com.xiaotingzhong.app.StatusesActivity"
+            android:theme="@style/Theme.Tadpole" >
+        </activity>
         <activity android:name=".APITypeListActivity" >
         </activity>
         <activity android:name="com.weibo.sdk.android.demo.ShareActivity" >

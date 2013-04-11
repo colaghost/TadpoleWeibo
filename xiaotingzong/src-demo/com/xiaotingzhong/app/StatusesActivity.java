@@ -30,10 +30,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.weibo.sdk.android.WeiboException;
-import com.weibo.sdk.android.api.ApiFactory;
-import com.weibo.sdk.android.api.response.WeiboStatuses;
+import com.weibo.sdk.android.api.UsersAPI;
+import com.weibo.sdk.android.api.WeiboAPI.FEATURE;
 import com.weibo.sdk.android.api.response.User;
+import com.weibo.sdk.android.api.response.WeiboStatuses;
 import com.weibo.sdk.android.net.RequestListener;
 import com.xiaotingzhong.app.storage.FriendsCacheMgr;
 import com.xiaotingzhong.app.storage.SubscriptionMgr;
@@ -47,7 +49,7 @@ import com.xiaotingzhong.widget.WeiboStatusesListAdapter;
  * @author chenzh
  * 
  */
-public class StatuesActivity extends Activity {
+public class StatusesActivity extends Activity implements OnRefreshListener2<ListView> {
     static final String TAG = "StatuesActivity";
     static final String USER = "user";
 
@@ -60,11 +62,10 @@ public class StatuesActivity extends Activity {
     public static void start(Activity activity, User user) {
         Intent intent = new Intent();
         intent.putExtra(USER, user);
-        intent.setClass(activity, SubscriptionActivity.class);
+        intent.setClass(activity, StatusesActivity.class);
         activity.startActivity(intent);
     }
 
-    private PageList<WeiboStatuses> mFriendsPageListTotal = null;
     private ImageButton mImgBtnLeft = null;
     private ImageButton mImgBtnRight = null;
     private WeiboStatusesListAdapter mPageAdapter = null;
@@ -74,15 +75,14 @@ public class StatuesActivity extends Activity {
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-
         // populate extra
         Intent intent = getIntent();
         Bundle extra = intent.getExtras();
         mUserSelf = (User) extra.getSerializable(USER);
 
 
-        setContentView(R.layout.activity_subscription);
-        final StatuesActivity me = this;
+        setContentView(R.layout.activity_statuses);
+        final StatusesActivity me = this;
 
         this.mImgBtnLeft = ((ImageButton) findViewById(R.id.imgbtn_left));
         this.mImgBtnLeft.setOnClickListener(new View.OnClickListener() {
@@ -98,22 +98,13 @@ public class StatuesActivity extends Activity {
         });
 
         this.mPageAdapter = new WeiboStatusesListAdapter(this);
-        this.mListStatuses = ((PageListView<WeiboStatuses>) findViewById(R.id.listview_friends));
-        this.mListStatuses.setOnLoadPageListListener(new AbsPageListView.OnLoadPageListListener() {
-            public PageList<User> onLoadNext(int startItemIndex, int maxResult) {
-                Log.d("SubscriptionActivity", "mPageListViewWeibo onLoadNext startItemIndex = " + startItemIndex);
-                me.fetchFriendsPreferCache(mUserSelf.id);
-                return null;
-            }
+        this.mListStatuses = ((PageListView<WeiboStatuses>) findViewById(R.id.listview_statuses));
+        this.mListStatuses.setOnRefreshListener(this);
 
-            public PageList<User> onRefreshToGetNew(int maxResult) {
-                Log.d("SubscriptionActivity", "mPageListViewWeibo onRefreshToGetNew");
-                me.loadFriendsFromRemote();
-                return null;
-            }
-        });
+        me.fetchStatusesPreferCache(mUserSelf.id);
         this.mListStatuses.setAdapter(this.mPageAdapter);
-        this.mListStatuses.doLoad();
+        
+        mListStatuses.getRefreshableView().setFastScrollEnabled(true);
     }
 
     /**
@@ -122,13 +113,34 @@ public class StatuesActivity extends Activity {
      * 
      * @param uid
      */
-    protected void fetchFriendsPreferCache(final int uid) {
-        final StatuesActivity me = this;
+    protected void fetchStatusesPreferCache(final int uid) {
+        final StatusesActivity me = this;
+        XTZApplication.getStatusesAPI().userTimeline(0, 0, 100, 0, false, FEATURE.ALL, true, new RequestListener() {
+            @Override
+            public void onIOException(IOException e) {
+            }
+            @Override
+            public void onError(WeiboException e) {
+            }
+            @Override
+            public void onComplete(String response) {
+            }
+        });
+        
+        
         new Thread(new Runnable() {
             public void run() {
                 try {
+                    ArrayList<WeiboStatuses> list = new ArrayList<WeiboStatuses>();
+                    for (int i = 0, len = 100; i < len; i++) {
+                        list.add(new WeiboStatuses());
+                    }
+                    PageList<WeiboStatuses> pageList = new PageList<WeiboStatuses>();
+                    pageList.records = list;
+                    pageList.totalCount = list.size();
+
                     if (pageList != null) {
-                        onWeiboStatusesLoad(pageList, false);
+                        onWeiboStatusesLoad(pageList);
                         Log.d("SubscriptionActivity", "loadFromCache");
                         return;
                     }
@@ -139,12 +151,22 @@ public class StatuesActivity extends Activity {
         }).start();
     }
 
-
-    public void onWeiboStatusesLoad(final PageList<User> pageList) {
+    public void onWeiboStatusesLoad(final PageList<WeiboStatuses> pageList) {
         runOnUiThread(new Runnable() {
             public void run() {
+                mPageAdapter.setList(pageList.records);
+                mPageAdapter.notifyDataSetChanged();
             }
         });
     }
 
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+        fetchStatusesPreferCache(mUserSelf.id);
+    }
+
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+    }
 }
