@@ -10,14 +10,14 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 7431294131953990833L;
 
-    public int id;
+    public long id;
     public String screen_name;
     public String name;
     public String profile_image_url;
     public String avatar_large;
-    
-    
-    
+
+
+
     public static ArrayList<User> fromFriends(String response) throws Exception {
         JSONObject jsonObj = new JSONObject(response);
         JSONArray usersArr = jsonObj.getJSONArray("users");
@@ -27,7 +27,7 @@ public class User implements Serializable {
         }
         return userList;
     }
-    
+
     public static User fromResponse(String response) throws Exception {
         User ret = new User();
         if (response != null) {
@@ -39,7 +39,7 @@ public class User implements Serializable {
 
     public static User fromResponse(JSONObject jsonObj) throws Exception {
         User ret = new User();
-        ret.id = jsonObj.getInt("id");
+        ret.id = jsonObj.getLong("id");
         ret.profile_image_url = jsonObj.getString("profile_image_url");
         ret.screen_name = jsonObj.optString("screen_name");
         ret.avatar_large = jsonObj.optString("avatar_large");

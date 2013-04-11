@@ -11,30 +11,30 @@ public class SubscriptionMgr extends BaseUserFileCache {
     static final String SUBSCRIPT_DIR = "subscript";
     private File mSubscriptDir = null;
 
-    public SubscriptionMgr(Context context, int uid) {
+    public SubscriptionMgr(Context context, long uid) {
         super(context, uid);
         mSubscriptDir = getSubDir(SUBSCRIPT_DIR);
     }
 
-    public ArrayList<Integer> getSubscriptedUids() {
-        ArrayList<Integer> uidLst = new ArrayList<Integer>();
+    public ArrayList<Long> getSubscriptedUids() {
+        ArrayList<Long> uidLst = new ArrayList<Long>();
         File[] files = this.mSubscriptDir.listFiles();
         for (File f : files) {
-            uidLst.add(Integer.valueOf(f.getName()));
+            uidLst.add(Long.valueOf(f.getName()));
         }
         return uidLst;
     }
 
-    public boolean isSubscripted(int uid) {
+    public boolean isSubscripted(long uid) {
         return new File(this.mSubscriptDir.getAbsolutePath() + File.separator + uid).exists();
     }
 
-    public void subscript(int uid) {
+    public void subscript(long uid) {
         SubsriptItem localSubsriptItem = new SubsriptItem();
         FileUtil.writeFile(this.mSubscriptDir.getAbsolutePath() + File.separator + uid, localSubsriptItem.toJSONBytes(), false);
     }
 
-    public void unSubscript(int uid) {
+    public void unSubscript(long uid) {
         FileUtil.delete(this.mSubscriptDir.getAbsolutePath() + File.separator + uid);
     }
 

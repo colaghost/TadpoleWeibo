@@ -134,7 +134,7 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         User user = mUserList.get(position);
-        Log.d(TAG, "onItemClick = " + user.id);
+        Log.d(TAG, "onItemClick  position =  " + position + " userId =  " + user.id);
         StatusesActivity.start(this, user);
     }
 

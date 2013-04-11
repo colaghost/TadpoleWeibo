@@ -7,8 +7,8 @@ import org.tadpoleweibo.common.FileUtil;
 public class BaseUserFileCache {
     private String mCachePath;
 
-    public BaseUserFileCache(Context context, int paramInt) {
-        this.mCachePath = (context.getFilesDir() + File.separator + paramInt + File.separator);
+    public BaseUserFileCache(Context context, long uid) {
+        this.mCachePath = (context.getFilesDir() + File.separator + uid + File.separator);
         FileUtil.createDir(this.mCachePath);
     }
 

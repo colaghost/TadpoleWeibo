@@ -135,7 +135,7 @@ public class SubscriptionActivity extends Activity {
      * 
      * @param uid
      */
-    protected void fetchFriendsPreferCache(final int uid) {
+    protected void fetchFriendsPreferCache(final long uid) {
         final SubscriptionActivity me = this;
         new Thread(new Runnable() {
             public void run() {

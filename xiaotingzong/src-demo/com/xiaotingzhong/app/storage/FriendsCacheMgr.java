@@ -16,14 +16,14 @@ import com.weibo.sdk.android.api.response.User;
 public class FriendsCacheMgr extends BaseUserFileCache {
     private File mFriendsDir = null;
 
-    public FriendsCacheMgr(Context context, int uid) {
+    public FriendsCacheMgr(Context context, long uid) {
         super(context, uid);
         mFriendsDir = getSubDir("friends");
     }
 
-    public ArrayList<User> getFriendsByUids(ArrayList<Integer> uids) {
+    public ArrayList<User> getFriendsByUids(ArrayList<Long> uids) {
         ArrayList<User> iList = new ArrayList<User>();
-        for (Integer uid : uids) {
+        for (Long uid : uids) {
             String str = this.mFriendsDir.getAbsolutePath() + File.separator + uid;
             User user = null;
             try {
@@ -72,9 +72,9 @@ public class FriendsCacheMgr extends BaseUserFileCache {
 
         PageList<User> pageList = new PageList<User>();
         pageList.records = iList;
-        pageList.totalCount = jo.optInt("total_number");
-        pageList.nextStartIndex = jo.optInt("next_cursor");
-        pageList.prevPage = jo.optInt("previous_cursor");
+        pageList.total_number = jo.optInt("total_number");
+        pageList.next_cursor = jo.optInt("next_cursor");
+        pageList.previous_cursor = jo.optInt("previous_cursor");
         return pageList;
     }
 }

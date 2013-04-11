@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
 import org.tadpole.R;
 import org.tadpoleweibo.widget.AbsPageListView;
 import org.tadpoleweibo.widget.AsyncRoundImageView;
@@ -97,14 +98,14 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
             }
         });
 
-        this.mPageAdapter = new WeiboStatusesListAdapter(this);
+        this.mPageAdapter = new WeiboStatusesListAdapter(this, mUserSelf);
         this.mListStatuses = ((PageListView<WeiboStatuses>) findViewById(R.id.listview_statuses));
         this.mListStatuses.setOnRefreshListener(this);
 
-        me.fetchStatusesPreferCache(mUserSelf.id);
         this.mListStatuses.setAdapter(this.mPageAdapter);
-        
         mListStatuses.getRefreshableView().setFastScrollEnabled(true);
+
+        me.fetchStatusesPreferCache(mUserSelf.id);
     }
 
     /**
@@ -113,42 +114,30 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
      * 
      * @param uid
      */
-    protected void fetchStatusesPreferCache(final int uid) {
-        final StatusesActivity me = this;
-        XTZApplication.getStatusesAPI().userTimeline(0, 0, 100, 0, false, FEATURE.ALL, true, new RequestListener() {
+    protected void fetchStatusesPreferCache(final long uid) {
+        XTZApplication.getStatusesAPI().userTimeline(uid, 0, 0, 100, 1, false, FEATURE.ALL, true, new RequestListener() {
             @Override
             public void onIOException(IOException e) {
             }
+
             @Override
             public void onError(WeiboException e) {
             }
+
             @Override
             public void onComplete(String response) {
-            }
-        });
-        
-        
-        new Thread(new Runnable() {
-            public void run() {
                 try {
-                    ArrayList<WeiboStatuses> list = new ArrayList<WeiboStatuses>();
-                    for (int i = 0, len = 100; i < len; i++) {
-                        list.add(new WeiboStatuses());
-                    }
-                    PageList<WeiboStatuses> pageList = new PageList<WeiboStatuses>();
-                    pageList.records = list;
-                    pageList.totalCount = list.size();
-
+                    PageList<WeiboStatuses> pageList = WeiboStatuses.fromUserTimelineJson(response);
                     if (pageList != null) {
                         onWeiboStatusesLoad(pageList);
                         Log.d("SubscriptionActivity", "loadFromCache");
                         return;
                     }
-                } catch (Exception e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        });
     }
 
     public void onWeiboStatusesLoad(final PageList<WeiboStatuses> pageList) {

@@ -132,12 +132,12 @@ public class AsyncRoundImageView extends ImageView {
         mImageUri = uri;
     }
 
-    public void setImageURL(final String profile_image_url) {
+    public void setImageURL(final String url) {
         this.setImageResource(R.drawable.close_selector);
         final AsyncRoundImageView me = this;
-        if (profile_image_url != null) {
+        if (url != null) {
 
-            BitmapDrawable bd = ImageHelper.getCacheBitmap(profile_image_url);
+            BitmapDrawable bd = ImageHelper.getCacheBitmap(url);
             if (bd != null) {
                 setImageDrawable(bd);
             } else {
@@ -145,7 +145,7 @@ public class AsyncRoundImageView extends ImageView {
                 mFuture = sExecutor.submit(new Runnable() {
                     @Override
                     public void run() {
-                        final BitmapDrawable bd = ImageHelper.getBitmapByUrl(me.getContext().getResources(), profile_image_url);
+                        final BitmapDrawable bd = ImageHelper.getBitmapByUrl(me.getContext().getResources(), url);
                         if (bd != null) {
                             Message msg = new Message();
                             msg.what = 1;
