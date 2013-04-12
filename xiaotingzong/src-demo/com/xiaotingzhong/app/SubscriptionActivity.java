@@ -41,6 +41,7 @@ public class SubscriptionActivity extends Activity {
      */
     public static void start(Activity activity, User user) {
         Intent intent = new Intent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(USER, user);
         intent.setClass(activity, SubscriptionActivity.class);
         activity.startActivity(intent);
@@ -66,7 +67,7 @@ public class SubscriptionActivity extends Activity {
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-
+        
         // populate extra
         Intent intent = getIntent();
         Bundle extra = intent.getExtras();

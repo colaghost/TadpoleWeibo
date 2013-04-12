@@ -13,6 +13,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -55,7 +57,7 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-
+        Log.d(TAG, "===== onCreate =====");
         final LauncherActivity me = this;
 
         // populate extra
@@ -68,6 +70,7 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
         setContentView(R.layout.activity_launcher);
         this.mLauncher = ((Launcher) findViewById(R.id.launcher));
         this.mImgViewBg = ((SurfaceImageView) findViewById(R.id.surfaceimgview_bg));
+
         this.mImgBtnAdd = ((ImageButton) findViewById(R.id.imgbtn_add));
         this.mImgBtnAdd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -96,6 +99,12 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
         mLauncher.setOnItemClickListener(this);
         // fetchUserInfo
         fetchUserFriends();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "===== onDestroy =====");
     }
 
     public void fetchUserFriends() {
@@ -138,4 +147,25 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
         StatusesActivity.start(this, user);
     }
 
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, 1, 1, " mImgViewBg.setZOrderOnTop(true);");
+        menu.add(0, 2, 2, " mImgViewBg.setZOrderOnTop(false);");
+        return true;
+    };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case 1:
+            mImgViewBg.setZOrderOnTop(true);
+            break;
+        case 2:
+            mImgViewBg.setZOrderOnTop(false);
+            break;
+        default:
+            break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

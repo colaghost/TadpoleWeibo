@@ -2,6 +2,7 @@ package org.tadpoleweibo.widget;
 
 import org.tadpole.R;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -9,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -42,6 +44,7 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
     }
 
     private void handlerDrawInternal(Canvas canvas) {
+        //        Log.d("SurfaceImageView", "handlerDrawInternal canvas = " + canvas + ", mDrawable = " + mDrawable);
         if (canvas == null || mDrawable == null) {
             return;
         }
@@ -64,6 +67,10 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
     }
 
     public void init() {
+        this.setFocusable(true);
+        this.setFocusableInTouchMode(true);
+        this.requestFocus();
+
         mHolder = getHolder();
         mHolder.addCallback(this);
         myThread = new MyThread(mHolder);
@@ -91,15 +98,13 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Log.d("MarqueeTextSurfaceView", "surfaceChanged");
         holder.setFixedSize(width, height);
+        Log.d("SurfaceImageView", "surfaceChanged width = " + holder.getSurfaceFrame().width() + ", height = " + holder.getSurfaceFrame().height());
 
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
-        Log.d("MarqueeTextSurfaceView", "surfaceCreated");
         isSurfaceValid = true;
-        startScroll();
         if (mDrawable != null) {
             // scale drawable to fit view height;
             int drawableHeight = mDrawable.getIntrinsicHeight();
@@ -108,10 +113,12 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
             mDrawableWidth = (int) (1.0f * height * drawableWidth / drawableHeight);
             mDrawable.setBounds(new Rect(0, 0, mDrawableWidth, height));
         }
+        startScroll();
+        Log.d("SurfaceImageView", "surfaceCreated width = " + holder.getSurfaceFrame().width() + ", height = " + holder.getSurfaceFrame().height());
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.d("MarqueeTextSurfaceView", "surfaceDestroyed");
+        Log.d("SurfaceImageView", "surfaceDestroyed width = " + holder.getSurfaceFrame().width() + ", height = " + holder.getSurfaceFrame().height());
         isSurfaceValid = false;
     }
 
@@ -125,7 +132,10 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
 
         public void run() {
             Canvas canvas = null;
-            while (canRun && isSurfaceValid) {
+            while (isSurfaceValid) {
+                if (!canRun) {
+                    continue;
+                }
                 try {
                     canvas = mHolder.lockCanvas();
                     handlerDrawInternal(canvas);

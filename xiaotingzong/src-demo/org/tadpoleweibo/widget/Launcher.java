@@ -44,6 +44,7 @@ public class Launcher extends ViewPagerEX {
     ImageView mDragView = null;
     WindowManager.LayoutParams mDragWinLP = null;
 
+
     private OnItemClickListener mOnItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener l) {
@@ -184,7 +185,7 @@ public class Launcher extends ViewPagerEX {
 
             @Override
             public int getCount() {
-                System.out.println("getCount = " + mLauncherPageList.size());
+                //                System.out.println("getCount = " + mLauncherPageList.size());
                 return mLauncherPageList.size();
             }
         };

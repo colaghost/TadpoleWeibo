@@ -443,13 +443,13 @@ public class LauncherPage extends ViewGroup {
     }
 
     public void onLayoutInternal() {
-        final int x = mFeatureMetrics.pLeft;
-        final int y = mFeatureMetrics.pTop;
-        final int childW = mFeatureMetrics.childW;
-        final int childH = mFeatureMetrics.childH;
-        final int cSpace = mFeatureMetrics.cSpace;
-        final int rSpace = mFeatureMetrics.rSpace;
-        final int numColums = mLauncher.mNumColumns;
+        final int x = mFeatureMetrics.pLeft; // 左padding
+        final int y = mFeatureMetrics.pTop;  // 右padding
+        final int childW = mFeatureMetrics.childW; // 子控件宽度
+        final int childH = mFeatureMetrics.childH; // 子控件高度
+        final int cSpace = mFeatureMetrics.cSpace; // 列间距
+        final int rSpace = mFeatureMetrics.rSpace; // 行间距
+        final int numColums = mLauncher.mNumColumns; // 列数量
 
         int v = 0;
         int z = 0;

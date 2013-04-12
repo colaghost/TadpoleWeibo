@@ -41,10 +41,6 @@ public class AsyncRoundImageView extends ImageView {
     private Path mMaskPath;
 
 
-    public void setAsyncEnable(boolean b) {
-        mDisableUsingImageUri = !b;
-    }
-
     public AsyncRoundImageView(Context context) {
         super(context);
         init();
@@ -58,6 +54,17 @@ public class AsyncRoundImageView extends ImageView {
     public AsyncRoundImageView(Context context, AttributeSet attr, int style) {
         super(context, attr, style);
         init();
+    }
+
+    /**
+     * 设置圆角半径
+     */
+    public void setCornerRadius(int r) {
+        mCornerRadius = r;
+    }
+
+    public void setAsyncEnable(boolean b) {
+        mDisableUsingImageUri = !b;
     }
 
     private void generateMaskPath(int width, int height) {
