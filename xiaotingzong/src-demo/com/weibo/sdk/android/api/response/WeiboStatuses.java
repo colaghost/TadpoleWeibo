@@ -22,12 +22,25 @@ public class WeiboStatuses {
     public String in_reply_to_status_id;
     public String in_reply_to_user_id;
     public String in_reply_to_screen_name;
+    public String thumbnail_pic;
+    public String bmiddle_pic;
+    public String original_pic;
 
 
     public static WeiboStatuses fromResponse(JSONObject jsonObject) {
         WeiboStatuses item = new WeiboStatuses();
         JSONUtil.copyProperties(item, WeiboStatuses.class, jsonObject);
         return item;
+    }
+
+
+    public static WeiboStatuses fromResponse(String response) {
+        try {
+            return fromResponse(new JSONObject(response));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static PageList<WeiboStatuses> fromUserTimelineJson(String response) throws JSONException {
@@ -51,4 +64,5 @@ public class WeiboStatuses {
 
         return pageList;
     }
+
 }

@@ -31,6 +31,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.weibo.sdk.android.WeiboException;
 import com.weibo.sdk.android.api.UsersAPI;
@@ -40,6 +41,7 @@ import com.weibo.sdk.android.api.response.WeiboStatuses;
 import com.weibo.sdk.android.net.RequestListener;
 import com.xiaotingzhong.app.storage.FriendsCacheMgr;
 import com.xiaotingzhong.app.storage.SubscriptionMgr;
+import com.xiaotingzhong.app.storage.WeiboStatusesCacheMgr;
 import com.xiaotingzhong.widget.SubscriptFriendListAdapter;
 import com.xiaotingzhong.widget.WeiboStatusesListAdapter;
 
@@ -104,7 +106,7 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
 
         this.mListStatuses.setAdapter(this.mPageAdapter);
         mListStatuses.getRefreshableView().setFastScrollEnabled(true);
-
+        mListStatuses.setMode(Mode.BOTH);
         me.fetchStatusesPreferCache(mUserSelf.id);
     }
 
@@ -115,7 +117,24 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
      * @param uid
      */
     protected void fetchStatusesPreferCache(final long uid) {
-        XTZApplication.getStatusesAPI().userTimeline(uid, 0, 0, 100, 1, false, FEATURE.ALL, true, new RequestListener() {
+        Log.d(TAG, "fetchStatusesPreferCache");
+        WeiboStatusesCacheMgr cacheMgr = new WeiboStatusesCacheMgr(this, XTZApplication.app.curUid, uid);
+        try {
+            ArrayList<WeiboStatuses> list = cacheMgr.getStatusesFromCache();
+            if (list != null && (list.size() != 0)) {
+                onWeiboStatusesLoad(list, false);
+                Log.d(TAG, "fetchStatusesPreferCache use cache");
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        fetchStatusesFromRemote(uid);
+    }
+
+    void fetchStatusesFromRemote(final long uid) {
+        Log.d(TAG, "fetchStatusesFromRemote");
+        XTZApplication.getStatusesAPI().userTimeline(uid, 0, 0, 30, 1, false, FEATURE.ALL, true, new RequestListener() {
             @Override
             public void onIOException(IOException e) {
             }
@@ -129,7 +148,7 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
                 try {
                     PageList<WeiboStatuses> pageList = WeiboStatuses.fromUserTimelineJson(response);
                     if (pageList != null) {
-                        onWeiboStatusesLoad(pageList);
+                        onWeiboStatusesLoad(pageList.records, false);
                         Log.d("SubscriptionActivity", "loadFromCache");
                         return;
                     }
@@ -140,11 +159,45 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
         });
     }
 
-    public void onWeiboStatusesLoad(final PageList<WeiboStatuses> pageList) {
+    void fetchStatusesFromRemote(final long uid, final boolean isAdd) {
+        Log.d(TAG, "fetchStatusesFromRemote since statuesId = " + mPageAdapter.getLastItemData().id);
+        XTZApplication.getStatusesAPI().userTimeline(uid, 0, mPageAdapter.getLastItemData().id - 1, 30, 1, false, FEATURE.ALL, true, new RequestListener() {
+            @Override
+            public void onIOException(IOException e) {
+            }
+
+            @Override
+            public void onError(WeiboException e) {
+            }
+
+            @Override
+            public void onComplete(String response) {
+                try {
+                    PageList<WeiboStatuses> pageList = WeiboStatuses.fromUserTimelineJson(response);
+                    if (pageList != null) {
+                        onWeiboStatusesLoad(pageList.records, isAdd);
+                        Log.d("SubscriptionActivity", "loadFromCache");
+                        return;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void onWeiboStatusesLoad(final ArrayList<WeiboStatuses> list, final boolean isAdd) {
         runOnUiThread(new Runnable() {
             public void run() {
-                mPageAdapter.setList(pageList.records);
+                List<WeiboStatuses> adapterList = mPageAdapter.getList();
+                if (isAdd && list != null) {
+                    adapterList.addAll(list);
+                } else {
+                    adapterList = list;
+                }
+                mPageAdapter.setList(adapterList);
                 mPageAdapter.notifyDataSetChanged();
+                mListStatuses.onRefreshComplete();
             }
         });
     }
@@ -156,6 +209,6 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+        fetchStatusesFromRemote(mUserSelf.id, true);
     }
 }

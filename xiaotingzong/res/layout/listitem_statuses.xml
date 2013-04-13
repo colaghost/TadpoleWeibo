@@ -3,7 +3,8 @@
     android:id="@+id/pageItemBg"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:padding="@dimen/padding_small" >
 
     <org.tadpoleweibo.widget.AsyncRoundImageView
         android:id="@+id/asyncimgview_profile"
@@ -14,7 +15,8 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/padding_small" >
 
         <TextView
             android:id="@+id/txtview_screen_name"
@@ -33,6 +35,16 @@
             android:text="dksjfkdjskfjdksjfkdjakfjdka;jfk;sjadkf;jdsak;jf;ksjfksdjkfjdskfjkdsjfkldsjfkdsj"
             android:textAppearance="@style/TextAppearance.Medium"
             android:textColor="@color/simple_black" />
+
+        <org.tadpoleweibo.widget.AsyncRoundImageView
+            android:id="@+id/asyncimgview_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:layout_marginTop="@dimen/padding_small"
+            android:contentDescription="XXX"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_launcher" />
     </LinearLayout>
 
 </LinearLayout>

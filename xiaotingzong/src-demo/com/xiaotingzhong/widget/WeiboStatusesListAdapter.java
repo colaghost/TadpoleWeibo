@@ -1,6 +1,7 @@
 package com.xiaotingzhong.widget;
 
 import org.tadpole.R;
+import org.tadpoleweibo.common.StringUtil;
 import org.tadpoleweibo.widget.AsyncRoundImageView;
 import org.tadpoleweibo.widget.PageListViewAdapter;
 
@@ -15,7 +16,7 @@ import com.weibo.sdk.android.api.response.WeiboStatuses;
 
 public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatuses> {
     private User mUser;
-    
+
     public WeiboStatusesListAdapter(Activity act, User user) {
         super(act);
         mUser = user;
@@ -32,6 +33,8 @@ public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatuses>
             holder.txtViewScreenName = (TextView) view.findViewById(R.id.txtview_screen_name);
             holder.txtViewText = (TextView) view.findViewById(R.id.txtview_text);
             holder.asycnImgViewProfile = (AsyncRoundImageView) view.findViewById(R.id.asyncimgview_profile);
+            holder.asycnImgViewPic = (AsyncRoundImageView) view.findViewById(R.id.asyncimgview_pic);
+            holder.asycnImgViewPic.setCornerRadius(0);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -39,9 +42,15 @@ public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatuses>
         holder.txtViewScreenName.setText(mUser.screen_name);
         holder.txtViewText.setText(weiboStatus.text);
         holder.asycnImgViewProfile.setImageURL(mUser.profile_image_url);
+
+        if (!StringUtil.isEmpty(weiboStatus.thumbnail_pic)) {
+            holder.asycnImgViewPic.setVisibility(View.VISIBLE);
+            holder.asycnImgViewPic.setImageURL(weiboStatus.thumbnail_pic);
+        } else {
+            holder.asycnImgViewPic.setVisibility(View.GONE);
+        }
         return view;
     }
-
 
     /**
      * 
@@ -57,5 +66,6 @@ public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatuses>
         TextView txtViewScreenName;
         TextView txtViewText;
         AsyncRoundImageView asycnImgViewProfile;
+        AsyncRoundImageView asycnImgViewPic;
     }
 }

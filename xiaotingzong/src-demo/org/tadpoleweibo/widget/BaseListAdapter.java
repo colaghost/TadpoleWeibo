@@ -34,6 +34,11 @@ public abstract class BaseListAdapter<T, V extends View> extends BaseAdapter {
         return mList.get(position);
     }
 
+    public T getLastItemData() {
+        return mList.get(mList.size() - 1);
+    }
+
+
     public T getItemData(int position) {
         if (this.mList == null) {
             return null;
