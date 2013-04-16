@@ -293,7 +293,7 @@ public class ImageHelper {
             }
             result = readBytes(response);
 
-            Log.d(TAG, "");
+            Log.d(TAG, "openUrl result = " + new String(result));
             return result;
         } catch (Exception e) {
             throw e;

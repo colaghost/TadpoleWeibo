@@ -25,7 +25,7 @@ public class SearchAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("q", q);
 		params.add("count", count);
-		request( SERVER_URL_PRIX + "/suggestions/users.json", params, HTTPMETHOD_GET,
+		requestAsync( SERVER_URL_PRIX + "/suggestions/users.json", params, HTTPMETHOD_GET,
 				listener);
 	}
 
@@ -40,7 +40,7 @@ public class SearchAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("q", q);
 		params.add("count", count);
-		request( SERVER_URL_PRIX + "/suggestions/statuses.json", params, HTTPMETHOD_GET,
+		requestAsync( SERVER_URL_PRIX + "/suggestions/statuses.json", params, HTTPMETHOD_GET,
 				listener);
 	}
 
@@ -57,7 +57,7 @@ public class SearchAPI extends WeiboAPI {
 		params.add("q", q);
 		params.add("count", count);
 		params.add("type", type.ordinal());
-		request( SERVER_URL_PRIX + "/suggestions/schools.json", params, HTTPMETHOD_GET,
+		requestAsync( SERVER_URL_PRIX + "/suggestions/schools.json", params, HTTPMETHOD_GET,
 				listener);
 	}
 
@@ -72,7 +72,7 @@ public class SearchAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("q", q);
 		params.add("count", count);
-		request( SERVER_URL_PRIX + "/suggestions/companies.json", params, HTTPMETHOD_GET,
+		requestAsync( SERVER_URL_PRIX + "/suggestions/companies.json", params, HTTPMETHOD_GET,
 				listener);
 	}
 
@@ -87,7 +87,7 @@ public class SearchAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("q", q);
 		params.add("count", count);
-		request( SERVER_URL_PRIX + "/suggestions/apps.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/suggestions/apps.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class SearchAPI extends WeiboAPI {
 		params.add("count", count);
 		params.add("type", type.ordinal());
 		params.add("range", range.ordinal());
-		request( SERVER_URL_PRIX + "/suggestions/at_users.json", params, HTTPMETHOD_GET,
+		requestAsync( SERVER_URL_PRIX + "/suggestions/at_users.json", params, HTTPMETHOD_GET,
 				listener);
 	}
 }

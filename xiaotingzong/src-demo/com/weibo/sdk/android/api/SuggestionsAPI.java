@@ -29,7 +29,7 @@ public class SuggestionsAPI extends WeiboAPI {
 	public void usersHot( USER_CATEGORY category, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("category", category.name());
-		request( SERVER_URL_PRIX + "/users/hot.json", params, HTTPMETHOD_GET,
+		requestAsync( SERVER_URL_PRIX + "/users/hot.json", params, HTTPMETHOD_GET,
 				listener);
 	}
 	
@@ -44,7 +44,7 @@ public class SuggestionsAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("count", count);
 		params.add("page", page);
-		request( SERVER_URL_PRIX + "/users/may_interested.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/users/may_interested.json", params, HTTPMETHOD_GET, listener);
 	}
 	
 	/**
@@ -58,7 +58,7 @@ public class SuggestionsAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("content", content);
 		params.add("num", num);
-		request( SERVER_URL_PRIX + "/users/may_interested.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/users/may_interested.json", params, HTTPMETHOD_GET, listener);
 	}
 	
 	/**
@@ -80,7 +80,7 @@ public class SuggestionsAPI extends WeiboAPI {
 		}
 		params.add("count", count);
 		params.add("page", page);
-		request( SERVER_URL_PRIX + "/statuses/hot.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/statuses/hot.json", params, HTTPMETHOD_GET, listener);
 	}
 	
 	/**
@@ -94,7 +94,7 @@ public class SuggestionsAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("count", count);
 		params.add("page", page);
-		request( SERVER_URL_PRIX + "/favorites/hot.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/favorites/hot.json", params, HTTPMETHOD_GET, listener);
 	}
 	
 	/**
@@ -106,6 +106,6 @@ public class SuggestionsAPI extends WeiboAPI {
 	public void notInterested( long uid, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("uid", uid);
-		request( SERVER_URL_PRIX + "/users/not_interested.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/users/not_interested.json", params, HTTPMETHOD_POST, listener);
 	}
 }

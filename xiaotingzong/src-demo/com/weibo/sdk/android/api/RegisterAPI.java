@@ -24,7 +24,7 @@ public class RegisterAPI extends WeiboAPI {
 	public void suggestions( String nickname, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("nickname", nickname);
-		request( SERVER_URL_PRIX + "/verify_nickname.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/verify_nickname.json", params, HTTPMETHOD_GET, listener);
 	}
 
 }

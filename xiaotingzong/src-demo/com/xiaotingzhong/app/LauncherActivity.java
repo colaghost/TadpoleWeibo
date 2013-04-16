@@ -38,9 +38,8 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
      * @param activity
      * @param uid
      */
-    public static void start(Activity activity, int uid, User user) {
+    public static void start(Activity activity, User user) {
         Intent intent = new Intent();
-        intent.putExtra(UID, uid);
         intent.putExtra(USER, user);
         intent.setClass(activity, LauncherActivity.class);
         activity.startActivity(intent);
@@ -51,7 +50,6 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
     private Launcher mLauncher;
     private ArrayList<User> mUserList = new ArrayList();
     private LauncherListAdapter<User> mLauncherAdapter = null;
-    private int mUidSelf = 0;
     private User mUserSelf = null;
 
 
@@ -63,7 +61,6 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
         // populate extra
         Intent intent = getIntent();
         Bundle extra = intent.getExtras();
-        mUidSelf = extra.getInt(UID);
         mUserSelf = (User) extra.getSerializable(USER);
 
         // init views
@@ -108,8 +105,8 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
     }
 
     public void fetchUserFriends() {
-        SubscriptionMgr subscriptionMgr = new SubscriptionMgr(this, mUidSelf);
-        ArrayList<User> userList = new FriendsCacheMgr(this, mUidSelf).getFriendsByUids(subscriptionMgr.getSubscriptedUids());
+        SubscriptionMgr subscriptionMgr = new SubscriptionMgr(this, mUserSelf.id);
+        ArrayList<User> userList = new FriendsCacheMgr(this, mUserSelf.id).getFriendsByUids(subscriptionMgr.getSubscriptedUids());
         fillLauncherData(userList);
     }
 

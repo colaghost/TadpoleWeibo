@@ -34,6 +34,7 @@
     <color name="simple_grey">#646464</color>
     <color name="simple_grey_trans">#AA646464</color>
     <color name="simple_grey_trans44">#44646464</color>
+     <color name="simple_grey_trans11">#11646464</color>
     <color name="simple_white_trans22">#22FFFFFF</color>
     <color name="simple_white_transCC">#CCFFFFFF</color>
 

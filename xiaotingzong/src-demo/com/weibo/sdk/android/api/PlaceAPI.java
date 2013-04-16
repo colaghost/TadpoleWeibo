@@ -38,7 +38,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("type", 1);
 		}
-		request( SERVER_URL_PRIX + "/friends_timeline.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/friends_timeline.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("base_app", 0);
 		}
-		request( SERVER_URL_PRIX + "/user_timeline.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/user_timeline.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("base_app", 1);
 		}
-		request( SERVER_URL_PRIX + "/poi_timeline.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/poi_timeline.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("offset", 0);
 		}
-		request( SERVER_URL_PRIX + "/nearby_timeline.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/nearby_timeline.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class PlaceAPI extends WeiboAPI {
 	public void statusesShow( long id, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("id", id);
-		request( SERVER_URL_PRIX + "/statuses/show.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/statuses/show.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("base_app", 0);
 		}
-		request( SERVER_URL_PRIX + "/users/show.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/users/show.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("base_app", 0);
 		}
-		request( SERVER_URL_PRIX + "/users/checkins.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/users/checkins.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -208,7 +208,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("base_app", 0);
 		}
-		request( SERVER_URL_PRIX + "/users/photos.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/users/photos.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -231,7 +231,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("base_app", 0);
 		}
-		request( SERVER_URL_PRIX + "/users/tips.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/users/tips.json", params, HTTPMETHOD_GET, listener);
 	}
 
 
@@ -250,7 +250,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("base_app", 0);
 		}
-		request( SERVER_URL_PRIX + "/pois/show.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/pois/show.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -273,7 +273,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("base_app", 0);
 		}
-		request( SERVER_URL_PRIX + "/pois/users.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/pois/users.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -298,7 +298,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("base_app", 0);
 		}
-		request( SERVER_URL_PRIX + "/pois/photos.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/pois/photos.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -323,7 +323,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("base_app", 0);
 		}
-		request( SERVER_URL_PRIX + "/pois/tips.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/pois/tips.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -344,7 +344,7 @@ public class PlaceAPI extends WeiboAPI {
 		params.add("category", category);
 		params.add("count", count);
 		params.add("page", page);
-		request( SERVER_URL_PRIX + "/pois/search.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/pois/search.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -362,7 +362,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("flag", 0);
 		}
-		request( SERVER_URL_PRIX + "/pois/category.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/pois/category.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -393,7 +393,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("offset", 0);
 		}
-		request( SERVER_URL_PRIX + "/nearby/pois.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/nearby/pois.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -426,7 +426,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("offset", 0);
 		}
-		request( SERVER_URL_PRIX + "/nearby/users.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/nearby/users.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -459,7 +459,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("offset", 0);
 		}
-		request( SERVER_URL_PRIX + "/nearby/photos.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/nearby/photos.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -482,7 +482,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("public", 0);
 		}
-		request( SERVER_URL_PRIX + "/pois/add_checkin.json", params, HTTPMETHOD_POST,
+		requestAsync( SERVER_URL_PRIX + "/pois/add_checkin.json", params, HTTPMETHOD_POST,
 				listener);
 	}
 
@@ -506,7 +506,7 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("public", 0);
 		}
-		request( SERVER_URL_PRIX + "/pois/add_photo.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/pois/add_photo.json", params, HTTPMETHOD_POST, listener);
 	}
 
 	/**
@@ -527,6 +527,6 @@ public class PlaceAPI extends WeiboAPI {
 		} else {
 			params.add("public", 0);
 		}
-		request( SERVER_URL_PRIX + "/pois/add_tip.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/pois/add_tip.json", params, HTTPMETHOD_POST, listener);
 	}
 }

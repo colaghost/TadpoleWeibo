@@ -3,6 +3,7 @@ package com.weibo.sdk.android.api;
 import android.text.TextUtils;
 
 import com.weibo.sdk.android.Oauth2AccessToken;
+import com.weibo.sdk.android.WeiboException;
 import com.weibo.sdk.android.WeiboParameters;
 import com.weibo.sdk.android.net.RequestListener;
 
@@ -28,7 +29,7 @@ public class AccountAPI extends WeiboAPI {
      */
     public void getPrivacy(RequestListener listener) {
         WeiboParameters params = new WeiboParameters();
-        request(SERVER_URL_PRIX + "/get_privacy.json", params, HTTPMETHOD_GET, listener);
+        requestAsync(SERVER_URL_PRIX + "/get_privacy.json", params, HTTPMETHOD_GET, listener);
     }
 
     /**
@@ -63,7 +64,7 @@ public class AccountAPI extends WeiboAPI {
             params.add("keyword", keyword);
         }
         params.add("count", count);
-        request(SERVER_URL_PRIX + "/profile/school_list.json", params, HTTPMETHOD_GET, listener);
+        requestAsync(SERVER_URL_PRIX + "/profile/school_list.json", params, HTTPMETHOD_GET, listener);
     }
 
     /**
@@ -73,7 +74,7 @@ public class AccountAPI extends WeiboAPI {
      */
     public void rateLimitStatus(RequestListener listener) {
         WeiboParameters params = new WeiboParameters();
-        request(SERVER_URL_PRIX + "/rate_limit_status.json", params, HTTPMETHOD_GET, listener);
+        requestAsync(SERVER_URL_PRIX + "/rate_limit_status.json", params, HTTPMETHOD_GET, listener);
     }
 
 
@@ -84,7 +85,17 @@ public class AccountAPI extends WeiboAPI {
      */
     public void getUid(RequestListener listener) {
         WeiboParameters params = new WeiboParameters();
-        request(SERVER_URL_PRIX + "/get_uid.json", params, HTTPMETHOD_GET, listener);
+        requestAsync(SERVER_URL_PRIX + "/get_uid.json", params, HTTPMETHOD_GET, listener);
+    }
+
+    /**
+     * OAuth授权之后，获取授权用户的UID
+     * 
+     * @throws WeiboException
+     */
+    public String getUid() throws WeiboException {
+        WeiboParameters params = new WeiboParameters();
+        return requestSync(SERVER_URL_PRIX + "/get_uid.json", params, HTTPMETHOD_GET);
     }
 
 
@@ -95,6 +106,6 @@ public class AccountAPI extends WeiboAPI {
      */
     public void endSession(RequestListener listener) {
         WeiboParameters params = new WeiboParameters();
-        request(SERVER_URL_PRIX + "/end_session.json", params, HTTPMETHOD_POST, listener);
+        requestAsync(SERVER_URL_PRIX + "/end_session.json", params, HTTPMETHOD_POST, listener);
     }
 }

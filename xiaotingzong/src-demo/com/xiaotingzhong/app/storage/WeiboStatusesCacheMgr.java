@@ -12,7 +12,7 @@ import org.tadpoleweibo.widget.PageList;
 import android.content.Context;
 
 import com.weibo.sdk.android.api.response.User;
-import com.weibo.sdk.android.api.response.WeiboStatuses;
+import com.weibo.sdk.android.api.response.WeiboStatus;
 
 public class WeiboStatusesCacheMgr extends BaseUserFileCache {
     private File mCacheDir = null;
@@ -22,14 +22,14 @@ public class WeiboStatusesCacheMgr extends BaseUserFileCache {
         mCacheDir = getSubDir("statues/" + friendUid);
     }
 
-    public ArrayList<WeiboStatuses> getStatusesFromCache() throws Exception {
+    public ArrayList<WeiboStatus> getStatusesFromCache() throws Exception {
         File[] files = this.mCacheDir.listFiles();
         if (files.length == 0) {
             return null;
         } else {
-            ArrayList<WeiboStatuses> iList = new ArrayList<WeiboStatuses>();
+            ArrayList<WeiboStatus> iList = new ArrayList<WeiboStatus>();
             for (File f : files) {
-                WeiboStatuses item = WeiboStatuses.fromResponse(FileUtil.readFile(f));
+                WeiboStatus item = WeiboStatus.fromResponse(FileUtil.readFile(f));
                 if (item != null) {
                     iList.add(item);
                 }
@@ -39,24 +39,24 @@ public class WeiboStatusesCacheMgr extends BaseUserFileCache {
 
     }
 
-    public PageList<WeiboStatuses> saveAndGetFriends(String friendsJson) throws Exception {
-        JSONObject jo = new JSONObject(friendsJson);
+    public PageList<WeiboStatus> saveAndGetStatuses(String jsonStr) throws Exception {
+        JSONObject jo = new JSONObject(jsonStr);
         JSONArray jr = jo.getJSONArray("statuses");
         JSONObject joTmp = null;
 
         String path = this.mCacheDir.getAbsolutePath();
 
-        ArrayList<WeiboStatuses> iList = new ArrayList<WeiboStatuses>();
+        ArrayList<WeiboStatus> iList = new ArrayList<WeiboStatus>();
         for (int i = 0, len = jr.length(); i < len; i++) {
             joTmp = jr.getJSONObject(i);
-            WeiboStatuses item = WeiboStatuses.fromResponse(joTmp);
+            WeiboStatus item = WeiboStatus.fromResponse(joTmp);
             iList.add(item);
             String str = path + File.separator + item.id;
             FileUtil.createFile(str);
             FileUtil.writeFile(str, joTmp.toString().getBytes(), false);
         }
 
-        PageList<WeiboStatuses> pageList = new PageList<WeiboStatuses>();
+        PageList<WeiboStatus> pageList = new PageList<WeiboStatus>();
         pageList.records = iList;
         pageList.total_number = jo.optInt("total_number");
         pageList.next_cursor = jo.optInt("next_cursor");

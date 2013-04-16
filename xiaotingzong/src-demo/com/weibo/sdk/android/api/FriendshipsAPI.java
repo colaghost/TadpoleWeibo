@@ -35,7 +35,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		} else {
 			params.add("trim_status", 0);
 		}
-		request( SERVER_URL_PRIX + "/friends.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/friends.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		} else {
 			params.add("trim_status", 1);
 		}
-		request( SERVER_URL_PRIX + "/friends.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/friends.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		} else {
 			params.add("trim_status", 0);
 		}
-		request( SERVER_URL_PRIX + "/friends/in_common.json", params, HTTPMETHOD_GET,
+		requestAsync( SERVER_URL_PRIX + "/friends/in_common.json", params, HTTPMETHOD_GET,
 				listener);
 	}
 
@@ -100,7 +100,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		params.add("uid", uid);
 		params.add("count", count);
 		params.add("page", page);
-		request( SERVER_URL_PRIX + "/friends/bilateral.json", params, HTTPMETHOD_GET,
+		requestAsync( SERVER_URL_PRIX + "/friends/bilateral.json", params, HTTPMETHOD_GET,
 				listener);
 	}
 
@@ -117,7 +117,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		params.add("uid", uid);
 		params.add("count", count);
 		params.add("page", page);
-		request( SERVER_URL_PRIX + "/friends/bilateral/ids.json", params, HTTPMETHOD_GET,
+		requestAsync( SERVER_URL_PRIX + "/friends/bilateral/ids.json", params, HTTPMETHOD_GET,
 				listener);
 	}
 
@@ -134,7 +134,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		params.add("uid", uid);
 		params.add("count", count);
 		params.add("cursor", cursor);
-		request( SERVER_URL_PRIX + "/friends/ids.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/friends/ids.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		params.add("screen_name", screen_name);
 		params.add("count", count);
 		params.add("cursor", cursor);
-		request( SERVER_URL_PRIX + "/friends/ids.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/friends/ids.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		} else {
 			params.add("trim_status", 1);
 		}
-		request( SERVER_URL_PRIX + "/followers.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/followers.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -197,7 +197,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		} else {
 			params.add("trim_status", 1);
 		}
-		request( SERVER_URL_PRIX + "/followers.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/followers.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		params.add("uid", uid);
 		params.add("count", count);
 		params.add("cursor", cursor);
-		request( SERVER_URL_PRIX + "/followers/ids.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/followers/ids.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -230,7 +230,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		params.add("screen_name", screen_name);
 		params.add("count", count);
 		params.add("cursor", cursor);
-		request( SERVER_URL_PRIX + "/followers/ids.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/followers/ids.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -244,7 +244,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("uid", uid);
 		params.add("count", count);
-		request( SERVER_URL_PRIX + "/followers/active.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/followers/active.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -260,7 +260,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		params.add("uid", uid);
 		params.add("count", count);
 		params.add("page", page);
-		request( SERVER_URL_PRIX + "/friends_chain/followers.json", params, HTTPMETHOD_GET,
+		requestAsync( SERVER_URL_PRIX + "/friends_chain/followers.json", params, HTTPMETHOD_GET,
 				listener);
 	}
 
@@ -275,7 +275,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("source_id", source_id);
 		params.add("target_id", target_id);
-		request( SERVER_URL_PRIX + "/show.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/show.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -289,7 +289,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("source_id", source_id);
 		params.add("target_screen_name", target_screen_name);
-		request( SERVER_URL_PRIX + "/show.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/show.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -303,7 +303,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("source_screen_name", source_screen_name);
 		params.add("target_id", target_id);
-		request( SERVER_URL_PRIX + "/show.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/show.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -318,7 +318,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("target_screen_name", target_screen_name);
 		params.add("source_screen_name", source_screen_name);
-		request(SERVER_URL_PRIX + "/show.json", params, HTTPMETHOD_GET, listener);
+		requestAsync(SERVER_URL_PRIX + "/show.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -332,7 +332,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("uid", uid);
 		params.add("screen_name", screen_name);
-		request( SERVER_URL_PRIX + "/create.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/create.json", params, HTTPMETHOD_POST, listener);
 	}
 
 	/**
@@ -345,7 +345,7 @@ public class FriendshipsAPI extends WeiboAPI {
 	public void create( String screen_name, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("screen_name", screen_name);
-		request( SERVER_URL_PRIX + "/create.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/create.json", params, HTTPMETHOD_POST, listener);
 	}
 
 	/**
@@ -359,7 +359,7 @@ public class FriendshipsAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("uid", uid);
 		params.add("screen_name", screen_name);
-		request( SERVER_URL_PRIX + "/destroy.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/destroy.json", params, HTTPMETHOD_POST, listener);
 	}
 	
 	/**
@@ -372,6 +372,6 @@ public class FriendshipsAPI extends WeiboAPI {
 	public void destroy(String screen_name, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("screen_name", screen_name);
-		request( SERVER_URL_PRIX + "/destroy.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/destroy.json", params, HTTPMETHOD_POST, listener);
 	}
 }

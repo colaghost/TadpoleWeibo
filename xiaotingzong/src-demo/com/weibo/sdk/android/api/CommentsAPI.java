@@ -34,7 +34,7 @@ public class CommentsAPI extends WeiboAPI {
 		params.add("count", count);
 		params.add("page", page);
 		params.add("filter_by_author", filter_by_author.ordinal());
-		request( SERVER_URL_PRIX + "/show.json", params, HTTPMETHOD_GET,listener);
+		requestAsync( SERVER_URL_PRIX + "/show.json", params, HTTPMETHOD_GET,listener);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class CommentsAPI extends WeiboAPI {
 		params.add("count", count);
 		params.add("page", page);
 		params.add("filter_by_source", filter_by_source.ordinal());
-		request(SERVER_URL_PRIX + "/by_me.json", params, HTTPMETHOD_GET,listener);
+		requestAsync(SERVER_URL_PRIX + "/by_me.json", params, HTTPMETHOD_GET,listener);
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class CommentsAPI extends WeiboAPI {
 		params.add("page", page);
 		params.add("filter_by_author", filter_by_author.ordinal());
 		params.add("filter_by_source", filter_by_source.ordinal());
-		request(SERVER_URL_PRIX + "/to_me.json", params, HTTPMETHOD_GET,listener);
+		requestAsync(SERVER_URL_PRIX + "/to_me.json", params, HTTPMETHOD_GET,listener);
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class CommentsAPI extends WeiboAPI {
 		} else {
 			params.add("trim_user", 0);
 		}
-		request(SERVER_URL_PRIX + "/timeline.json", params, HTTPMETHOD_GET,listener);
+		requestAsync(SERVER_URL_PRIX + "/timeline.json", params, HTTPMETHOD_GET,listener);
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class CommentsAPI extends WeiboAPI {
 		params.add("page", page);
 		params.add("filter_by_author", filter_by_author.ordinal());
 		params.add("filter_by_source", filter_by_source.ordinal());
-		request(SERVER_URL_PRIX + "/mentions.json", params, HTTPMETHOD_GET,listener);
+		requestAsync(SERVER_URL_PRIX + "/mentions.json", params, HTTPMETHOD_GET,listener);
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class CommentsAPI extends WeiboAPI {
 		}
 		strb.deleteCharAt(strb.length() - 1);
 		params.add("cids", strb.toString());
-		request(SERVER_URL_PRIX + "/show_batch.json", params, HTTPMETHOD_GET,listener);
+		requestAsync(SERVER_URL_PRIX + "/show_batch.json", params, HTTPMETHOD_GET,listener);
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class CommentsAPI extends WeiboAPI {
 		} else {
 			params.add("comment_ori", 1);
 		}
-		request(SERVER_URL_PRIX + "/create.json", params, HTTPMETHOD_POST, listener);
+		requestAsync(SERVER_URL_PRIX + "/create.json", params, HTTPMETHOD_POST, listener);
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class CommentsAPI extends WeiboAPI {
 	public void destroy(long cid, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("cid", cid);
-		request( SERVER_URL_PRIX + "/destroy.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/destroy.json", params, HTTPMETHOD_POST, listener);
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class CommentsAPI extends WeiboAPI {
 		}
 		strb.deleteCharAt(strb.length() - 1);
 		params.add("ids", strb.toString());
-		request(SERVER_URL_PRIX + "/sdestroy_batch.json", params, HTTPMETHOD_POST, listener);
+		requestAsync(SERVER_URL_PRIX + "/sdestroy_batch.json", params, HTTPMETHOD_POST, listener);
 	}
 
 	/**
@@ -220,7 +220,7 @@ public class CommentsAPI extends WeiboAPI {
 		} else {
 			params.add("comment_ori", 0);
 		}
-		request(SERVER_URL_PRIX + "/reply.json", params, HTTPMETHOD_POST, listener);
+		requestAsync(SERVER_URL_PRIX + "/reply.json", params, HTTPMETHOD_POST, listener);
 	}
 
 }

@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 import org.tadpole.R;
+import org.tadpoleweibo.app.LoadDialog;
+import org.tadpoleweibo.app.LoadDialogAsyncTask;
 import org.tadpoleweibo.common.ActivityUtil;
 import org.tadpoleweibo.widget.Launcher;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +28,7 @@ import com.weibo.sdk.android.WeiboException;
 import com.weibo.sdk.android.api.AccountAPI;
 import com.weibo.sdk.android.api.UsersAPI;
 import com.weibo.sdk.android.api.response.Account;
+import com.weibo.sdk.android.api.response.Emotion;
 import com.weibo.sdk.android.api.response.User;
 import com.weibo.sdk.android.keep.AccessTokenKeeper;
 import com.weibo.sdk.android.net.RequestListener;
@@ -50,8 +54,6 @@ public class MainActivity extends Activity {
      * SsoHandler 仅当sdk支持sso时有效，
      */
     SsoHandler mSsoHandler;
-
-    private Launcher mLauncher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -121,9 +123,6 @@ public class MainActivity extends Activity {
         } else {
             mText.setText("使用SSO登录前，请检查手机上是否已经安装新浪微博客户端，目前仅3.0.0及以上微博客户端版本支持SSO；如果未安装，将自动转为Oauth2.0进行认证");
         }
-
-        mLauncher = (Launcher) findViewById(R.id.launcher);
-
     }
 
 
@@ -173,7 +172,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         /**
          * 下面两个注释掉的代码，仅当sdk支持sso时有效，
          */
@@ -182,56 +180,31 @@ public class MainActivity extends Activity {
         }
     }
 
-
     public void startLauncherActivity() {
-        getUid();
-    }
-
-    public void getUid() {
-        new AccountAPI(AccessTokenKeeper.readAccessToken(this)).getUid(new RequestListener() {
-            @Override
-            public void onIOException(IOException e) {
-            }
-
-            @Override
-            public void onError(WeiboException e) {
-            }
-
-            @Override
-            public void onComplete(String response) {
-                Account ac;
-                try {
-                    ac = Account.fromGetUid(response);
-                    fetchUserInfo(ac.uid);
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-
-            }
-        });
-    }
-
-    public void fetchUserInfo(final int uid) {
         final MainActivity me = this;
-        new UsersAPI(AccessTokenKeeper.readAccessToken(this)).show(uid, new RequestListener() {
-            public void onComplete(String response) {
-                User user = null;
+        new LoadDialogAsyncTask<String, String, Boolean>(me) {
+            @Override
+            protected Boolean doInBackground(String... params) {
                 try {
-                    user = User.fromResponse(response);
-                    XTZApplication.app.curUser = user;
-                    LauncherActivity.start(me, uid, user);
+                    // 获取用户信息
+                    XTZApplication.setCurUser(Account.getUserByToken());
+                    // 获取表情
+                    Emotion.cacheEmotions();
+                    return true;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
+                return false;
+            };
 
-            public void onError(WeiboException weiboE) {
+            protected void onPostExecute(Boolean result) {
+                super.onPostExecute(result);
+                if (result.booleanValue() == true) {
+                    LauncherActivity.start(me, XTZApplication.getCurUser());
+                } else {
+                    Toast.makeText(me, "获取用户信息失败", Toast.LENGTH_LONG).show();
+                }
             }
-
-            public void onIOException(IOException e) {
-                e.printStackTrace();
-            }
-        });
+        }.execute("");
     }
 }

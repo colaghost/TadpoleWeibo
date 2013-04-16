@@ -30,7 +30,7 @@ public class CommonAPI extends WeiboAPI {
 	          params.add("capital", capital.name().toLowerCase());
 	      }
 		params.add("language", language);
-		request( SERVER_URL_PRIX + "/get_city.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/get_city.json", params, HTTPMETHOD_GET, listener);
 	}
 		
 	/**
@@ -44,7 +44,7 @@ public class CommonAPI extends WeiboAPI {
           params.add("capital", capital.name().toLowerCase());
       }
         params.add("language", language);
-        request( SERVER_URL_PRIX + "/get_country.json", params, HTTPMETHOD_GET, listener);
+        requestAsync( SERVER_URL_PRIX + "/get_country.json", params, HTTPMETHOD_GET, listener);
     }
 	
 	/**
@@ -56,6 +56,6 @@ public class CommonAPI extends WeiboAPI {
 	public void getTimezone( String language, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("language", language);
-		request( SERVER_URL_PRIX + "/get_timezone.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/get_timezone.json", params, HTTPMETHOD_GET, listener);
 	}
 }

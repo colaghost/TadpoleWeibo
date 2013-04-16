@@ -26,7 +26,7 @@ public class TagsAPI extends WeiboAPI {
 		params.add("uid", uid);
 		params.add("count", count);
 		params.add("page", page);
-		request( SERVER_URL_PRIX + ".json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + ".json", params, HTTPMETHOD_GET, listener);
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public class TagsAPI extends WeiboAPI {
 		}
 		strb.deleteCharAt(strb.length() - 1);
 		params.add("uids", strb.toString());
-		request( SERVER_URL_PRIX + "/tags_batch.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/tags_batch.json", params, HTTPMETHOD_GET, listener);
 	}
 	
 	/**
@@ -53,7 +53,7 @@ public class TagsAPI extends WeiboAPI {
 	public void suggestions( int count, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("count", count);
-		request( SERVER_URL_PRIX + "/suggestions.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/suggestions.json", params, HTTPMETHOD_GET, listener);
 	}
 	
 	/**
@@ -69,7 +69,7 @@ public class TagsAPI extends WeiboAPI {
 		}
 		strb.deleteCharAt(strb.length() - 1);
 		params.add("tags", strb.toString());
-		request( SERVER_URL_PRIX + "/create.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/create.json", params, HTTPMETHOD_POST, listener);
 	}
 	
 	/**
@@ -80,7 +80,7 @@ public class TagsAPI extends WeiboAPI {
 	public void destroy( long tag_id, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("tag_id", tag_id);
-		request( SERVER_URL_PRIX + "/destroy.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/destroy.json", params, HTTPMETHOD_POST, listener);
 	}
 	
 	/**
@@ -96,6 +96,6 @@ public class TagsAPI extends WeiboAPI {
 		}
 		strb.deleteCharAt(strb.length() - 1);
 		params.add("ids", strb.toString());
-		request( SERVER_URL_PRIX + "/destroy_batch.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/destroy_batch.json", params, HTTPMETHOD_POST, listener);
 	}
 }

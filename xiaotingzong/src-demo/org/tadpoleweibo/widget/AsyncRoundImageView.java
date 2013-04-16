@@ -56,15 +56,13 @@ public class AsyncRoundImageView extends ImageView {
         init();
     }
 
-<<<<<<< HEAD
-    
+
     @TargetApi(11)
     private void init() {
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         this.mMaskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
     }
-    
-=======
+
     /**
      * 设置圆角半径
      */
@@ -76,7 +74,6 @@ public class AsyncRoundImageView extends ImageView {
         mDisableUsingImageUri = !b;
     }
 
->>>>>>> fc0cc95dfef030ef77814060ae6f5e5999683061
     private void generateMaskPath(int width, int height) {
         this.mMaskPath = new Path();
         this.mMaskPath.addRoundRect(new RectF(0.0F, 0.0F, width, height), this.mCornerRadius, this.mCornerRadius, Path.Direction.CW);

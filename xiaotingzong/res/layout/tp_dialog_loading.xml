@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/background"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@color/weibosdk_text_num_gray"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/padding_medium" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:padding="@dimen/padding_large"
+            android:text="正在努力加载中"
+            android:textAppearance="@style/TextAppearance.Small"
+            android:textColor="@android:color/white" />
+
+        <ImageView
+            android:layout_width="1px"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/imgview_loadrefresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/padding_medium"
+            android:src="@drawable/loadrefresh"
+            android:text="正在努力加载中" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -26,9 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 
 public class LauncherPage extends ViewGroup {
-
     static final String TAG = "LauncherPage";
-
     static final Rect sRect = new Rect();
 
     private int mPageDraPos = INVALID_POSITION;
@@ -71,10 +69,8 @@ public class LauncherPage extends ViewGroup {
         View view = listAdapter.getView(position, null, null);
         final long itemId = listAdapter.getItemId(position);
 
-        view.setBackgroundColor(Color.GRAY);
         view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
         itemView.addView(view);
-        itemView.setBackgroundColor(Color.RED);
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

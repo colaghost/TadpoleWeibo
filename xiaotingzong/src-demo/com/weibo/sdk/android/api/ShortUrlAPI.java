@@ -29,7 +29,7 @@ public class ShortUrlAPI extends WeiboAPI {
             }
 		}
 		
-		request( SERVER_URL_PRIX + "/shorten.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/shorten.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class ShortUrlAPI extends WeiboAPI {
             }
 		}
 		
-		request( SERVER_URL_PRIX + "/expand.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/expand.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class ShortUrlAPI extends WeiboAPI {
                 params.add("url_short", url_short[i]);
             }
         }
-		request( SERVER_URL_PRIX + "/clicks.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/clicks.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class ShortUrlAPI extends WeiboAPI {
 	public void referers( String url_short, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("url_short", url_short);
-		request( SERVER_URL_PRIX + "/referers.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/referers.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class ShortUrlAPI extends WeiboAPI {
 	public void locations( String url_short, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("url_short", url_short);
-		request( SERVER_URL_PRIX + "/locations.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/locations.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class ShortUrlAPI extends WeiboAPI {
                 params.add("url_short", url_short[i]);
             }
         }
-		request( SERVER_URL_PRIX + "/share/counts.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/share/counts.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class ShortUrlAPI extends WeiboAPI {
 		params.add("max_id", max_id);
 		params.add("count", count);
 		params.add("page", page);
-		request( SERVER_URL_PRIX + "/share/statuses.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/share/statuses.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -143,7 +143,7 @@ public class ShortUrlAPI extends WeiboAPI {
                 params.add("url_short", url_short[i]);
             }
         }
-		request( SERVER_URL_PRIX + "/comment/counts.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/comment/counts.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class ShortUrlAPI extends WeiboAPI {
 		params.add("max_id", max_id);
 		params.add("count", count);
 		params.add("page", page);
-		request( SERVER_URL_PRIX + "/comment/comments.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/comment/comments.json", params, HTTPMETHOD_GET, listener);
 	}
 
 

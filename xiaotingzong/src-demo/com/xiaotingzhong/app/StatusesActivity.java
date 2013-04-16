@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.json.JSONException;
 import org.tadpole.R;
+import org.tadpoleweibo.common.StringUtil;
 import org.tadpoleweibo.widget.AbsPageListView;
 import org.tadpoleweibo.widget.AsyncRoundImageView;
 import org.tadpoleweibo.widget.Launcher;
@@ -16,7 +17,9 @@ import org.tadpoleweibo.widget.PageListViewAdapter;
 import org.tadpoleweibo.widget.SurfaceImageView;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,6 +32,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
@@ -37,7 +41,7 @@ import com.weibo.sdk.android.WeiboException;
 import com.weibo.sdk.android.api.UsersAPI;
 import com.weibo.sdk.android.api.WeiboAPI.FEATURE;
 import com.weibo.sdk.android.api.response.User;
-import com.weibo.sdk.android.api.response.WeiboStatuses;
+import com.weibo.sdk.android.api.response.WeiboStatus;
 import com.weibo.sdk.android.net.RequestListener;
 import com.xiaotingzhong.app.storage.FriendsCacheMgr;
 import com.xiaotingzhong.app.storage.SubscriptionMgr;
@@ -62,7 +66,7 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
      * @param activity
      * @param uid
      */
-    public static void start(Activity activity, User user) {
+    public static void start(Context activity, User user) {
         Intent intent = new Intent();
         intent.putExtra(USER, user);
         intent.setClass(activity, StatusesActivity.class);
@@ -72,7 +76,7 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
     private ImageButton mImgBtnLeft = null;
     private ImageButton mImgBtnRight = null;
     private WeiboStatusesListAdapter mPageAdapter = null;
-    private PageListView<WeiboStatuses> mListStatuses = null;
+    private PageListView<WeiboStatus> mListStatuses = null;
 
     private User mUserSelf = null;
 
@@ -101,7 +105,7 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
         });
 
         this.mPageAdapter = new WeiboStatusesListAdapter(this, mUserSelf);
-        this.mListStatuses = ((PageListView<WeiboStatuses>) findViewById(R.id.listview_statuses));
+        this.mListStatuses = ((PageListView<WeiboStatus>) findViewById(R.id.listview_statuses));
         this.mListStatuses.setOnRefreshListener(this);
 
         this.mListStatuses.setAdapter(this.mPageAdapter);
@@ -118,9 +122,9 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
      */
     protected void fetchStatusesPreferCache(final long uid) {
         Log.d(TAG, "fetchStatusesPreferCache");
-        WeiboStatusesCacheMgr cacheMgr = new WeiboStatusesCacheMgr(this, XTZApplication.app.curUid, uid);
+        WeiboStatusesCacheMgr cacheMgr = new WeiboStatusesCacheMgr(this, XTZApplication.getCurUid(), uid);
         try {
-            ArrayList<WeiboStatuses> list = cacheMgr.getStatusesFromCache();
+            ArrayList<WeiboStatus> list = cacheMgr.getStatusesFromCache();
             if (list != null && (list.size() != 0)) {
                 onWeiboStatusesLoad(list, false);
                 Log.d(TAG, "fetchStatusesPreferCache use cache");
@@ -134,7 +138,7 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
 
     void fetchStatusesFromRemote(final long uid) {
         Log.d(TAG, "fetchStatusesFromRemote");
-        XTZApplication.getStatusesAPI().userTimeline(uid, 0, 0, 30, 1, false, FEATURE.ALL, true, new RequestListener() {
+        XTZApplication.getStatusesAPI().userTimeline(uid, 0, 0, 30, 1, false, FEATURE.ALL, false, new RequestListener() {
             @Override
             public void onIOException(IOException e) {
             }
@@ -145,14 +149,16 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
 
             @Override
             public void onComplete(String response) {
+                WeiboStatusesCacheMgr cacheMgr = new WeiboStatusesCacheMgr(StatusesActivity.this, XTZApplication.getCurUid(), uid);
                 try {
-                    PageList<WeiboStatuses> pageList = WeiboStatuses.fromUserTimelineJson(response);
+                    PageList<WeiboStatus> pageList = cacheMgr.saveAndGetStatuses(response);
                     if (pageList != null) {
                         onWeiboStatusesLoad(pageList.records, false);
                         Log.d("SubscriptionActivity", "loadFromCache");
                         return;
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -161,7 +167,7 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
 
     void fetchStatusesFromRemote(final long uid, final boolean isAdd) {
         Log.d(TAG, "fetchStatusesFromRemote since statuesId = " + mPageAdapter.getLastItemData().id);
-        XTZApplication.getStatusesAPI().userTimeline(uid, 0, mPageAdapter.getLastItemData().id - 1, 30, 1, false, FEATURE.ALL, true, new RequestListener() {
+        XTZApplication.getStatusesAPI().userTimeline(uid, 0, mPageAdapter.getLastItemData().id - 1, 30, 1, false, FEATURE.ALL, false, new RequestListener() {
             @Override
             public void onIOException(IOException e) {
             }
@@ -172,24 +178,26 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
 
             @Override
             public void onComplete(String response) {
+                WeiboStatusesCacheMgr cacheMgr = new WeiboStatusesCacheMgr(StatusesActivity.this, XTZApplication.getCurUid(), uid);
                 try {
-                    PageList<WeiboStatuses> pageList = WeiboStatuses.fromUserTimelineJson(response);
+                    PageList<WeiboStatus> pageList = cacheMgr.saveAndGetStatuses(response);
                     if (pageList != null) {
                         onWeiboStatusesLoad(pageList.records, isAdd);
                         Log.d("SubscriptionActivity", "loadFromCache");
                         return;
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
         });
     }
 
-    public void onWeiboStatusesLoad(final ArrayList<WeiboStatuses> list, final boolean isAdd) {
+    public void onWeiboStatusesLoad(final ArrayList<WeiboStatus> list, final boolean isAdd) {
         runOnUiThread(new Runnable() {
             public void run() {
-                List<WeiboStatuses> adapterList = mPageAdapter.getList();
+                List<WeiboStatus> adapterList = mPageAdapter.getList();
                 if (isAdd && list != null) {
                     adapterList.addAll(list);
                 } else {
@@ -211,4 +219,5 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
     public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
         fetchStatusesFromRemote(mUserSelf.id, true);
     }
+
 }

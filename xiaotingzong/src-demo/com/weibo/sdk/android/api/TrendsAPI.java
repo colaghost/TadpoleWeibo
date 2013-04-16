@@ -26,7 +26,7 @@ public class TrendsAPI extends WeiboAPI {
 		params.add("uid", uid);
 		params.add("count", count);
 		params.add("page", page);
-		request( SERVER_URL_PRIX + ".json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + ".json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -37,7 +37,7 @@ public class TrendsAPI extends WeiboAPI {
 	public void isFollow( String trend_name, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("trend_name", trend_name);
-		request( SERVER_URL_PRIX + "/is_follow.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/is_follow.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class TrendsAPI extends WeiboAPI {
 		} else {
 			params.add("base_app", 0);
 		}
-		request( SERVER_URL_PRIX + "/hourly.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/hourly.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class TrendsAPI extends WeiboAPI {
 		} else {
 			params.add("base_app", 0);
 		}
-		request( SERVER_URL_PRIX + "/daily.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/daily.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class TrendsAPI extends WeiboAPI {
 		} else {
 			params.add("base_app", 1);
 		}
-		request( SERVER_URL_PRIX + "/weekly.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/weekly.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class TrendsAPI extends WeiboAPI {
 	public void follow( String trend_name, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("trend_name", trend_name);
-		request( SERVER_URL_PRIX + "/follow.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/follow.json", params, HTTPMETHOD_POST, listener);
 	}
 
 	/**
@@ -104,6 +104,6 @@ public class TrendsAPI extends WeiboAPI {
 	public void destroy( long trend_id, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("trend_id", trend_id);
-		request( SERVER_URL_PRIX + "/destroy.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/destroy.json", params, HTTPMETHOD_POST, listener);
 	}
 }

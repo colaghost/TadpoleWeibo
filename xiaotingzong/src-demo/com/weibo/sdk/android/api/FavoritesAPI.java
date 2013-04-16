@@ -26,7 +26,7 @@ public class FavoritesAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("count", count);
 		params.add("page", page);
-		request( SERVER_URL_PRIX + ".json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + ".json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class FavoritesAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("count", count);
 		params.add("page", page);
-		request( SERVER_URL_PRIX + "/ids.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/ids.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class FavoritesAPI extends WeiboAPI {
 	public void show(long id, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("id", id);
-		request( SERVER_URL_PRIX + "/show.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/show.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class FavoritesAPI extends WeiboAPI {
 		params.add("tid", tid);
 		params.add("count", count);
 		params.add("page", page);
-		request( SERVER_URL_PRIX + "/by_tags.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/by_tags.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class FavoritesAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("count", count);
 		params.add("page", page);
-		request( SERVER_URL_PRIX + "/tags.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/tags.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class FavoritesAPI extends WeiboAPI {
 		params.add("tid", tid);
 		params.add("count", count);
 		params.add("page", page);
-		request( SERVER_URL_PRIX + "/by_tags/ids.json", params, HTTPMETHOD_GET, listener);
+		requestAsync( SERVER_URL_PRIX + "/by_tags/ids.json", params, HTTPMETHOD_GET, listener);
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class FavoritesAPI extends WeiboAPI {
 	public void create( long id, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("id", id);
-		request( SERVER_URL_PRIX + "/create.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/create.json", params, HTTPMETHOD_POST, listener);
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class FavoritesAPI extends WeiboAPI {
 	public void destroy( long id, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("id", id);
-		request( SERVER_URL_PRIX + "/destroy.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/destroy.json", params, HTTPMETHOD_POST, listener);
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class FavoritesAPI extends WeiboAPI {
 		}
 		strb.deleteCharAt(strb.length() - 1);
 		params.add("ids", strb.toString());
-		request( SERVER_URL_PRIX + "/destroy_batch.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/destroy_batch.json", params, HTTPMETHOD_POST, listener);
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class FavoritesAPI extends WeiboAPI {
 		}
 		strb.deleteCharAt(strb.length() - 1);
 		params.add("tags", strb.toString());
-		request( SERVER_URL_PRIX + "/tags/update.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/tags/update.json", params, HTTPMETHOD_POST, listener);
 	}
 	
 	/**
@@ -172,7 +172,7 @@ public class FavoritesAPI extends WeiboAPI {
 		WeiboParameters params = new WeiboParameters();
 		params.add("tid", id);
 		params.add("tag", tag);
-		request( SERVER_URL_PRIX + "/tags/update_batch.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/tags/update_batch.json", params, HTTPMETHOD_POST, listener);
 	}
 	
 	/**
@@ -184,6 +184,6 @@ public class FavoritesAPI extends WeiboAPI {
 	public void tagsDestroyBatch( long tid, RequestListener listener) {
 		WeiboParameters params = new WeiboParameters();
 		params.add("tid", tid);
-		request( SERVER_URL_PRIX + "/tags/destroy_batch.json", params, HTTPMETHOD_POST, listener);
+		requestAsync( SERVER_URL_PRIX + "/tags/destroy_batch.json", params, HTTPMETHOD_POST, listener);
 	}
 }
