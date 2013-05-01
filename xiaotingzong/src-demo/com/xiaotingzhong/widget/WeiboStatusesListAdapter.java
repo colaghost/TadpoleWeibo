@@ -1,3 +1,4 @@
+
 package com.xiaotingzhong.widget;
 
 import org.tadpole.R;
@@ -16,17 +17,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.weibo.sdk.android.api.response.User;
-import com.weibo.sdk.android.api.response.WeiboStatus;
 import com.xiaotingzhong.app.StatusesActivity;
+import com.xiaotingzhong.model.User;
+import com.xiaotingzhong.model.WeiboStatus;
+import com.xiaotingzhong.model.state.UserState;
 
 public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatus> {
     private static final String TAG = null;
-    private User mUser;
+
+    private User mCurUser;
 
     public WeiboStatusesListAdapter(Activity act, User user) {
         super(act);
-        mUser = user;
+        mCurUser = user;
     }
 
     @Override
@@ -37,29 +40,30 @@ public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatus> {
         if (view == null) {
             view = LayoutInflater.from(getContext()).inflate(R.layout.listitem_statuses, null);
             holder = new ViewHolder();
-            holder.txtViewScreenName = (TextView) view.findViewById(R.id.txtview_screen_name);
-            holder.txtViewText = (TextView) view.findViewById(R.id.txtview_text);
+            holder.txtViewScreenName = (TextView)view.findViewById(R.id.txtview_screen_name);
+            holder.txtViewText = (TextView)view.findViewById(R.id.txtview_text);
             holder.txtViewText.setClickable(true);
             holder.txtViewText.setMovementMethod(LinkMovementMethod.getInstance());
 
-            holder.asycnImgViewProfile = (AsyncRoundImageView) view.findViewById(R.id.asyncimgview_profile);
-            holder.asycnImgViewPic = (AsyncRoundImageView) view.findViewById(R.id.asyncimgview_pic);
+            holder.asycnImgViewProfile = (AsyncRoundImageView)view
+                    .findViewById(R.id.asyncimgview_profile);
+            holder.asycnImgViewPic = (AsyncRoundImageView)view.findViewById(R.id.asyncimgview_pic);
             holder.asycnImgViewPic.setCornerRadius(0);
 
-
-            holder.txtViewRetweetedText = (TextView) view.findViewById(R.id.txtview_retweeted_text);
+            holder.txtViewRetweetedText = (TextView)view.findViewById(R.id.txtview_retweeted_text);
             holder.txtViewRetweetedText.setClickable(true);
             holder.txtViewRetweetedText.setMovementMethod(LinkMovementMethod.getInstance());
-            holder.asycnImgViewRetweetedPic = (AsyncRoundImageView) view.findViewById(R.id.asyncimgview_retweeted_pic);
+            holder.asycnImgViewRetweetedPic = (AsyncRoundImageView)view
+                    .findViewById(R.id.asyncimgview_retweeted_pic);
             holder.asycnImgViewRetweetedPic.setCornerRadius(0);
 
             view.setTag(holder);
         } else {
-            holder = (ViewHolder) view.getTag();
+            holder = (ViewHolder)view.getTag();
         }
-        holder.txtViewScreenName.setText(mUser.screen_name);
+        holder.txtViewScreenName.setText(mCurUser.screen_name);
         holder.txtViewText.setText(weiboStatus.text);
-        holder.asycnImgViewProfile.setImageURL(mUser.profile_image_url);
+        holder.asycnImgViewProfile.setImageURL(mCurUser.profile_image_url);
         holder.txtViewText.setText(weiboStatus.getTextSpannaleString());
 
         if (!StringUtil.isEmpty(weiboStatus.thumbnail_pic)) {
@@ -68,8 +72,6 @@ public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatus> {
         } else {
             holder.asycnImgViewPic.setVisibility(View.GONE);
         }
-
-
 
         WeiboStatus retweeted = weiboStatus.retweeted_status;
         // weibo retweeted status
@@ -95,42 +97,48 @@ public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatus> {
             holder.asycnImgViewRetweetedPic.setVisibility(View.GONE);
         }
 
-
         return view;
     }
 
-
     /**
-     * j
-     * use holder to avoid calling findViewById . Make Code Speed Up
-     * 
-     * <br>==========================
-     * <br> author：Zenip
-     * <br> email：lxyczh@gmail.com
-     * <br> create：2013-4-9
-     * <br>==========================
+     * j use holder to avoid calling findViewById . Make Code Speed Up <br>=
+     * ========================= <br>
+     * author：Zenip <br>
+     * email：lxyczh@gmail.com <br>
+     * create：2013-4-9 <br>=
+     * =========================
      */
     static class ViewHolder {
         TextView txtViewScreenName;
+
         TextView txtViewText;
+
         AsyncRoundImageView asycnImgViewProfile;
+
         AsyncRoundImageView asycnImgViewPic;
 
         TextView txtViewRetweetedText;
+
         AsyncRoundImageView asycnImgViewRetweetedPic;
     }
 
     public static class ShowUserAsyncTask extends AsyncTask<String, String, User> {
 
         private String mScreenName;
+
         private long mUid;
+
         private Context mContext;
+
         private LoadDialog mLoadingDialog;
 
-        public ShowUserAsyncTask(Context context, long uid, String screen_name) {
+        private User mCurUser;
+
+        public ShowUserAsyncTask(Context context, User curUser, long uid, String screen_name) {
             mScreenName = screen_name;
             mUid = uid;
             mContext = context;
+            mCurUser = curUser;
         }
 
         @Override
@@ -153,13 +161,14 @@ public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatus> {
         }
 
         @Override
-        protected void onPostExecute(User result) {
-            super.onPostExecute(result);
+        protected void onPostExecute(User resultUser) {
+            super.onPostExecute(resultUser);
             mLoadingDialog.cancel();
-            if (result == null) {
+            if (resultUser == null) {
                 Toast.makeText(mContext, "用户不存在", Toast.LENGTH_LONG).show();
             } else {
-                StatusesActivity.start(mContext, result);
+                UserState userState = mCurUser.getRelateUserState(resultUser);
+                StatusesActivity.start(mContext, resultUser, userState);
             }
         }
     }

@@ -1,3 +1,4 @@
+
 package org.tadpoleweibo.common;
 
 import java.io.File;
@@ -13,13 +14,12 @@ import android.app.Activity;
 import android.util.Log;
 
 /**
- * 文件操作
- * 
- * <br>==========================
- * <br>公司：优视科技-游戏中心
- * <br>开发：chenzh@ucweb.com
- * <br>创建时间：2012-5-25下午5:11:04
- * <br>==========================
+ * 文件操作 <br>=
+ * ========================= <br>
+ * 公司：优视科技-游戏中心 <br>
+ * 开发：chenzh@ucweb.com <br>
+ * 创建时间：2012-5-25下午5:11:04 <br>=
+ * =========================
  */
 public class FileUtil {
 
@@ -63,7 +63,9 @@ public class FileUtil {
             return file.createNewFile();
         } catch (Exception exception) {
             exception.printStackTrace();
-            //            Logging.error(CLASS_NAME, "createFile", ErrorLogConst.ERROR_BUSINESS_IO, "create file error ", exception);
+            // Logging.error(CLASS_NAME, "createFile",
+            // ErrorLogConst.ERROR_BUSINESS_IO, "create file error ",
+            // exception);
         }
         return false;
     }
@@ -71,14 +73,20 @@ public class FileUtil {
     public static boolean createFile(String paramString) {
         File f = new File(paramString);
         if (f.exists()) {
-            return false;
+            if (f.isDirectory()) {
+                f.delete();
+            } else {
+                return false;
+            }
         }
 
         try {
             return f.createNewFile();
         } catch (Exception exception) {
             exception.printStackTrace();
-            //            Logging.error(CLASS_NAME, "createFile", ErrorLogConst.ERROR_BUSINESS_IO, "create file2 error ", exception);
+            // Logging.error(CLASS_NAME, "createFile",
+            // ErrorLogConst.ERROR_BUSINESS_IO, "create file2 error ",
+            // exception);
             // Logger.e("create file error ", exception);
         }
         return false;
@@ -99,7 +107,10 @@ public class FileUtil {
             // exception);
             // else
             exception.printStackTrace();
-            //            Logging.error(CLASS_NAME, "unZip", ErrorLogConst.ERROR_BUSINESS_IO, "UnZip error, uses permission WRITE_EXTERNAL_STORAGE ", exception);
+            // Logging.error(CLASS_NAME, "unZip",
+            // ErrorLogConst.ERROR_BUSINESS_IO,
+            // "UnZip error, uses permission WRITE_EXTERNAL_STORAGE ",
+            // exception);
             // Logger.e("UnZip error, uses permission WRITE_EXTERNAL_STORAGE",
             // exception);
         }
@@ -125,7 +136,6 @@ public class FileUtil {
         return bRet;
     }
 
-
     public static boolean unZip(InputStream inputStream, String dirPath) {
         boolean bRet = true;
         try {
@@ -139,18 +149,17 @@ public class FileUtil {
                 Object object;
                 if (zipEntry.isDirectory()) {
                     object = zipEntry.getName();
-                    object = ((String) object).substring(0, ((String) object).length() - 1);
-                    file = new File(dirPath + File.separator + (String) object);
+                    object = ((String)object).substring(0, ((String)object).length() - 1);
+                    file = new File(dirPath + File.separator + (String)object);
                     file.mkdirs();
                 } else {
                     file = new File(dirPath + File.separator + zipEntry.getName());
 
-                    //					file.createNewFile();
+                    // file.createNewFile();
 
                     if (file.exists()) {
                         file.delete();
                     }
-
 
                     FileOutputStream fos = new FileOutputStream(file);
 
@@ -177,8 +186,7 @@ public class FileUtil {
     }
 
     /**
-     * @param path
-     *            can be file or dir
+     * @param path can be file or dir
      */
     public static void delete(String path) {
         if (path == null)
@@ -230,13 +238,9 @@ public class FileUtil {
     }
 
     /**
-     * 
-     * @param srcFilePath
-     *            原始文件路径
-     * @param dstFilePath
-     *            目标文件路径
-     * @param forced
-     *            是否强制覆盖
+     * @param srcFilePath 原始文件路径
+     * @param dstFilePath 目标文件路径
+     * @param forced 是否强制覆盖
      * @return
      */
     public static boolean copyFile(String srcFilePath, String dstFilePath, boolean forced) {
@@ -267,7 +271,10 @@ public class FileUtil {
             return true;
         } catch (Exception exception) {
             exception.printStackTrace();
-            //            Logging.error(CLASS_NAME, "copyFile", ErrorLogConst.ERROR_BUSINESS_IO, "copyFile error, uses permission WRITE_EXTERNAL_STORAGE", exception);
+            // Logging.error(CLASS_NAME, "copyFile",
+            // ErrorLogConst.ERROR_BUSINESS_IO,
+            // "copyFile error, uses permission WRITE_EXTERNAL_STORAGE",
+            // exception);
         }
         return false;
     }
@@ -281,7 +288,8 @@ public class FileUtil {
      * @return
      * @throws IOException
      */
-    public static File copyFile(InputStream inputStream, String dstFilePath, boolean forceOverride) throws IOException {
+    public static File copyFile(InputStream inputStream, String dstFilePath, boolean forceOverride)
+            throws IOException {
         if ((inputStream == null) || (dstFilePath == null)) {
             return null;
         }
@@ -291,7 +299,6 @@ public class FileUtil {
         }
         if ((!dstFile.exists()) && (!dstFile.createNewFile()))
             return null;
-
 
         byte[] arrayOfByte = new byte[BUFFER_SIZE];
         FileOutputStream ouputStream = new FileOutputStream(dstFile);
@@ -321,7 +328,10 @@ public class FileUtil {
             return true;
         } catch (Exception exception) {
             exception.printStackTrace();
-            //            Logging.error(CLASS_NAME, "copyFile", ErrorLogConst.ERROR_BUSINESS_IO, "copyFile3 error, uses permission WRITE_EXTERNAL_STORAGE", exception);
+            // Logging.error(CLASS_NAME, "copyFile",
+            // ErrorLogConst.ERROR_BUSINESS_IO,
+            // "copyFile3 error, uses permission WRITE_EXTERNAL_STORAGE",
+            // exception);
         }
         return false;
     }
@@ -343,8 +353,7 @@ public class FileUtil {
     /***
      * @param file
      * @return 返回字符串
-     * @throws IOException
-     *             发生文件不存在或者读取错误的情况下
+     * @throws IOException 发生文件不存在或者读取错误的情况下
      */
     public static String readFile(File file) throws IOException {
         InputStream is = new FileInputStream(file);
@@ -354,12 +363,10 @@ public class FileUtil {
         return new String(buffer);
     }
 
-
     /***
      * @param path 文件路径
      * @return 返回字节数
-     * @throws IOException
-     *             发生文件不存在或者读取错误的情况下
+     * @throws IOException 发生文件不存在或者读取错误的情况下
      */
     public static byte[] readFile(String path) throws IOException {
         InputStream is = new FileInputStream(path);
@@ -392,7 +399,7 @@ public class FileUtil {
                 dirSize += file.length();
             } else if (file.isDirectory()) {
                 dirSize += file.length();
-                dirSize += getDirSize(file); // 如果遇到目录则通过递归调用继续统计  
+                dirSize += getDirSize(file); // 如果遇到目录则通过递归调用继续统计
             }
         }
         return dirSize;
@@ -414,6 +421,21 @@ public class FileUtil {
     public static boolean writeFile(String filePath, byte[] data, boolean append) {
         File file = new File(filePath);
         return writeFile(file, data, append);
+    }
+
+    public static boolean writeFile(File file, String data) {
+        if (null == data || "".equals(data)) {
+            return false;
+        }
+        try {
+            FileOutputStream output = new FileOutputStream(file);
+            output.write(data.getBytes());
+            output.close();
+        } catch (IOException e) {
+            Log.e(CLASS_NAME, e.getMessage());
+            return false;
+        }
+        return true;
     }
 
 }

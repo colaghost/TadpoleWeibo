@@ -1,3 +1,4 @@
+
 package org.tadpoleweibo.widget;
 
 import java.util.ArrayList;
@@ -25,25 +26,36 @@ import android.widget.AdapterView.OnItemClickListener;
 public class Launcher extends ViewPagerEX {
 
     static final int ANI_DURATION = 500;
+
     static final String TAG = "Launcher";
+
     private static final int INVALID_POSITION = -1;
 
     static final int ROW_COUNT = 6;
+
     static final int COL_COUNT = 3;
+
     static final int OFFSET_LIMIT = 2;
 
     int mNumColumns = COL_COUNT;
+
     int mNumRows = ROW_COUNT;
 
     LauncherListAdapter mListAdapter;
-    int mEdgeStopCount = 0;
-    int mDragPosition = INVALID_POSITION;
-    int mDropPosition = INVALID_POSITION;
-    int mPageItemCount = ROW_COUNT * COL_COUNT;
-    PagerAdapter mPageAdapter;
-    ImageView mDragView = null;
-    WindowManager.LayoutParams mDragWinLP = null;
 
+    int mEdgeStopCount = 0;
+
+    int mDragPosition = INVALID_POSITION;
+
+    int mDropPosition = INVALID_POSITION;
+
+    int mPageItemCount = ROW_COUNT * COL_COUNT;
+
+    PagerAdapter mPageAdapter;
+
+    ImageView mDragView = null;
+
+    WindowManager.LayoutParams mDragWinLP = null;
 
     private OnItemClickListener mOnItemClickListener;
 
@@ -58,11 +70,15 @@ public class Launcher extends ViewPagerEX {
     }
 
     private int mLastX = 0;
+
     private int mLastY = 0;
 
     private boolean mIsDragging = false;
+
     private ArrayList<LauncherPage> mLauncherPageList = new ArrayList<LauncherPage>();
+
     private WindowManager mWindowManager;
+
     private DataSetObserver mDataSetObserver = new DataSetObserver() {
 
         @Override
@@ -80,6 +96,7 @@ public class Launcher extends ViewPagerEX {
         }
 
     };
+
     private boolean isHandlingDelete = false;
 
     public Launcher(Context context) {
@@ -93,9 +110,8 @@ public class Launcher extends ViewPagerEX {
     }
 
     private void init() {
-        mWindowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        mWindowManager = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
     }
-
 
     public void setDataAdapter(LauncherListAdapter adapter) {
         if (mListAdapter != null && mDataSetObserver != null) {
@@ -148,7 +164,8 @@ public class Launcher extends ViewPagerEX {
         int pageCount = (mListAdapter.getCount() - 1) / mPageItemCount + 1;
         for (int i = 0; i < pageCount; i++) {
             LauncherPage launcherPage = new LauncherPage(getContext(), i, Launcher.this);
-            launcherPage.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+            launcherPage.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.FILL_PARENT,
+                    LayoutParams.FILL_PARENT));
             mLauncherPageList.add(launcherPage);
         }
 
@@ -167,7 +184,7 @@ public class Launcher extends ViewPagerEX {
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
                 Log.d(TAG, "destroyItem position = " + position);
-                container.removeView((View) object);
+                container.removeView((View)object);
             }
 
             @Override
@@ -185,13 +202,12 @@ public class Launcher extends ViewPagerEX {
 
             @Override
             public int getCount() {
-                //                System.out.println("getCount = " + mLauncherPageList.size());
+                // System.out.println("getCount = " + mLauncherPageList.size());
                 return mLauncherPageList.size();
             }
         };
         this.setAdapter(mPageAdapter);
     }
-
 
     public void startDragging(View v, int index, int pageIndex) {
         mIsDragging = true;
@@ -201,10 +217,12 @@ public class Launcher extends ViewPagerEX {
 
         System.out.println("dragPosition = " + mDragPosition);
 
-        final int statusBarHeight = getStatusHeight((Activity) getContext());
+        final int statusBarHeight = getStatusHeight((Activity)getContext());
 
         v.setVisibility(View.INVISIBLE);
-        int locations[] = { 0, 0 };
+        int locations[] = {
+                0, 0
+        };
         v.getLocationInWindow(locations);
 
         mDragWinLP = new WindowManager.LayoutParams();
@@ -224,8 +242,8 @@ public class Launcher extends ViewPagerEX {
         mWindowManager.addView(mDragView, mDragWinLP);
     }
 
-
     int mTmpDragCenterX = 0;
+
     int mTmpDragCenterY = 0;
 
     public void handlerDragViewMove(float eventX, float eventY) {
@@ -233,7 +251,8 @@ public class Launcher extends ViewPagerEX {
         mDragWinLP.y += eventY - mLastY;
 
         mTmpDragCenterX = mDragWinLP.x + mDragWinLP.width / 2;
-        mTmpDragCenterY = mDragWinLP.y + getStatusHeight((Activity) getContext()) + mDragWinLP.height / 2;
+        mTmpDragCenterY = mDragWinLP.y + getStatusHeight((Activity)getContext())
+                + mDragWinLP.height / 2;
 
         if (mTmpDragCenterX > eventX) {
             mDragWinLP.x -= 1;
@@ -247,18 +266,17 @@ public class Launcher extends ViewPagerEX {
             mDragWinLP.y += 1;
         }
 
-        mLastX = (int) eventX;
-        mLastY = (int) eventY;
+        mLastX = (int)eventX;
+        mLastY = (int)eventY;
 
         mWindowManager.updateViewLayout(mDragView, mDragWinLP);
     }
 
-
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (MotionEvent.ACTION_DOWN == ev.getAction()) {
-            mLastX = (int) ev.getRawX();
-            mLastY = (int) ev.getRawY();
+            mLastX = (int)ev.getRawX();
+            mLastY = (int)ev.getRawY();
         }
         if (MotionEvent.ACTION_MOVE == ev.getAction()) {
             if (mDragView != null) {
@@ -302,7 +320,6 @@ public class Launcher extends ViewPagerEX {
         if (getScrollState() != SCROLL_STATE_IDLE) {
             return;
         }
-
 
         final int currentItem = getCurrentItem();
 
@@ -407,8 +424,6 @@ public class Launcher extends ViewPagerEX {
         return 0;
     }
 
-
-
     // -----------------------------------------------------------
     // 动画层
     // -----------------------------------------------------------
@@ -436,9 +451,10 @@ public class Launcher extends ViewPagerEX {
      * @throws
      */
     private ViewGroup createAnimLayout() {
-        ViewGroup rootView = (ViewGroup) ((Activity) getContext()).getWindow().getDecorView();
+        ViewGroup rootView = (ViewGroup)((Activity)getContext()).getWindow().getDecorView();
         RelativeLayout animLayout = new RelativeLayout(getContext());
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
         animLayout.setLayoutParams(lp);
         animLayout.setBackgroundResource(android.R.color.transparent);
         rootView.addView(animLayout);
@@ -471,7 +487,8 @@ public class Launcher extends ViewPagerEX {
         return view;
     }
 
-    public void attachToAniAndStartAni(final View view, Animation animation, final AnimationListener listener) {
+    public void attachToAniAndStartAni(final View view, Animation animation,
+            final AnimationListener listener) {
         view.startAnimation(animation);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -501,14 +518,11 @@ public class Launcher extends ViewPagerEX {
         });
     }
 
-
     // -----------------------------------------------------------
     // 工具方法
     // -----------------------------------------------------------
 
-
     /**
-     * 
      * @param activity
      * @return > 0 success; <= 0 fail
      */
@@ -522,7 +536,8 @@ public class Launcher extends ViewPagerEX {
             try {
                 localClass = Class.forName("com.android.internal.R$dimen");
                 Object localObject = localClass.newInstance();
-                int i5 = Integer.parseInt(localClass.getField("status_bar_height").get(localObject).toString());
+                int i5 = Integer.parseInt(localClass.getField("status_bar_height").get(localObject)
+                        .toString());
                 statusHeight = activity.getResources().getDimensionPixelSize(i5);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -543,5 +558,20 @@ public class Launcher extends ViewPagerEX {
         return statusHeight;
     }
 
+    private OnDataChangeListener mDataChangeListener;
+
+    public void onDataChange() {
+        if (mDataChangeListener != null) {
+            mDataChangeListener.onChange();
+        }
+    }
+
+    public void setOnDataChangeListener(OnDataChangeListener listener) {
+        mDataChangeListener = listener;
+    }
+
+    public interface OnDataChangeListener {
+        void onChange();
+    }
 
 }

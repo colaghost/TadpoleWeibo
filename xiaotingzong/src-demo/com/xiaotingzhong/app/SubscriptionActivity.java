@@ -24,9 +24,9 @@ import android.widget.ListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.weibo.sdk.android.WeiboException;
-import com.weibo.sdk.android.api.response.User;
 import com.weibo.sdk.android.net.RequestListener;
-import com.xiaotingzhong.app.storage.FriendsCacheMgr;
+import com.xiaotingzhong.model.User;
+import com.xiaotingzhong.model.cache.userprivate.FriendsCache;
 import com.xiaotingzhong.widget.SubscriptFriendListAdapter;
 
 public class SubscriptionActivity extends Activity {
@@ -140,7 +140,7 @@ public class SubscriptionActivity extends Activity {
         final SubscriptionActivity me = this;
         new Thread(new Runnable() {
             public void run() {
-                FriendsCacheMgr friendMgr = new FriendsCacheMgr(me, uid);
+                FriendsCache friendMgr = new FriendsCache(me, uid);
                 try {
                     ArrayList<User> list = friendMgr.getFriendsFromCache();
                     if (list != null) {
@@ -162,7 +162,7 @@ public class SubscriptionActivity extends Activity {
         XTZApplication.getFriendshipsAPI().friends(mUserSelf.id, 200, 0, true, new RequestListener() {
             public void onComplete(String response) {
                 try {
-                    final PageList pageList = new FriendsCacheMgr(getApplicationContext(), mUserSelf.id).saveAndGetFriends(response);
+                    final PageList pageList = new FriendsCache(getApplicationContext(), mUserSelf.id).saveAndGetFriends(response);
                     Log.d("SubscriptionActivity", "pageList.size = " + pageList.records.size());
                     runOnUiThread(new Runnable() {
                         public void run() {

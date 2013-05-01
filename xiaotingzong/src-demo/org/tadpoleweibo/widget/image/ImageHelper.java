@@ -1,3 +1,4 @@
+
 package org.tadpoleweibo.widget.image;
 
 import java.io.BufferedInputStream;
@@ -14,6 +15,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.tadpoleweibo.app.TadpoleConfig;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -35,15 +37,18 @@ public class ImageHelper {
 
     static final String TAG = "ImageHelper";
 
-
     private static ImageDiskCache cache = new ImageDiskCache(null);
 
-    private static final String[] PROJECTIONS = { MediaStore.Images.ImageColumns._ID, MediaStore.Images.ImageColumns.DISPLAY_NAME, MediaStore.Images.ImageColumns.DATA,
-            MediaStore.Images.ImageColumns.LATITUDE, MediaStore.Images.ImageColumns.SIZE, MediaStore.Images.ImageColumns.TITLE };
+    private static final String[] PROJECTIONS = {
+            MediaStore.Images.ImageColumns._ID, MediaStore.Images.ImageColumns.DISPLAY_NAME,
+            MediaStore.Images.ImageColumns.DATA, MediaStore.Images.ImageColumns.LATITUDE,
+            MediaStore.Images.ImageColumns.SIZE, MediaStore.Images.ImageColumns.TITLE
+    };
 
     public Cursor getImage(Context context) {
         ContentResolver contentResolver = context.getContentResolver();
-        Cursor cursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, PROJECTIONS, null, null, "");
+        Cursor cursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                PROJECTIONS, null, null, "");
         return cursor;
     }
 
@@ -54,7 +59,9 @@ public class ImageHelper {
         if (mCache.containsKey(path)) {
             BitmapDrawable d = mCache.get(path).get();
             if (d != null) {
-                System.out.println("getBitmapDrawableFromCache path = " + path);
+                if (TadpoleConfig.DEBUG) {
+                    System.out.println("getBitmapDrawableFromCache path = " + path);
+                }
                 return d;
             }
         }
@@ -84,9 +91,9 @@ public class ImageHelper {
     }
 
     /**
-     * A safer decodeStream method
-     * rather than the one of {@link BitmapFactory} which will be easy to get OutOfMemory Exception
-     * while loading a big image file.
+     * A safer decodeStream method rather than the one of {@link BitmapFactory}
+     * which will be easy to get OutOfMemory Exception while loading a big image
+     * file.
      * 
      * @param uri
      * @param width
@@ -94,16 +101,18 @@ public class ImageHelper {
      * @return
      * @throws FileNotFoundException
      */
-    protected static Bitmap safeDecodeStream(Context context, Uri uri, int width, int height) throws FileNotFoundException {
+    protected static Bitmap safeDecodeStream(Context context, Uri uri, int width, int height)
+            throws FileNotFoundException {
         int scale = 1;
-        // Decode image size without loading all data into memory  
+        // Decode image size without loading all data into memory
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
 
         android.content.ContentResolver resolver = context.getContentResolver();
         try {
 
-            BitmapFactory.decodeStream(new BufferedInputStream(resolver.openInputStream(uri), 4 * 1024), null, options);
+            BitmapFactory.decodeStream(new BufferedInputStream(resolver.openInputStream(uri),
+                    4 * 1024), null, options);
             if (width > 0 || height > 0) {
                 options.inJustDecodeBounds = true;
                 int w = options.outWidth;
@@ -117,10 +126,11 @@ public class ImageHelper {
                     scale *= 2;
                 }
             }
-            // Decode with inSampleSize option  
+            // Decode with inSampleSize option
             options.inJustDecodeBounds = false;
             options.inSampleSize = scale;
-            return BitmapFactory.decodeStream(new BufferedInputStream(resolver.openInputStream(uri), 4 * 1024), null, options);
+            return BitmapFactory.decodeStream(new BufferedInputStream(
+                    resolver.openInputStream(uri), 4 * 1024), null, options);
         } catch (Exception e) {
             e.printStackTrace();
         } catch (OutOfMemoryError e) {
@@ -135,18 +145,18 @@ public class ImageHelper {
         options.inJustDecodeBounds = true;
         ContentResolver resolver = context.getContentResolver();
         try {
-            BitmapFactory.decodeStream(new BufferedInputStream(resolver.openInputStream(uri), 4 * 1024), null, options);
+            BitmapFactory.decodeStream(new BufferedInputStream(resolver.openInputStream(uri),
+                    4 * 1024), null, options);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         return options;
     }
 
-
     /**
-     * A safer decodeStream method
-     * rather than the one of {@link BitmapFactory} which will be easy to get OutOfMemory Exception
-     * while loading a big image file.
+     * A safer decodeStream method rather than the one of {@link BitmapFactory}
+     * which will be easy to get OutOfMemory Exception while loading a big image
+     * file.
      * 
      * @param uri
      * @param width
@@ -156,21 +166,22 @@ public class ImageHelper {
      */
     protected static Bitmap safeDecodeStream2(Context context, Uri uri, int width, int height) {
         int scale = 1;
-        // Decode image size without loading all data into memory  
+        // Decode image size without loading all data into memory
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
 
         android.content.ContentResolver resolver = context.getContentResolver();
         try {
 
-            BitmapFactory.decodeStream(new BufferedInputStream(resolver.openInputStream(uri), 4 * 1024), null, options);
+            BitmapFactory.decodeStream(new BufferedInputStream(resolver.openInputStream(uri),
+                    4 * 1024), null, options);
             if (width > 0 || height > 0) {
                 options.inJustDecodeBounds = true;
                 int w = options.outWidth;
                 int h = options.outHeight;
-
-                System.out.println("safeDecodeStream2 outWidth = " + w + ", outHeight = " + h);
-
+                if (TadpoleConfig.DEBUG) {
+                    System.out.println("safeDecodeStream2 outWidth = " + w + ", outHeight = " + h);
+                }
                 int s = 1;
 
                 int wScale = 1;
@@ -192,10 +203,11 @@ public class ImageHelper {
 
                 options.inSampleSize = s;
             }
-            // Decode with inSampleSize option  
+            // Decode with inSampleSize option
             options.inJustDecodeBounds = false;
 
-            return BitmapFactory.decodeStream(new BufferedInputStream(resolver.openInputStream(uri), 4 * 1024), null, options);
+            return BitmapFactory.decodeStream(new BufferedInputStream(
+                    resolver.openInputStream(uri), 4 * 1024), null, options);
         } catch (Exception e) {
             e.printStackTrace();
         } catch (OutOfMemoryError e) {
@@ -206,7 +218,7 @@ public class ImageHelper {
     }
 
     public static BitmapDrawable getBitmapDrawableWithOutOOM(Context context, Uri uri) {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics metrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(metrics);
         int width = metrics.widthPixels;
@@ -226,7 +238,6 @@ public class ImageHelper {
         }
         return null;
     }
-
 
     public static BitmapDrawable getBitmapByUrl(Resources res, String url) {
         if (mCache.containsKey(url)) {
@@ -263,11 +274,8 @@ public class ImageHelper {
     }
 
     /**
-     * 
-     * @param url
-     *            服务器地址
-     * @param method
-     *            "GET"or “POST”
+     * @param url 服务器地址
+     * @param method "GET"or “POST”
      * @return 响应结果
      * @throws WeiboException
      */
@@ -277,7 +285,8 @@ public class ImageHelper {
             HttpClient client = new DefaultHttpClient();
             HttpUriRequest request = null;
             ByteArrayOutputStream bos = null;
-            client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, NetStateManager.getAPN());
+            client.getParams()
+                    .setParameter(ConnRoutePNames.DEFAULT_PROXY, NetStateManager.getAPN());
             HttpGet get = new HttpGet(url);
             request = get;
             byte[] data = null;
@@ -293,7 +302,10 @@ public class ImageHelper {
             }
             result = readBytes(response);
 
-            Log.d(TAG, "openUrl result = " + new String(result));
+            if (TadpoleConfig.DEBUG) {
+                Log.d(TAG, "openUrl result = " + new String(result));
+            }
+
             return result;
         } catch (Exception e) {
             throw e;

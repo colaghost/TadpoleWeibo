@@ -11,5 +11,10 @@
             <solid android:color="@android:color/white" />
         </shape>
     </item>
+    <item android:left="@dimen/padding_large">
+        <shape>
+            <solid android:color="@color/simple_grey_trans11" />
+        </shape>
+    </item>
 
 </layer-list>

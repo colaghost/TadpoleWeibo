@@ -1,3 +1,4 @@
+
 package org.tadpoleweibo.widget;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -21,25 +22,32 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewCompatJB;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 public class AsyncRoundImageView extends ImageView {
-    static ThreadPoolExecutor sExecutor = new ThreadPoolExecutor(5, 6, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(100), new RejectedExecutionHandler() {
-        @Override
-        public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-        }
-    });
+    static ThreadPoolExecutor sExecutor = new ThreadPoolExecutor(5, 6, 30, TimeUnit.SECONDS,
+            new ArrayBlockingQueue<Runnable>(100), new RejectedExecutionHandler() {
+                @Override
+                public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+                }
+            });
 
     private Future<?> mFuture;
-    private boolean mDisableUsingImageUri = false;;
-    private Uri mImageUri;
-    private int mCornerRadius = 10;
-    private Paint mMaskPaint = new Paint(1);
-    private Path mMaskPath;
 
+    private boolean mDisableUsingImageUri = false;;
+
+    private Uri mImageUri;
+
+    private int mCornerRadius = 10;
+
+    private Paint mMaskPaint = new Paint(1);
+
+    private Path mMaskPath;
 
     public AsyncRoundImageView(Context context) {
         super(context);
@@ -56,10 +64,8 @@ public class AsyncRoundImageView extends ImageView {
         init();
     }
 
-
-    @TargetApi(11)
     private void init() {
-        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        ViewCompat.setLayerType(this, ViewCompat.LAYER_TYPE_SOFTWARE, null);
         this.mMaskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
     }
 
@@ -76,7 +82,8 @@ public class AsyncRoundImageView extends ImageView {
 
     private void generateMaskPath(int width, int height) {
         this.mMaskPath = new Path();
-        this.mMaskPath.addRoundRect(new RectF(0.0F, 0.0F, width, height), this.mCornerRadius, this.mCornerRadius, Path.Direction.CW);
+        this.mMaskPath.addRoundRect(new RectF(0.0F, 0.0F, width, height), this.mCornerRadius,
+                this.mCornerRadius, Path.Direction.CW);
         this.mMaskPath.setFillType(Path.FillType.INVERSE_WINDING);
     }
 
@@ -123,7 +130,8 @@ public class AsyncRoundImageView extends ImageView {
                     @Override
                     public void run() {
                         System.out.println("mFuture to thread pool");
-                        final BitmapDrawable bd = ImageHelper.getBitmapDrawable(me.getContext(), uri);
+                        final BitmapDrawable bd = ImageHelper.getBitmapDrawable(me.getContext(),
+                                uri);
                         System.out.println("mFuture to thread pool) = " + bd);
 
                         if (bd != null) {
@@ -153,7 +161,8 @@ public class AsyncRoundImageView extends ImageView {
                 mFuture = sExecutor.submit(new Runnable() {
                     @Override
                     public void run() {
-                        final BitmapDrawable bd = ImageHelper.getBitmapByUrl(me.getContext().getResources(), url);
+                        final BitmapDrawable bd = ImageHelper.getBitmapByUrl(me.getContext()
+                                .getResources(), url);
                         if (bd != null) {
                             Message msg = new Message();
                             msg.what = 1;
@@ -171,8 +180,9 @@ public class AsyncRoundImageView extends ImageView {
         @Override
         public boolean handleMessage(Message msg) {
             if (msg.what == 1) {
-                AsyncRoundImageView.this.setImageDrawable((BitmapDrawable) msg.obj);
-                AsyncRoundImageView.this.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.alpha_in));
+                AsyncRoundImageView.this.setImageDrawable((BitmapDrawable)msg.obj);
+                AsyncRoundImageView.this.startAnimation(AnimationUtils.loadAnimation(getContext(),
+                        R.anim.alpha_in));
             }
             return false;
         }

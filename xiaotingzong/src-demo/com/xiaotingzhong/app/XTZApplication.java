@@ -1,72 +1,86 @@
 package com.xiaotingzhong.app;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 
+import com.weibo.sdk.android.Oauth2AccessToken;
 import com.weibo.sdk.android.api.AccountAPI;
 import com.weibo.sdk.android.api.FriendshipsAPI;
 import com.weibo.sdk.android.api.StatusesAPI;
 import com.weibo.sdk.android.api.UsersAPI;
-import com.weibo.sdk.android.api.response.Emotion;
-import com.weibo.sdk.android.api.response.User;
 import com.weibo.sdk.android.keep.AccessTokenKeeper;
+import com.xiaotingzhong.model.Emotion;
+import com.xiaotingzhong.model.User;
 
 public class XTZApplication extends Application {
-    public static XTZApplication app;
+	public static XTZApplication app;
 
-    private long curUid;
-    private User curUser = null;
+	private static SharedPreferences sSharedPref;
 
-    public static Emotion getEmotionByPhrase(String p) {
-        return Emotion.map.get(p);
-    }
+	static final String PREF_XTZ = "com_xiaotingzhong.pref";
 
-    public static long getCurUid() {
-        return app.curUid;
-    }
+	private long curUid;
 
-    public static User getCurUser() {
-        return app.curUser;
-    }
+	private User curUser = null;
 
-    public static void setCurUser(User u) {
-        app.curUser = u;
-        app.curUid = u.id;
-    }
+	public void onCreate() {
+		super.onCreate();
+		app = this;
+		sSharedPref = getSharedPreferences(PREF_XTZ, MODE_PRIVATE);
+	}
 
+	public static SharedPreferences getGlobalSharedPref() {
+		return sSharedPref;
+	}
 
-    public static FriendshipsAPI getFriendshipsAPI() {
-        return new FriendshipsAPI(AccessTokenKeeper.readAccessToken(app));
-    }
+	public static Emotion getEmotionByPhrase(String p) {
+		return Emotion.map.get(p);
+	}
 
-    public static UsersAPI getUsersAPI() {
-        return new UsersAPI(AccessTokenKeeper.readAccessToken(app));
-    }
+	public static long getCurUid() {
+		return app.curUid;
+	}
 
-    public static StatusesAPI getStatusesAPI() {
-        return new StatusesAPI(AccessTokenKeeper.readAccessToken(app));
-    }
+	public static User getCurUser() {
+		return app.curUser;
+	}
 
-    public static AccountAPI getAccountAPI() {
-        return new AccountAPI(AccessTokenKeeper.readAccessToken(app));
-    }
+	public static void setCurUser(User u) {
+		app.curUser = u;
+		app.curUid = u.id;
+	}
 
-    public void onConfigurationChanged(Configuration paramConfiguration) {
-        super.onConfigurationChanged(paramConfiguration);
-    }
+	public static Oauth2AccessToken getWeiboAccessToken() {
+		return AccessTokenKeeper.readAccessToken(app);
+	}
 
-    public void onCreate() {
-        super.onCreate();
-        app = this;
-    }
+	public static FriendshipsAPI getFriendshipsAPI() {
+		return new FriendshipsAPI(AccessTokenKeeper.readAccessToken(app));
+	}
 
-    public void onLowMemory() {
-        super.onLowMemory();
-    }
+	public static UsersAPI getUsersAPI() {
+		return new UsersAPI(AccessTokenKeeper.readAccessToken(app));
+	}
 
-    public void onTerminate() {
-        super.onTerminate();
-    }
+	public static StatusesAPI getStatusesAPI() {
+		return new StatusesAPI(AccessTokenKeeper.readAccessToken(app));
+	}
 
+	public static AccountAPI getAccountAPI() {
+		return new AccountAPI(AccessTokenKeeper.readAccessToken(app));
+	}
+
+	public void onConfigurationChanged(Configuration paramConfiguration) {
+		super.onConfigurationChanged(paramConfiguration);
+	}
+
+	public void onLowMemory() {
+		super.onLowMemory();
+	}
+
+	public void onTerminate() {
+		super.onTerminate();
+	}
 
 }
