@@ -6,13 +6,14 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:background="@color/simple_blue" >
 
         <org.tadpoleweibo.widget.SurfaceImageView
             android:id="@+id/surfaceimgview_bg"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:src="@drawable/rootblock_default_bg" >
+            android:src="@drawable/rootblock_default_bg">
         </org.tadpoleweibo.widget.SurfaceImageView>
     </LinearLayout>
 
@@ -33,17 +34,20 @@
 
         <ImageButton
             style="@style/Tadpole.ImageButton.Launcher"
-            android:src="@drawable/selector_rootblock_icon_add" >
+            android:src="@drawable/selector_rootblock_icon_add"
+            android:visibility="invisible" >
         </ImageButton>
 
         <ImageButton
             style="@style/Tadpole.ImageButton.Launcher"
-            android:src="@drawable/selector_rootblock_icon_add" >
+            android:src="@drawable/selector_rootblock_icon_add"
+            android:visibility="invisible" >
         </ImageButton>
 
         <ImageButton
             style="@style/Tadpole.ImageButton.Launcher"
-            android:src="@drawable/selector_rootblock_icon_add" >
+            android:src="@drawable/selector_rootblock_icon_add"
+            android:visibility="invisible" >
         </ImageButton>
 
         <ImageButton

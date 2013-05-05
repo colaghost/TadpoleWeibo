@@ -1,3 +1,4 @@
+
 package com.xiaotingzhong.app;
 
 import java.io.IOException;
@@ -31,6 +32,7 @@ import com.xiaotingzhong.widget.SubscriptFriendListAdapter;
 
 public class SubscriptionActivity extends Activity {
     static final String TAG = "SubscriptionActivity";
+
     static final String USER = "user";
 
     /**
@@ -47,7 +49,6 @@ public class SubscriptionActivity extends Activity {
         activity.startActivity(intent);
     }
 
-
     public static void startForResult(Activity activity, User user, int requestCode) {
         Intent intent = new Intent();
         intent.putExtra(USER, user);
@@ -56,40 +57,43 @@ public class SubscriptionActivity extends Activity {
     }
 
     private EditText mEditTxtSearch = null;
+
     private ImageButton mImgBtnLeft = null;
+
     private ImageButton mImgBtnRight = null;
 
     private ArrayList<User> mListFriendsAll = null;
+
     private PageListViewAdapter<User> mAdapterFriends = null;
+
     private PageListView<User> mListViewFriends = null;
 
     private User mUserSelf = null;
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        
+
         // populate extra
         Intent intent = getIntent();
         Bundle extra = intent.getExtras();
-        mUserSelf = (User) extra.getSerializable(USER);
-
+        mUserSelf = (User)extra.getSerializable(USER);
 
         setContentView(R.layout.activity_subscription);
         final SubscriptionActivity me = this;
 
-        this.mImgBtnLeft = ((ImageButton) findViewById(R.id.imgbtn_left));
+        this.mImgBtnLeft = ((ImageButton)findViewById(R.id.imgbtn_left));
         this.mImgBtnLeft.setOnClickListener(new View.OnClickListener() {
             public void onClick(View paramView) {
                 finish();
             }
         });
-        this.mImgBtnRight = ((ImageButton) findViewById(R.id.imgbtn_right));
+        this.mImgBtnRight = ((ImageButton)findViewById(R.id.imgbtn_right));
         this.mImgBtnRight.setOnClickListener(new View.OnClickListener() {
             public void onClick(View paramView) {
                 finish();
             }
         });
-        this.mEditTxtSearch = ((EditText) findViewById(R.id.edittext_search));
+        this.mEditTxtSearch = ((EditText)findViewById(R.id.edittext_search));
         this.mEditTxtSearch.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -108,7 +112,7 @@ public class SubscriptionActivity extends Activity {
         });
 
         this.mAdapterFriends = new SubscriptFriendListAdapter(this, mUserSelf);
-        this.mListViewFriends = ((PageListView<User>) findViewById(R.id.listview_friends));
+        this.mListViewFriends = ((PageListView<User>)findViewById(R.id.listview_friends));
         this.mListViewFriends.setOnRefreshListener(new OnRefreshListener2<ListView>() {
 
             @Override
@@ -122,16 +126,15 @@ public class SubscriptionActivity extends Activity {
         });
         this.mListViewFriends.setAdapter(this.mAdapterFriends);
         // TODO 将这些设置转移到xml配置文件。
-        ListView listView = (ListView) this.mListViewFriends.getRefreshableView();
+        ListView listView = (ListView)this.mListViewFriends.getRefreshableView();
         listView.setDividerHeight(1);
         listView.setDivider(getResources().getDrawable(R.drawable.divider));
         listView.setVerticalScrollBarEnabled(false);
 
-        me.fetchFriendsPreferCache(mUserSelf.id);
+        mListViewFriends.firePullDownToRefresh();
     }
 
     /**
-     * 
      * fetch friends list from cache. if no cache , fetch from remote
      * 
      * @param uid
@@ -159,40 +162,42 @@ public class SubscriptionActivity extends Activity {
 
     public void loadFriendsFromRemote() {
         Log.d("SubscriptionActivity", "loadFromRemote ");
-        XTZApplication.getFriendshipsAPI().friends(mUserSelf.id, 200, 0, true, new RequestListener() {
-            public void onComplete(String response) {
-                try {
-                    final PageList pageList = new FriendsCache(getApplicationContext(), mUserSelf.id).saveAndGetFriends(response);
-                    Log.d("SubscriptionActivity", "pageList.size = " + pageList.records.size());
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            onFriendListLoad(pageList.records, false);
+        XTZApplication.getFriendshipsAPI().friends(mUserSelf.id, 200, 0, true,
+                new RequestListener() {
+                    public void onComplete(String response) {
+                        try {
+                            final PageList pageList = new FriendsCache(getApplicationContext(),
+                                    mUserSelf.id).saveAndGetFriends(response);
+                            Log.d("SubscriptionActivity",
+                                    "pageList.size = " + pageList.records.size());
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    onFriendListLoad(pageList.records, false);
+                                }
+                            });
+                            return;
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    });
-                    return;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+                    }
 
-            public void onError(WeiboException we) {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        mListViewFriends.onRefreshComplete();
+                    public void onError(WeiboException we) {
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                mListViewFriends.proxyOnRefreshComplete();
+                            }
+                        });
+                    }
+
+                    public void onIOException(IOException e) {
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                mListViewFriends.proxyOnRefreshComplete();
+                            }
+                        });
                     }
                 });
-            }
-
-            public void onIOException(IOException e) {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        mListViewFriends.onRefreshComplete();
-                    }
-                });
-            }
-        });
     }
-
 
     public void onFriendListLoad(final ArrayList<User> list, final boolean isSearch) {
         runOnUiThread(new Runnable() {
@@ -203,8 +208,9 @@ public class SubscriptionActivity extends Activity {
                     mListFriendsAll = list;
                 }
                 mAdapterFriends.setList(list);
-                mListViewFriends.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(SubscriptionActivity.this, R.anim.list_anim_layout));
-                mListViewFriends.onRefreshComplete();
+                mListViewFriends.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(
+                        SubscriptionActivity.this, R.anim.list_anim_layout));
+                mListViewFriends.proxyOnRefreshComplete();
                 mListViewFriends.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
             }
         });

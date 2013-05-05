@@ -104,6 +104,9 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
                 return v;
             }
         };
+        
+        System.out.println("mLauncherAdapter = " + mLauncherAdapter.getCount());
+        
         mLauncher.setDataAdapter(mLauncherAdapter);
         mLauncher.setOnItemClickListener(this);
         mLauncher.setOnDataChangeListener(new OnDataChangeListener() {
@@ -149,7 +152,6 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
         Log.d(TAG, "fillLauncherData " + userList.size());
         mUserList = userList;
         mLauncherAdapter.setList(mUserList);
-        final LauncherActivity me = this;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

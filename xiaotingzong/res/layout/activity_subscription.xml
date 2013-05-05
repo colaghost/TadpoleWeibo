@@ -48,7 +48,8 @@
     <org.tadpoleweibo.widget.PageListView
         android:id="@+id/listview_friends"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:background="@android:color/white" >
     </org.tadpoleweibo.widget.PageListView>
 
 </LinearLayout>

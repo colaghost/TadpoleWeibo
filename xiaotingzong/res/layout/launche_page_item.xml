@@ -2,12 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/view_item"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="@android:color/transparent" >
 
     <org.tadpoleweibo.widget.AsyncRoundImageView
         android:id="@+id/asyncimgview_profile"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:background="@android:color/transparent"
         android:scaleType="centerCrop" >
     </org.tadpoleweibo.widget.AsyncRoundImageView>
 

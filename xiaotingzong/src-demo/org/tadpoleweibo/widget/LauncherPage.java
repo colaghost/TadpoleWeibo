@@ -1,3 +1,4 @@
+
 package org.tadpoleweibo.widget;
 
 import java.util.Arrays;
@@ -13,6 +14,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,18 +29,29 @@ import android.widget.ListAdapter;
 
 public class LauncherPage extends ViewGroup {
     static final String TAG = "LauncherPage";
+
     static final Rect sRect = new Rect();
 
     private int mPageDraPos = INVALID_POSITION;
+
     private int mPageDropPos = INVALID_POSITION;
-    public static final int LOCALTION[] = { 0, 0 };
+
+    public static final int LOCALTION[] = {
+            0, 0
+    };
 
     private FeatureMetrics mFeatureMetrics = new FeatureMetrics();
+
     private WindowManager mWindowManager;
 
-    private int array[] = new int[] { 0, 1, 2, 3, 4, 5, 6, 7 };
+    private int array[] = new int[] {
+            0, 1, 2, 3, 4, 5, 6, 7
+    };
+
     private int mPageIndex;
+
     private Launcher mLauncher;
+
     private int mItemCount = 0;
 
     private int mLastPageItemPos = 0;
@@ -48,7 +61,7 @@ public class LauncherPage extends ViewGroup {
 
         mPageIndex = pageIndex;
         mLauncher = launcher;
-        mWindowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        mWindowManager = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
         resetDragParams();
 
         Resources resource = getContext().getResources();
@@ -62,14 +75,14 @@ public class LauncherPage extends ViewGroup {
         fillData();
     }
 
-
-    private LauncherPageItemView getLauncherPageItemView(final int position) {
+    private LauncherPageItemView createLauncherPageItemView(final int position) {
         final ListAdapter listAdapter = mLauncher.mListAdapter;
         LauncherPageItemView itemView = new LauncherPageItemView(getContext());
         View view = listAdapter.getView(position, null, null);
         final long itemId = listAdapter.getItemId(position);
 
-        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
+                LinearLayout.LayoutParams.FILL_PARENT));
         itemView.addView(view);
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,13 +115,15 @@ public class LauncherPage extends ViewGroup {
 
             TLog.debug(TAG, "fillData start = %d end = %d mPageIndex =", start, end, mPageIndex);
             for (int i = start; i < end; i++) {
-                LauncherPageItemView itemView = getLauncherPageItemView(i);
+                LauncherPageItemView itemView = createLauncherPageItemView(i);
                 final int index = i;
                 itemView.setOnLongClickListener(new OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
                         mHideView = v;
-                        mLauncher.startDragging(v, index, mPageIndex);
+
+                        LauncherPageItemView dragView = createLauncherPageItemView(index);
+                        mLauncher.startDragging(v, index, mPageIndex, dragView);
                         // covert by pageIndex;
                         mPageDraPos = mPageDropPos = index - mPageIndex * mLauncher.mPageItemCount;
 
@@ -120,7 +135,6 @@ public class LauncherPage extends ViewGroup {
             }
         }
     }
-
 
     public void onDataUpdate() {
         fillData();
@@ -144,7 +158,8 @@ public class LauncherPage extends ViewGroup {
         int location[] = null;
         for (int i = 0; i < mItemCount; i++) {
             location = getLocationByPos(i);
-            rect.set(location[0], location[1], location[0] + mFeatureMetrics.childW, location[1] + mFeatureMetrics.childH);
+            rect.set(location[0], location[1], location[0] + mFeatureMetrics.childW, location[1]
+                    + mFeatureMetrics.childH);
             if (rect.contains(x, y)) {
                 return i;
             }
@@ -166,10 +181,9 @@ public class LauncherPage extends ViewGroup {
 
     int[] getWindowLocationByPos(int position) {
         int[] location = getLocationByPos(position);
-        location[1] += getStatusHeight((Activity) getContext()) + mFeatureMetrics.titleBarHeight;
+        location[1] += getStatusHeight((Activity)getContext()) + mFeatureMetrics.titleBarHeight;
         return location;
     }
-
 
     void onDragging(int x, int y) {
         int hitPosition = getHitPosition(x, y);
@@ -191,7 +205,6 @@ public class LauncherPage extends ViewGroup {
                 // Cur Page
                 mPageDraPos = mPageDropPos = 0;
 
-
                 fromLocation = getLocationByPos(0);
                 toLocation = getLocationPrevPageByPos(mLauncher.mPageItemCount - 1);
 
@@ -209,13 +222,14 @@ public class LauncherPage extends ViewGroup {
                 toLocation = getLocationNextPageByPos(0);
             }
 
-
             mLauncher.mDropPosition = mPageIndex * mLauncher.mPageItemCount + mPageDraPos;
 
             ani = getTranslateAnimation(fromLocation, toLocation);
             View view = getChildAt(mPageDraPos);
             view.setVisibility(View.INVISIBLE);
-            View copyViewAni = mLauncher.copyViewInAniLayer(view, getWindowLocationByPos(mPageDraPos), mFeatureMetrics.childH, mFeatureMetrics.childW);
+            View copyViewAni = mLauncher.copyViewInAniLayer(view,
+                    getWindowLocationByPos(mPageDraPos), mFeatureMetrics.childH,
+                    mFeatureMetrics.childW);
             mLauncher.attachToAniAndStartAni(copyViewAni, ani, null);
 
         }
@@ -224,14 +238,15 @@ public class LauncherPage extends ViewGroup {
             return;
         }
 
-
         int realDragPostion = arr[mPageDraPos];
-        //        Log.d(TAG, "dragging hitPosition = " + hitPosition + ", realDragPostion =" + realDragPostion);
+        // Log.d(TAG, "dragging hitPosition = " + hitPosition +
+        // ", realDragPostion =" + realDragPostion);
         if (hitPosition == realDragPostion || hitPosition == INVALID_POSITION) {
             return;
         }
 
-        TLog.debug("", "hitPosition hitPosition = %d,realDragPostion = %d ,mPageDraPos =%d", hitPosition, realDragPostion, mPageDraPos);
+        TLog.debug("", "hitPosition hitPosition = %d,realDragPostion = %d ,mPageDraPos =%d",
+                hitPosition, realDragPostion, mPageDraPos);
         HashMap<Integer, Integer> posToViewPos = getRealArrayHashMap();
 
         // move next
@@ -264,11 +279,12 @@ public class LauncherPage extends ViewGroup {
     }
 
     int onEndDrag() {
-        Log.d(TAG, "mLauncher.mDragPosition = " + mLauncher.mDragPosition + ", mPageDropPos = " + mPageDropPos);
+        Log.d(TAG, "mLauncher.mDragPosition = " + mLauncher.mDragPosition + ", mPageDropPos = "
+                + mPageDropPos);
         int launcherDropPosition = INVALID_POSITION;
         // 制造假得view，等待数据刷新.
         if (mLauncher.mDragPosition != INVALID_POSITION) {
-            final View fakeView = getLauncherPageItemView(mLauncher.mDragPosition);
+            final View fakeView = createLauncherPageItemView(mLauncher.mDragPosition);
             if (fakeView != null) {
                 putViewToPostion(fakeView, mPageDropPos);
             }
@@ -286,8 +302,10 @@ public class LauncherPage extends ViewGroup {
     private void putViewToPostion(View view, int position) {
         this.addView(view);
         int location[] = getLocationByPos(position);
-        view.measure(MeasureSpec.makeMeasureSpec(mFeatureMetrics.childW, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(mFeatureMetrics.childH, MeasureSpec.EXACTLY));
-        view.layout(location[0], location[1], location[0] + mFeatureMetrics.childW, location[1] + mFeatureMetrics.childH);
+        view.measure(MeasureSpec.makeMeasureSpec(mFeatureMetrics.childW, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(mFeatureMetrics.childH, MeasureSpec.EXACTLY));
+        view.layout(location[0], location[1], location[0] + mFeatureMetrics.childW, location[1]
+                + mFeatureMetrics.childH);
     }
 
     private void resetDragParams() {
@@ -310,13 +328,15 @@ public class LauncherPage extends ViewGroup {
         final int rSpace = mFeatureMetrics.rSpace;
         final int numColums = mLauncher.COL_COUNT;
 
-        int v = position / numColums;  // 第几行
-        int z = position % numColums;  // 第几列
+        int v = position / numColums; // 第几行
+        int z = position % numColums; // 第几列
 
         int xTmp = x + z * childW + z * cSpace;
         int yTmp = y + v * childH + v * rSpace;
 
-        return new int[] { xTmp, yTmp };
+        return new int[] {
+                xTmp, yTmp
+        };
     }
 
     public void moveNext(int viewPos, int aniFromPos, AnimationListener listener) {
@@ -327,10 +347,11 @@ public class LauncherPage extends ViewGroup {
         moveFromTo(viewPos, aniFromPos, aniFromPos - 1, listener);
     }
 
-    private void moveFromTo(final int viewPos, final int aniFromPos, final int aniToPos, AnimationListener listener) {
+    private void moveFromTo(final int viewPos, final int aniFromPos, final int aniToPos,
+            AnimationListener listener) {
         int[] fLocation = getLocationByPos(aniFromPos);
         final int[] tLocation = getLocationByPos(aniToPos);
-        final LauncherPageItemView view = (LauncherPageItemView) getChildAt(viewPos);
+        final LauncherPageItemView view = (LauncherPageItemView)getChildAt(viewPos);
 
         if (view == null) {
             return;
@@ -340,7 +361,8 @@ public class LauncherPage extends ViewGroup {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                view.layout(tLocation[0], tLocation[1], tLocation[0] + mFeatureMetrics.childW, tLocation[1] + mFeatureMetrics.childH);
+                view.layout(tLocation[0], tLocation[1], tLocation[0] + mFeatureMetrics.childW,
+                        tLocation[1] + mFeatureMetrics.childH);
                 view.setVisibility(View.VISIBLE);
             }
         };
@@ -352,20 +374,20 @@ public class LauncherPage extends ViewGroup {
     }
 
     private Animation getTranslateAnimation(int[] fromLocation, int[] toLocation) {
-        TranslateAnimation transAni = new TranslateAnimation(Animation.ABSOLUTE, 0, Animation.ABSOLUTE, toLocation[0] - fromLocation[0], Animation.ABSOLUTE, 0, Animation.ABSOLUTE, toLocation[1]
-                - fromLocation[1]);
+        TranslateAnimation transAni = new TranslateAnimation(Animation.ABSOLUTE, 0,
+                Animation.ABSOLUTE, toLocation[0] - fromLocation[0], Animation.ABSOLUTE, 0,
+                Animation.ABSOLUTE, toLocation[1] - fromLocation[1]);
         transAni.setDuration(Launcher.ANI_DURATION);
         return transAni;
     }
 
     /**
-     * 属性值计算缓存
-     * 
-     * <br>==========================
-     * <br> author：Zenip
-     * <br> email：lxyczh@gmail.com
-     * <br> create：2013-3-29
-     * <br>==========================
+     * 属性值计算缓存 <br>=
+     * ========================= <br>
+     * author：Zenip <br>
+     * email：lxyczh@gmail.com <br>
+     * create：2013-3-29 <br>=
+     * =========================
      */
     private static class FeatureMetrics {
         boolean isCaculate;
@@ -386,14 +408,14 @@ public class LauncherPage extends ViewGroup {
             rSpace = view.getRowSpacing();
             cSpace = view.getColumnSpacing();
 
-            childW = (measureWidth - pLeft - pRight - ((view.mLauncher.mNumColumns - 1) * cSpace)) / view.mLauncher.mNumColumns;
-            childH = (measureHeight - pTop - pBottom - (view.mLauncher.mNumRows - 1) * rSpace) / view.mLauncher.mNumRows;
+            childW = (measureWidth - pLeft - pRight - ((view.mLauncher.mNumColumns - 1) * cSpace))
+                    / view.mLauncher.mNumColumns;
+            childH = (measureHeight - pTop - pBottom - (view.mLauncher.mNumRows - 1) * rSpace)
+                    / view.mLauncher.mNumRows;
 
             isCaculate = true;
 
-
-
-            Activity act = (Activity) view.getContext();
+            Activity act = (Activity)view.getContext();
             Window window = act.getWindow();
             window.getDecorView().getWindowVisibleDisplayFrame(sRect);
             statusBarHeight = sRect.top;
@@ -403,7 +425,8 @@ public class LauncherPage extends ViewGroup {
 
         }
 
-        int pLeft, pRight, pTop, pBottom, rSpace, cSpace, childW, childH, titleBarHeight, statusBarHeight;
+        int pLeft, pRight, pTop, pBottom, rSpace, cSpace, childW, childH, titleBarHeight,
+                statusBarHeight;
 
         public void print() {
             JSONObject jsonObj = new JSONObject();
@@ -440,7 +463,7 @@ public class LauncherPage extends ViewGroup {
 
     public void onLayoutInternal() {
         final int x = mFeatureMetrics.pLeft; // 左padding
-        final int y = mFeatureMetrics.pTop;  // 右padding
+        final int y = mFeatureMetrics.pTop; // 右padding
         final int childW = mFeatureMetrics.childW; // 子控件宽度
         final int childH = mFeatureMetrics.childH; // 子控件高度
         final int cSpace = mFeatureMetrics.cSpace; // 列间距
@@ -452,20 +475,23 @@ public class LauncherPage extends ViewGroup {
         int xTmp, yTmp;
 
         int childCount = getChildCount();
-        //        Log.d(TAG, "childCount = " + childCount);
+        // Log.d(TAG, "childCount = " + childCount);
 
         View childView = null;
         for (int i = 0; i < childCount; i++) {
             childView = getChildAt(i);
 
-            v = i / numColums;  // 第几行
-            z = i % numColums;  // 第几列
+            v = i / numColums; // 第几行
+            z = i % numColums; // 第几列
 
             xTmp = x + z * childW + z * cSpace;
             yTmp = y + v * childH + v * rSpace;
 
-            childView.measure(MeasureSpec.makeMeasureSpec(childW, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(childH, MeasureSpec.EXACTLY));
-            //            TLog.debug(TAG, "onLayout left = %d , top = %d, right = %d, bottom = %d", xTmp, yTmp, xTmp + childW, yTmp + childH);
+            childView.measure(MeasureSpec.makeMeasureSpec(childW, MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(childH, MeasureSpec.EXACTLY));
+            // TLog.debug(TAG,
+            // "onLayout left = %d , top = %d, right = %d, bottom = %d", xTmp,
+            // yTmp, xTmp + childW, yTmp + childH);
             childView.layout(xTmp, yTmp, xTmp + childW, yTmp + childH);
         }
     }
@@ -474,7 +500,6 @@ public class LauncherPage extends ViewGroup {
     // 工具类
     // -------------------------------------------------------
     /**
-     * 
      * @param activity
      * @return > 0 success; <= 0 fail
      */
@@ -488,7 +513,8 @@ public class LauncherPage extends ViewGroup {
             try {
                 localClass = Class.forName("com.android.internal.R$dimen");
                 Object localObject = localClass.newInstance();
-                int i5 = Integer.parseInt(localClass.getField("status_bar_height").get(localObject).toString());
+                int i5 = Integer.parseInt(localClass.getField("status_bar_height").get(localObject)
+                        .toString());
                 statusHeight = activity.getResources().getDimensionPixelSize(i5);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -515,8 +541,10 @@ public class LauncherPage extends ViewGroup {
         resetDragParams();
     }
 
-    public void onDelete(int pageItemPos, final int launcherPageItemPos, final Runnable deleteCallback) {
-        Log.d(TAG, "onDelete  mLastPageItemPos = " + mLastPageItemPos + ", click pageItemPos =  " + pageItemPos + ", launcherPageItemPos = " + launcherPageItemPos);
+    public void onDelete(int pageItemPos, final int launcherPageItemPos,
+            final Runnable deleteCallback) {
+        Log.d(TAG, "onDelete  mLastPageItemPos = " + mLastPageItemPos + ", click pageItemPos =  "
+                + pageItemPos + ", launcherPageItemPos = " + launcherPageItemPos);
         final View v = getChildAt(pageItemPos);
 
         v.setVisibility(View.INVISIBLE);
@@ -538,15 +566,19 @@ public class LauncherPage extends ViewGroup {
         });
         v.startAnimation(dimissAni);
 
-
         boolean isNeedDragFromNextPage = true;
 
-        Log.d(TAG, "onDelete mPageIndex = " + mPageIndex + ",  mLauncher.mPageItemCount = " + mLauncher.mPageItemCount);
+        Log.d(TAG, "onDelete mPageIndex = " + mPageIndex + ",  mLauncher.mPageItemCount = "
+                + mLauncher.mPageItemCount);
 
         int fromPos = (mPageIndex + 1) * mLauncher.mPageItemCount;
 
-        Log.d(TAG, "onDelete fromPos = " + fromPos + ", mLauncher.getPageCount() = " + mLauncher.getPageCount() + ", mLauncher.mListAdapter.getCount() =  " + mLauncher.mListAdapter.getCount());
-        if ((mLauncher.getPageCount() <= (mPageIndex + 1)) || (fromPos > (mLauncher.mListAdapter.getCount() - 1))) {
+        Log.d(TAG,
+                "onDelete fromPos = " + fromPos + ", mLauncher.getPageCount() = "
+                        + mLauncher.getPageCount() + ", mLauncher.mListAdapter.getCount() =  "
+                        + mLauncher.mListAdapter.getCount());
+        if ((mLauncher.getPageCount() <= (mPageIndex + 1))
+                || (fromPos > (mLauncher.mListAdapter.getCount() - 1))) {
             isNeedDragFromNextPage = false;
         }
 
@@ -594,8 +626,8 @@ public class LauncherPage extends ViewGroup {
             return;
         }
 
-        final View view = getLauncherPageItemView(fromPos);
-        final View viewFroAni = getLauncherPageItemView(fromPos);
+        final View view = createLauncherPageItemView(fromPos);
+        final View viewFroAni = createLauncherPageItemView(fromPos);
         final int toPageItemPos = mLauncher.mPageItemCount - 1;
 
         int[] toLocation = getLocationByPos(mLauncher.mPageItemCount - 1);
@@ -603,11 +635,15 @@ public class LauncherPage extends ViewGroup {
 
         Animation ani = getTranslateAnimation(fromLocation, toLocation);
 
-        int[] fromWindowLocatioin = { 0, 0 };
+        int[] fromWindowLocatioin = {
+                0, 0
+        };
         System.arraycopy(fromLocation, 0, fromWindowLocatioin, 0, 2);
-        fromWindowLocatioin[1] += getStatusHeight((Activity) getContext()) + mFeatureMetrics.titleBarHeight;
+        fromWindowLocatioin[1] += getStatusHeight((Activity)getContext())
+                + mFeatureMetrics.titleBarHeight;
 
-        mLauncher.addViewToAnimLayout(viewFroAni, fromWindowLocatioin, mFeatureMetrics.childH, mFeatureMetrics.childW);
+        mLauncher.addViewToAnimLayout(viewFroAni, fromWindowLocatioin, mFeatureMetrics.childH,
+                mFeatureMetrics.childW);
         mLauncher.attachToAniAndStartAni(viewFroAni, ani, new AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -631,7 +667,8 @@ public class LauncherPage extends ViewGroup {
     }
 
     public Animation getDismissAnimation() {
-        ScaleAnimation scaleAni = new ScaleAnimation(1, 0, 1, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        ScaleAnimation scaleAni = new ScaleAnimation(1, 0, 1, 0, Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
         scaleAni.setDuration(Launcher.ANI_DURATION - 200);
         return scaleAni;
     }

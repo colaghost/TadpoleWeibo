@@ -21,4 +21,6 @@ public class PageListView<T> extends AbsPageListView<T> {
         super.setAdapter(adapter);
     }
 
+    
+
 }

@@ -1,6 +1,8 @@
+
 package org.tadpoleweibo.widget;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -38,12 +40,9 @@ public class LauncherPageItemView extends LinearLayout {
         }
     };
 
-    public LauncherPageItemView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
     public LauncherPageItemView(Context context) {
         super(context);
+        this.setBackgroundColor(Color.TRANSPARENT);
     }
 
     private Runnable runnable = null;

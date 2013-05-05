@@ -21,9 +21,11 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.conn.scheme.LayeredSocketFactory;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.scheme.SocketFactory;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -44,6 +46,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
@@ -206,6 +210,8 @@ public class HttpManager {
 
             client.setKeepAliveStrategy(sKeeyAliveStrategy);
 
+//            workAroundReverseDnsBugInHoneycombAndEarlier(client);
+
             // if (NetState.Mobile == NetStateManager.CUR_NETSTATE) {
             // // 获取当前正在使用的APN接入点
             // HttpHost proxy = NetStateManager.getAPN();
@@ -218,6 +224,49 @@ public class HttpManager {
         } catch (Exception e) {
             return new DefaultHttpClient();
         }
+    }
+
+    private static void workAroundReverseDnsBugInHoneycombAndEarlier(HttpClient client) {
+        // Android had a bug where HTTPS made reverse DNS lookups (fixed in Ice
+        // Cream Sandwich)
+        // http://code.google.com/p/android/issues/detail?id=13117
+        SocketFactory socketFactory = new LayeredSocketFactory() {
+            SSLSocketFactory delegate = SSLSocketFactory.getSocketFactory();
+
+            @Override
+            public Socket createSocket() throws IOException {
+                return delegate.createSocket();
+            }
+
+            @Override
+            public Socket connectSocket(Socket sock, String host, int port,
+                    InetAddress localAddress, int localPort, HttpParams params) throws IOException {
+                return delegate.connectSocket(sock, host, port, localAddress, localPort, params);
+            }
+
+            @Override
+            public boolean isSecure(Socket sock) throws IllegalArgumentException {
+                return delegate.isSecure(sock);
+            }
+
+            @Override
+            public Socket createSocket(Socket socket, String host, int port, boolean autoClose)
+                    throws IOException {
+                injectHostname(socket, host);
+                return delegate.createSocket(socket, host, port, autoClose);
+            }
+
+            private void injectHostname(Socket socket, String host) {
+                try {
+                    Field field = InetAddress.class.getDeclaredField("hostName");
+                    field.setAccessible(true);
+                    field.set(socket.getInetAddress(), host);
+                } catch (Exception ignored) {
+                }
+            }
+        };
+        client.getConnectionManager().getSchemeRegistry()
+                .register(new Scheme("https", socketFactory, 443));
     }
 
     private static class MySSLSocketFactory extends SSLSocketFactory {
@@ -249,12 +298,22 @@ public class HttpManager {
         @Override
         public Socket createSocket(Socket socket, String host, int port, boolean autoClose)
                 throws IOException, UnknownHostException {
+            injectHostname(socket, host);
             return sslContext.getSocketFactory().createSocket(socket, host, port, autoClose);
         }
 
         @Override
         public Socket createSocket() throws IOException {
             return sslContext.getSocketFactory().createSocket();
+        }
+
+        private void injectHostname(Socket socket, String host) {
+            try {
+                Field field = InetAddress.class.getDeclaredField("hostName");
+                field.setAccessible(true);
+                field.set(socket.getInetAddress(), host);
+            } catch (Exception ignored) {
+            }
         }
     }
 

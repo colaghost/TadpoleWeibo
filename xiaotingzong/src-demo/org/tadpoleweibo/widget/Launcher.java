@@ -1,12 +1,11 @@
 
 package org.tadpoleweibo.widget;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPagerEX;
@@ -19,11 +18,15 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.AdapterView.OnItemClickListener;
+
+import java.util.ArrayList;
 
 public class Launcher extends ViewPagerEX {
+
+    static boolean DEBUG = false;
 
     static final int ANI_DURATION = 500;
 
@@ -53,21 +56,11 @@ public class Launcher extends ViewPagerEX {
 
     PagerAdapter mPageAdapter;
 
-    ImageView mDragView = null;
+    LauncherPageItemView mDragView = null;
 
     WindowManager.LayoutParams mDragWinLP = null;
 
     private OnItemClickListener mOnItemClickListener;
-
-    public void setOnItemClickListener(OnItemClickListener l) {
-        mOnItemClickListener = l;
-    }
-
-    void onItemClickListener(View v, int position, long itemId) {
-        if (mOnItemClickListener != null) {
-            mOnItemClickListener.onItemClick(null, v, position, itemId);
-        }
-    }
 
     private int mLastX = 0;
 
@@ -110,7 +103,18 @@ public class Launcher extends ViewPagerEX {
     }
 
     private void init() {
+        setOffscreenPageLimit(OFFSET_LIMIT); // 设置ViewPager预加载页数
         mWindowManager = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener l) {
+        mOnItemClickListener = l;
+    }
+
+    void onItemClickListener(View v, int position, long itemId) {
+        if (mOnItemClickListener != null) {
+            mOnItemClickListener.onItemClick(null, v, position, itemId);
+        }
     }
 
     public void setDataAdapter(LauncherListAdapter adapter) {
@@ -125,26 +129,47 @@ public class Launcher extends ViewPagerEX {
         populateDataFromAdapter();
     }
 
+    public int getPageCountFromAdapter() {
+        if (mListAdapter == null) {
+            return 0;
+        }
+        return (mListAdapter.getCount() - 1) / mPageItemCount + 1;
+    }
+
     void notifyDataUpdate() {
         if (mLauncherPageList == null) {
             return;
         }
 
         if (mPageAdapter != null) {
-            int newPageCount = (mListAdapter.getCount() - 1) / mPageItemCount + 1;
-            // pages increase
-            if (newPageCount > mLauncherPageList.size()) {
-                LauncherPage lPage = new LauncherPage(getContext(), newPageCount - 1, this);
-                mLauncherPageList.add(lPage);
 
+            int newPageCount = getPageCountFromAdapter(); // 新页数
+            int oldPageCount = mLauncherPageList.size(); // 老页数
+
+            if (DEBUG) {
+                System.out.println("newPageCount = " + newPageCount + ", oldPageCount = "
+                        + oldPageCount);
+            }
+
+            // pages increase
+            if (newPageCount > oldPageCount) {
+                for (int i = oldPageCount; i < newPageCount; i++) {
+                    LauncherPage lPage = new LauncherPage(getContext(), i, this);
+                    mLauncherPageList.add(lPage);
+                }
             }
             // pages unincrease
-            else if (newPageCount < mLauncherPageList.size()) {
-                if (getCurrentItem() == newPageCount) {
+            else if (newPageCount < oldPageCount) {
+                for (int i = oldPageCount; i > newPageCount; i--) {
+                    mLauncherPageList.remove(oldPageCount - 1);
+                }
+                if (getCurrentItem() >= newPageCount - 1) {
                     this.setCurrentItem(newPageCount - 1, false);
                 }
-                Log.d(TAG, "notifyDataUpdate remove pageIndex = " + (newPageCount - 1));
-                mLauncherPageList.remove(newPageCount);
+
+                if (DEBUG) {
+                    Log.d(TAG, "notifyDataUpdate remove pageIndex = " + (newPageCount - 1));
+                }
             }
             mPageAdapter.notifyDataSetChanged();
         }
@@ -169,7 +194,6 @@ public class Launcher extends ViewPagerEX {
             mLauncherPageList.add(launcherPage);
         }
 
-        this.setOffscreenPageLimit(OFFSET_LIMIT);
         mPageAdapter = new PagerAdapter() {
             @Override
             public int getItemPosition(Object object) {
@@ -209,7 +233,7 @@ public class Launcher extends ViewPagerEX {
         this.setAdapter(mPageAdapter);
     }
 
-    public void startDragging(View v, int index, int pageIndex) {
+    public void startDragging(View v, int index, int pageIndex, LauncherPageItemView dragView) {
         mIsDragging = true;
         mDragPosition = index;
 
@@ -231,14 +255,9 @@ public class Launcher extends ViewPagerEX {
         mDragWinLP.y = locations[1] - statusBarHeight;
         mDragWinLP.width = v.getWidth();
         mDragWinLP.height = v.getHeight();
+        mDragWinLP.format = PixelFormat.TRANSLUCENT;
 
-        v.destroyDrawingCache();
-        v.setDrawingCacheEnabled(true);
-        Bitmap bm = Bitmap.createBitmap(v.getDrawingCache());
-        v.setDrawingCacheEnabled(false);
-
-        mDragView = new ImageView(getContext());
-        mDragView.setImageBitmap(bm);
+        mDragView = dragView;
         mWindowManager.addView(mDragView, mDragWinLP);
     }
 
@@ -481,7 +500,6 @@ public class Launcher extends ViewPagerEX {
         lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
         lp.leftMargin = x;
         lp.topMargin = y;
-
         view.setLayoutParams(lp);
         aniViewGroup.addView(view);
         return view;

@@ -1,33 +1,33 @@
 
 package org.tadpoleweibo.widget;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Future;
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
 import org.tadpole.R;
 import org.tadpoleweibo.widget.image.ImageHelper;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.graphics.Xfermode;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewCompatJB;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class AsyncRoundImageView extends ImageView {
     static ThreadPoolExecutor sExecutor = new ThreadPoolExecutor(5, 6, 30, TimeUnit.SECONDS,
@@ -45,9 +45,11 @@ public class AsyncRoundImageView extends ImageView {
 
     private int mCornerRadius = 10;
 
-    private Paint mMaskPaint = new Paint(1);
+    private Paint mMaskPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private Path mMaskPath;
+
+    private Paint mTransparentPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     public AsyncRoundImageView(Context context) {
         super(context);
@@ -67,6 +69,7 @@ public class AsyncRoundImageView extends ImageView {
     private void init() {
         ViewCompat.setLayerType(this, ViewCompat.LAYER_TYPE_SOFTWARE, null);
         this.mMaskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        this.mMaskPaint.setColor(Color.RED);
     }
 
     /**
@@ -96,11 +99,14 @@ public class AsyncRoundImageView extends ImageView {
     }
 
     protected void onDraw(Canvas canvas) {
-        if (canvas.isOpaque())
-            canvas.saveLayerAlpha(0.0F, 0.0F, canvas.getWidth(), canvas.getHeight(), 255, 4);
+        // 保存当前layer的透明橡树到离屏缓冲区。并新创建一个透明度爲255的新layer
+        int saveCount = canvas.saveLayerAlpha(0.0F, 0.0F, canvas.getWidth(), canvas.getHeight(),
+                255, Canvas.HAS_ALPHA_LAYER_SAVE_FLAG);
         super.onDraw(canvas);
-        if (this.mMaskPath != null)
+        if (this.mMaskPath != null) {
             canvas.drawPath(this.mMaskPath, this.mMaskPaint);
+        }
+        canvas.restoreToCount(saveCount);
     }
 
     @Override
@@ -132,7 +138,6 @@ public class AsyncRoundImageView extends ImageView {
                         System.out.println("mFuture to thread pool");
                         final BitmapDrawable bd = ImageHelper.getBitmapDrawable(me.getContext(),
                                 uri);
-                        System.out.println("mFuture to thread pool) = " + bd);
 
                         if (bd != null) {
                             Message msg = new Message();
@@ -162,7 +167,7 @@ public class AsyncRoundImageView extends ImageView {
                     @Override
                     public void run() {
                         final BitmapDrawable bd = ImageHelper.getBitmapByUrl(me.getContext()
-                                .getResources(), url);
+                                .getResources(), url, null);
                         if (bd != null) {
                             Message msg = new Message();
                             msg.what = 1;

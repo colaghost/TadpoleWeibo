@@ -18,12 +18,14 @@ import org.tadpole.R;
 import org.tadpoleweibo.widget.PageList;
 import org.tadpoleweibo.widget.PageListView;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -36,7 +38,7 @@ import java.util.List;
  * 
  * @author chenzh
  */
-public class StatusesActivity extends Activity implements OnRefreshListener2<ListView> {
+public class StatusesActivity extends BaseActivity implements OnRefreshListener2<ListView> {
     static final String TAG = "StatuesActivity";
 
     static final String EXTRA_USER = "user";
@@ -113,7 +115,8 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
         this.mListStatuses.setAdapter(this.mPageAdapter);
         mListStatuses.getRefreshableView().setFastScrollEnabled(true);
         mListStatuses.setMode(Mode.BOTH);
-        me.fetchStatusesPreferCache(mUserSelf.id);
+
+        mListStatuses.firePullDownToRefresh();
     }
 
     @Override
@@ -218,7 +221,8 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
     }
 
     public void onWeiboStatusesLoad(final ArrayList<WeiboStatus> list, final boolean isAdd) {
-        runOnUiThread(new Runnable() {
+        mHandler.post(new Runnable() {
+            @Override
             public void run() {
                 List<WeiboStatus> adapterList = mPageAdapter.getList();
                 if (isAdd && list != null) {
@@ -228,7 +232,7 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
                 }
                 mPageAdapter.setList(adapterList);
                 mPageAdapter.notifyDataSetChanged();
-                mListStatuses.onRefreshComplete();
+                mListStatuses.proxyOnRefreshComplete();
             }
         });
     }
@@ -242,5 +246,13 @@ public class StatusesActivity extends Activity implements OnRefreshListener2<Lis
     public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
         fetchStatusesFromRemote(mUserSelf.id, true);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private Handler mHandler = new Handler();
 
 }

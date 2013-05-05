@@ -77,9 +77,6 @@ public class WeiboStatus {
             return null;
         }
         WeiboStatus item = new WeiboStatus();
-        Log.d(TAG, "fromResponse = " + jsonObject.toString());
-        Log.d(TAG, "fromResponse = " + jsonObject.has("user"));
-
         if (jsonObject.has("user")) {
             JSONObject jo = jsonObject.optJSONObject("user");
             try {
@@ -195,7 +192,7 @@ public class WeiboStatus {
                 Emotion emotion = XTZApplication.getEmotionByPhrase(phrase);
                 if (emotion != null) {
                     BitmapDrawable drawable = ImageHelper.getBitmapByUrl(context.getResources(),
-                            emotion.icon);
+                            emotion.icon, null);
                     Log.d(TAG, "phrase = " + phrase + ", url = " + emotion.icon + ",drawable = "
                             + drawable);
                     if (drawable != null) {
