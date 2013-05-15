@@ -200,7 +200,7 @@ public class MainActivity extends Activity {
                     // 获取用户信息
                     XTZApplication.setCurUser(Account.getUserPreferCache());
                     // 获取表情
-                    // Emotion.cacheEmotions();
+                    Emotion.cacheEmotions();
                     return true;
                 } catch (Exception e) {
                     e.printStackTrace();

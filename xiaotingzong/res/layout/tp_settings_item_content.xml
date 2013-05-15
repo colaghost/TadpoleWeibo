@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="@dimen/list_item_size"
+    android:paddingLeft="@dimen/padding_medium"
+    android:paddingRight="@dimen/padding_medium" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/txtview_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="测试一下，打酱油"
+            android:textAppearance="@style/TextAppearance.Medium"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/txtview_sub_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_small"
+            android:text="测试一下，打酱油"
+            android:textAppearance="@style/TextAppearance.Small"
+            android:textColor="@color/simple_grey"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/list_item_size"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true" >
+
+        <org.tadpoleweibo.widget.SwitchButton
+            android:id="@+id/switchbtn"
+            android:layout_width="@dimen/switch_width"
+            android:layout_height="@dimen/switch_height"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+</RelativeLayout>

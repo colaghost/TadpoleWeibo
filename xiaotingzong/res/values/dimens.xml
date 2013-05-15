@@ -27,4 +27,14 @@
     <dimen name="list_item_size">45dp</dimen>
     <dimen name="list_item_size_large">60dp</dimen>
 
+    <!-- Stroke Size -->
+    <dimen name="stroke_size">1px</dimen>
+
+    <!-- Radius -->
+    <dimen name="radius_szie">3dp</dimen>
+
+    <!-- Settings Switch -->
+    <dimen name="switch_height">21dp</dimen>
+    <dimen name="switch_width">65dp</dimen>
+
 </resources>

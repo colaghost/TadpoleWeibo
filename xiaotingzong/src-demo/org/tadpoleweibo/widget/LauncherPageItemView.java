@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 
 public class LauncherPageItemView extends LinearLayout {
 

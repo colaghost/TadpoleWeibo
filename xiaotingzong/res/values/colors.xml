@@ -15,7 +15,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ */
 -->
 <resources>
 
@@ -34,8 +34,12 @@
     <color name="simple_grey">#646464</color>
     <color name="simple_grey_trans">#AA646464</color>
     <color name="simple_grey_trans44">#44646464</color>
-     <color name="simple_grey_trans11">#11646464</color>
+    <color name="simple_grey_trans11">#11646464</color>
     <color name="simple_white_trans22">#22FFFFFF</color>
     <color name="simple_white_transCC">#CCFFFFFF</color>
+    <color name="stroke_color">#646464</color>
+    
+    
+    <color name="tp_settings_background_color">#E6E6E6</color>
 
 </resources>

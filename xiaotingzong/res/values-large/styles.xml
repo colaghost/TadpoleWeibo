@@ -37,37 +37,18 @@
     </style>
 
     <style name="TextAppearance.Small" parent="Tadpole">
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">13sp</item>
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
     <style name="TextAppearance.Medium" parent="Tadpole">
-        <item name="android:textSize">14.7sp</item>
+        <item name="android:textSize">17.7sp</item>
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
     <style name="TextAppearance.Large" parent="Tadpole">
-        <item name="android:textSize">17sp</item>
+        <item name="android:textSize">21sp</item>
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
-
-    <style name="Tadpole.Animation.Activity" mce_bogus="1" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/slide_up</item>
-        <item name="android:activityOpenExitAnimation">@anim/none</item>
-        <item name="android:activityCloseEnterAnimation">@anim/none</item>
-        <item name="android:activityCloseExitAnimation">@anim/slide_down</item>
-    </style>
-
-    <style name="Tadpole.Dialog">
-        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
-    </style>
-
-    <style name="Tadpole.Dialog.Loading" parent="Tadpole.Dialog">
-        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-    </style>
-
-    <style name="DialogAnimation" parent="@android:style/Animation.Dialog"></style>
 
 </resources>

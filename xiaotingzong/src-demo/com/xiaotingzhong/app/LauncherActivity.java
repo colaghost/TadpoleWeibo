@@ -52,6 +52,8 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
 
     private ImageButton mImgBtnAdd;
 
+    private ImageButton mImgBtnSet;
+
     private SurfaceImageView mImgViewBg;
 
     private Launcher mLauncher;
@@ -86,6 +88,16 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
             }
         });
 
+        mImgBtnSet = (ImageButton)findViewById(R.id.imgbtn_set);
+        mImgBtnSet.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Activity act = (Activity)v.getContext();
+                SettingsActivity.start(act);
+            }
+        });
+
         mLauncherAdapter = new LauncherListAdapter<User>(mUserList) {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v = LayoutInflater.from(me).inflate(R.layout.launche_page_item, null);
@@ -104,9 +116,9 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
                 return v;
             }
         };
-        
+
         System.out.println("mLauncherAdapter = " + mLauncherAdapter.getCount());
-        
+
         mLauncher.setDataAdapter(mLauncherAdapter);
         mLauncher.setOnItemClickListener(this);
         mLauncher.setOnDataChangeListener(new OnDataChangeListener() {

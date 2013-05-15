@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.tadpole"
     android:versionCode="1"
@@ -21,11 +22,7 @@
             android:name="com.weibo.sdk.android.demo.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.Tadpole" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.xiaotingzhong.app.LauncherActivity"
@@ -40,11 +37,21 @@
             android:name="com.xiaotingzhong.app.StatusesActivity"
             android:theme="@style/Theme.Tadpole" >
         </activity>
-        <activity android:name=".APITypeListActivity" >
+        <activity android:name="org.tadpole.APITypeListActivity" >
         </activity>
         <activity android:name="com.weibo.sdk.android.demo.ShareActivity" >
         </activity>
         <activity android:name="com.weibo.sdk.android.demo.BlogFunActivity" >
+        </activity>
+        <activity
+            android:name="com.xiaotingzhong.app.SettingsActivity"
+            android:label="@string/title_activity_settings" >
+            
+                        <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
