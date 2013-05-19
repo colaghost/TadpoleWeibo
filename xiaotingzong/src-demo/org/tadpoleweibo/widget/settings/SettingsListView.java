@@ -1,8 +1,11 @@
 
 package org.tadpoleweibo.widget.settings;
 
+import org.tadpole.R;
+
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -35,6 +38,7 @@ public class SettingsListView extends ListView {
     private void init() {
         setDivider(null);
         setDividerHeight(0);
+        this.setVerticalScrollBarEnabled(false);
         setAdapter(new SettingsAdapter(getActivity()));
     }
 

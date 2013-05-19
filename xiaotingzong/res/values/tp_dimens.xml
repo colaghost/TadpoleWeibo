@@ -1,0 +1,7 @@
+<resources>
+    
+    <!-- Tp Settings -->
+    <dimen name="tp_settings_vertical_margin">20dp</dimen>
+    <dimen name="tp_settingsitem_height">49dp</dimen>
+    
+</resources>

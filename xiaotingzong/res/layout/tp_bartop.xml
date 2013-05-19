@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Tadpole.TopBar"
+    android:orientation="horizontal" >
+
+    <ImageButton
+        android:id="@+id/tp_imgbtn_left"
+        style="@style/Tadpole.ImageButton.TopBar"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/tostart" >
+    </ImageButton>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="好友列表"
+        android:textAppearance="@style/TextAppearance.Large"
+        android:textColor="@android:color/white" >
+    </TextView>
+
+    <ImageButton
+        android:id="@+id/tp_imgbtn_right"
+        style="@style/Tadpole.ImageButton.TopBar"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/selector_rootblock_add_toolbar_added" >
+    </ImageButton>
+
+</LinearLayout>

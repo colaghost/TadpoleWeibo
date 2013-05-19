@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import java.util.zip.Inflater;
 
-public class SettingsItem implements ISettingsItem {
+public abstract class SettingsItem implements ISettingsItem {
 
     @Override
     public View getContentView(LayoutInflater inflater) {
@@ -28,6 +28,15 @@ public class SettingsItem implements ISettingsItem {
     public View getContentView(LayoutInflater inflater, ViewGroup parent) {
         View view = inflater.inflate(R.layout.tp_settings_item_content, null);
         view.setLayoutParams(SettingsListView.LP_F_F);
+
+        ViewGroup viewGroupRight = (ViewGroup)view.findViewById(R.id.right);
+        View viewRightDetail = createRightDetailView(inflater, viewGroupRight);
+        if (null != viewRightDetail) {
+            viewGroupRight.removeAllViews();
+            viewGroupRight.addView(viewRightDetail, SettingsListView.LP_F_F);
+        }
         return view;
     }
+
+    public abstract View createRightDetailView(LayoutInflater inflater, ViewGroup parent);
 }

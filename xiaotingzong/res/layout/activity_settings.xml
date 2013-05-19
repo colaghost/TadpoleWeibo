@@ -4,13 +4,16 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <include
+        android:id="@+id/bartop_settings"
+        layout="@layout/tp_bartop" />
+
     <org.tadpoleweibo.widget.settings.SettingsListView
         android:id="@+id/settingsview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@color/tp_settings_background_color"
         android:cacheColorHint="@color/tp_settings_background_color"
-        android:descendantFocusability="blocksDescendants"
-        android:dividerHeight="0dp" />
+        android:descendantFocusability="blocksDescendants" />
 
 </LinearLayout>

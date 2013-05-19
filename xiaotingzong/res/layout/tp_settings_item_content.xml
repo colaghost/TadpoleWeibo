@@ -32,16 +32,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/right"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/list_item_size"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true" >
-
-        <org.tadpoleweibo.widget.SwitchButton
-            android:id="@+id/switchbtn"
-            android:layout_width="@dimen/switch_width"
-            android:layout_height="@dimen/switch_height"
-            android:layout_gravity="center_vertical" />
     </LinearLayout>
 
 </RelativeLayout>

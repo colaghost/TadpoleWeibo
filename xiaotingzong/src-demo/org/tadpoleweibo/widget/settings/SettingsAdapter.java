@@ -18,15 +18,12 @@ public class SettingsAdapter extends BaseListAdapter<SettingsGroup, ListView> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         SettingsGroup item = getItemData(position);
-
         LinearLayout root = new LinearLayout(getLayoutInflater().getContext());
         root = (LinearLayout)getLayoutInflater().inflate(R.layout.tp_settings_group, root);
 
         SettingsGroupView view = (SettingsGroupView)root.findViewById(R.id.settingsgroupview);
-        view.addGroup(item);
-
+        view.setGroup(item);
         return root;
     }
 }

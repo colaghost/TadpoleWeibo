@@ -32,18 +32,7 @@ class SettingsGroupView extends LinearLayout {
         mInflater = LayoutInflater.from(getContext());
     }
 
-    public void addItems(ArrayList<SettingsItem> items) {
-        if (null == items || 0 == items.size()) {
-            return;
-        }
-        if (items.size() == 1) {
-            addSingleItem(items.get(0));
-        } else {
-            addMultipleItem(items);
-        }
-    }
-
-    public void addGroup(SettingsGroup group) {
+    public void setGroup(SettingsGroup group) {
         if (group == null) {
             throw new IllegalArgumentException("SettingsGroup can't not be null");
         }
@@ -72,6 +61,17 @@ class SettingsGroupView extends LinearLayout {
             if (needDivider) {
                 createAndAddDivider();
             }
+        }
+    }
+
+    private void addItems(ArrayList<SettingsItem> items) {
+        if (null == items || 0 == items.size()) {
+            return;
+        }
+        if (items.size() == 1) {
+            addSingleItem(items.get(0));
+        } else {
+            addMultipleItem(items);
         }
     }
 

@@ -4,6 +4,9 @@ package com.xiaotingzhong.app;
 import org.tadpole.R;
 import org.tadpoleweibo.widget.settings.SettingsItem;
 import org.tadpoleweibo.widget.settings.SettingsGroup;
+import org.tadpoleweibo.widget.settings.SettingsItemNav;
+import org.tadpoleweibo.widget.settings.SettingsItemOptions;
+import org.tadpoleweibo.widget.settings.SettingsItemSwitcher;
 import org.tadpoleweibo.widget.settings.SettingsListView;
 
 import android.app.Activity;
@@ -33,40 +36,38 @@ public class SettingsActivity extends Activity {
         mSettingsView = (SettingsListView)this.findViewById(R.id.settingsview);
 
         SettingsGroup group = new SettingsGroup();
-        group.addItem(new SettingsItem());
-        group.addItem(new SettingsItem());
-        group.addItem(new SettingsItem());
-        group.addItem(new SettingsItem());
-        
+        group.addItem(new SettingsItemOptions());
+        group.addItem(new SettingsItemNav());
+        group.addItem(new SettingsItemSwitcher());
+        group.addItem(new SettingsItemSwitcher());
+
         mSettingsView.addGroup(group);
-        
+
         SettingsGroup group1 = new SettingsGroup();
-        group1.addItem(new SettingsItem());
+        group1.addItem(new SettingsItemOptions());
         mSettingsView.addGroup(group1);
-        
-        
+
         SettingsGroup group2 = new SettingsGroup();
-        group2.addItem(new SettingsItem());
+        group2.addItem(new SettingsItemSwitcher());
         mSettingsView.addGroup(group2);
-        
-        
+
         SettingsGroup group4 = new SettingsGroup();
-        group4.addItem(new SettingsItem());
-        group4.addItem(new SettingsItem());
-        group4.addItem(new SettingsItem());
-        group4.addItem(new SettingsItem());
-        
+        group4.addItem(new SettingsItemNav());
+        group4.addItem(new SettingsItemNav());
+        group4.addItem(new SettingsItemSwitcher());
+        group4.addItem(new SettingsItemOptions());
+
         mSettingsView.addGroup(group4);
     }
 
     private SettingsListView mSettingsView;
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add("hello ");
         return super.onCreateOptionsMenu(menu);
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         mSettingsView.notiyDataSetChanged();

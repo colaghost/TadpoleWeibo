@@ -36,5 +36,6 @@
     <!-- Settings Switch -->
     <dimen name="switch_height">21dp</dimen>
     <dimen name="switch_width">65dp</dimen>
-
+    
+    
 </resources>

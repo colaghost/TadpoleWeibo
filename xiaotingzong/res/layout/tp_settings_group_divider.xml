@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="@dimen/stroke_size"
-    android:background="@color/stroke_color"
+    android:background="@color/tp_divider"
     android:orientation="horizontal" >
-</LinearLayout>
+
+</LinearLayout>
