@@ -1,3 +1,4 @@
+
 package org.tadpoleweibo.common;
 
 import java.io.UnsupportedEncodingException;
@@ -15,9 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 字符串处理类。
- * 
- * <br>=
+ * 字符串处理类。 <br>=
  * ========================= <br>
  * 公司：优视科技 <br>
  * 开发：liuyong@ucweb.com <br>
@@ -31,24 +30,21 @@ public class StringUtil {
     public static final String EMPTY_STRING = "";
 
     /**
-     * 判断配置字符串中是否包含对应的配置项.
-     * <br> StringUtil.defStrContains("1|2,3"|"1","|") =true
-     * <br> StringUtil.defStrContains("1|2|3","3","|") =true
-     * <br> StringUtil.defStrContains("1|2|3","2","|") =true
-     * <br> StringUtil.defStrContains("1|2|3","4","|") =false
-     * <br> StringUtil.defStrContains("1|2|3","","|") =false
-     * <br> StringUtil.defStrContains("1|2|3",null,"|") =false
-     * <br> <b>StringUtil.defStrContains("1|2|3","1|2","|") =true</b>
-     * <br> StringUtil.defStrContains("1|2|3","|2|","|") =true
-     * <br> StringUtil.defStrContains("1|2|3","|2|",",") =true
-     * <br> StringUtil.defStrContains("1|2|3","2",",") =false
+     * 判断配置字符串中是否包含对应的配置项. <br>
+     * StringUtil.defStrContains("1|2,3"|"1","|") =true <br>
+     * StringUtil.defStrContains("1|2|3","3","|") =true <br>
+     * StringUtil.defStrContains("1|2|3","2","|") =true <br>
+     * StringUtil.defStrContains("1|2|3","4","|") =false <br>
+     * StringUtil.defStrContains("1|2|3","","|") =false <br>
+     * StringUtil.defStrContains("1|2|3",null,"|") =false <br>
+     * <b>StringUtil.defStrContains("1|2|3","1|2","|") =true</b> <br>
+     * StringUtil.defStrContains("1|2|3","|2|","|") =true <br>
+     * StringUtil.defStrContains("1|2|3","|2|",",") =true <br>
+     * StringUtil.defStrContains("1|2|3","2",",") =false
      * 
-     * @param defStr
-     *            配置内容
-     * @param defValue
-     *            配置项的关键字
-     * @param splitSyb
-     *            分隔符号
+     * @param defStr 配置内容
+     * @param defValue 配置项的关键字
+     * @param splitSyb 分隔符号
      * @return
      */
     public static boolean defStrContains(String defStr, String defValue, String splitSyb) {
@@ -59,13 +55,12 @@ public class StringUtil {
      * 将邮箱中间部分替换成星号
      * 
      * <pre>
-     * StringUtil.asteriskReplace("upayTest@ucweb.com") = "upa*****@ucweb.com"
+     * StringUtil.asteriskReplace(&quot;upayTest@ucweb.com&quot;) = &quot;upa*****@ucweb.com&quot;
      * </pre>
      * 
-     * @param str
-     *            被替换字符串
-     * 
-     * @return 前三位或@后明文，中间为密文，若@前少于等于三位则将@前全部替换为*(fyg@ucweb.com--->***@ucweb.com)
+     * @param str 被替换字符串
+     * @return 
+     *         前三位或@后明文，中间为密文，若@前少于等于三位则将@前全部替换为*(fyg@ucweb.com--->***@ucweb.com)
      *         不符合邮箱规则返回asteriskReplace(str) 若传入参数为null，直接返回null
      */
     public static String asteriskEmailReplace(String str) {
@@ -84,10 +79,11 @@ public class StringUtil {
     }
 
     /**
-     * 将字符串中间部分替换成星号.
-     * <br />若长度大于6位则将中间部分替换成星号，保留前三位后三位,其他替换为4个星号
-     * <br />若长度大于2位且小于等于6位，则保留第一位,其他替换为3个星号
-     * <br />若长度小于等于2位则替换为2个星号
+     * 将字符串中间部分替换成星号. <br />
+     * 若长度大于6位则将中间部分替换成星号，保留前三位后三位,其他替换为4个星号 <br />
+     * 若长度大于2位且小于等于6位，则保留第一位,其他替换为3个星号 <br />
+     * 若长度小于等于2位则替换为2个星号
+     * 
      * <pre>
      * str.length()>6:
      * StringUtil.asteriskReplace("12345678") = "123****678"
@@ -97,9 +93,7 @@ public class StringUtil {
      * StringUtil.asteriskReplace("12") = "**"
      * </pre>
      * 
-     * @param str
-     *            被替换字符串
-     * 
+     * @param str 被替换字符串
      * @return
      */
     public static String asteriskReplace(String str) {
@@ -130,11 +124,8 @@ public class StringUtil {
      * StringUtil.equals("abc", "ABC") = false
      * </pre>
      * 
-     * @param str1
-     *            要比较的字符串1
-     * @param str2
-     *            要比较的字符串2
-     * 
+     * @param str1 要比较的字符串1
+     * @param str2 要比较的字符串2
      * @return 如果两个字符串相同，或者都是<code>null</code>，则返回<code>true</code>
      */
     public static boolean equals(String str1, String str2) {
@@ -156,11 +147,8 @@ public class StringUtil {
      * StringUtil.equalsIgnoreCase("abc", "ABC") = true
      * </pre>
      * 
-     * @param str1
-     *            要比较的字符串1
-     * @param str2
-     *            要比较的字符串2
-     * 
+     * @param str1 要比较的字符串1
+     * @param str2 要比较的字符串2
      * @return 如果两个字符串相同，或者都是<code>null</code>，则返回<code>true</code>
      */
     public static boolean equalsIgnoreCase(String str1, String str2) {
@@ -182,9 +170,7 @@ public class StringUtil {
      * StringUtil.isBlank("  bob  ") = false
      * </pre>
      * 
-     * @param str
-     *            要检查的字符串
-     * 
+     * @param str 要检查的字符串
      * @return 如果为空白, 则返回<code>true</code>
      */
     public static boolean isBlank(String str) {
@@ -214,9 +200,7 @@ public class StringUtil {
      * StringUtil.isNotBlank("  bob  ") = true
      * </pre>
      * 
-     * @param str
-     *            要检查的字符串
-     * 
+     * @param str 要检查的字符串
      * @return 如果为空白, 则返回<code>true</code>
      */
     public static boolean isNotBlank(String str) {
@@ -246,9 +230,7 @@ public class StringUtil {
      * StringUtil.isEmpty("  bob  ") = false
      * </pre>
      * 
-     * @param str
-     *            要检查的字符串
-     * 
+     * @param str 要检查的字符串
      * @return 如果为空, 则返回<code>true</code>
      */
     public static boolean isEmpty(String str) {
@@ -266,9 +248,7 @@ public class StringUtil {
      * StringUtil.isNotEmpty("  bob  ") = true
      * </pre>
      * 
-     * @param str
-     *            要检查的字符串
-     * 
+     * @param str 要检查的字符串
      * @return 如果不为空, 则返回<code>true</code>
      */
     public static boolean isNotEmpty(String str) {
@@ -288,11 +268,8 @@ public class StringUtil {
      * StringUtil.indexOf("aabaabaa", "") = 0
      * </pre>
      * 
-     * @param str
-     *            要扫描的字符串
-     * @param searchStr
-     *            要查找的字符串
-     * 
+     * @param str 要扫描的字符串
+     * @param searchStr 要查找的字符串
      * @return 第一个匹配的索引值。如果字符串为<code>null</code>或未找到，则返回<code>-1</code>
      */
     public static int indexOf(String str, String searchStr) {
@@ -320,13 +297,9 @@ public class StringUtil {
      * StringUtil.indexOf("abc", "", 9) = 3
      * </pre>
      * 
-     * @param str
-     *            要扫描的字符串
-     * @param searchStr
-     *            要查找的字符串
-     * @param startPos
-     *            开始搜索的索引值，如果小于0，则看作0
-     * 
+     * @param str 要扫描的字符串
+     * @param searchStr 要查找的字符串
+     * @param startPos 开始搜索的索引值，如果小于0，则看作0
      * @return 第一个匹配的索引值。如果字符串为<code>null</code>或未找到，则返回<code>-1</code>
      */
     public static int indexOf(String str, String searchStr, int startPos) {
@@ -344,7 +317,6 @@ public class StringUtil {
 
     /**
      * 取指定字符串的子串。
-     * 
      * <p>
      * 负的索引代表从尾部开始计算。如果字符串为<code>null</code>，则返回<code>null</code>。
      * 
@@ -362,13 +334,9 @@ public class StringUtil {
      * 
      * </p>
      * 
-     * @param str
-     *            字符串
-     * @param start
-     *            起始索引，如果为负数，表示从尾部计算
-     * @param end
-     *            结束索引（不含），如果为负数，表示从尾部计算
-     * 
+     * @param str 字符串
+     * @param start 起始索引，如果为负数，表示从尾部计算
+     * @param end 结束索引（不含），如果为负数，表示从尾部计算
      * @return 子串，如果原始串为<code>null</code>，则返回<code>null</code>
      */
     public static String substring(String str, int start, int end) {
@@ -415,11 +383,8 @@ public class StringUtil {
      * StringUtil.contains("abc", "z") = false
      * </pre>
      * 
-     * @param str
-     *            要扫描的字符串
-     * @param searchStr
-     *            要查找的字符串
-     * 
+     * @param str 要扫描的字符串
+     * @param searchStr 要查找的字符串
      * @return 如果找到，则返回<code>true</code>
      */
     public static boolean contains(String str, String searchStr) {
@@ -435,7 +400,6 @@ public class StringUtil {
      * Checks if the String contains only unicode digits. A decimal point is not
      * a unicode digit and returns false.
      * </p>
-     * 
      * <p>
      * <code>null</code> will return <code>false</code>. An empty String ("")
      * will return <code>true</code>.
@@ -452,8 +416,7 @@ public class StringUtil {
      * StringUtils.isNumeric("12.3") = false
      * </pre>
      * 
-     * @param str
-     *            the String to check, may be null
+     * @param str the String to check, may be null
      * @return <code>true</code> if only contains digits, and is non-null
      */
     public static boolean isNumeric(String str) {
@@ -470,18 +433,17 @@ public class StringUtil {
     }
 
     /**
-     * 将url参数形式的字符串转换为map,
-     * <br /> 如果某个key重复出现,则只留最后一次出现的值
-     * <br /> 若某个value URLDecode失败,则返回null
+     * 将url参数形式的字符串转换为map, <br />
+     * 如果某个key重复出现,则只留最后一次出现的值 <br />
+     * 若某个value URLDecode失败,则返回null
      * 
      * @param queryString
-     * @param enc
-     *            key-value中的value的URLDecode编码
-     * @param keepEmptyValue
-     *            如果某个'key-value对'没有=号,是否包括此对,但将value设置为null
+     * @param enc key-value中的value的URLDecode编码
+     * @param keepEmptyValue 如果某个'key-value对'没有=号,是否包括此对,但将value设置为null
      * @return
      */
-    public static Map<String, String> urlToSingleMap(String queryString, String enc, boolean keepEmptyValue) {
+    public static Map<String, String> urlToSingleMap(String queryString, String enc,
+            boolean keepEmptyValue) {
         Map<String, String> pMap = new HashMap<String, String>();
         if (isBlank(queryString)) {
             return null;
@@ -546,7 +508,9 @@ public class StringUtil {
                     System.arraycopy(values, 0, newValues, 0, len);
                     newValues[len] = value;
                 } else {
-                    newValues = new String[] { value };
+                    newValues = new String[] {
+                        value
+                    };
                 }
                 paramsMap.put(param, newValues);
             } while (ampersandIndex > 0);
@@ -570,10 +534,10 @@ public class StringUtil {
         StringBuffer buf = new StringBuffer(bLen * 2);
         int i;
         for (i = 0; i < bLen; i++) {
-            if (((int) bytes[i] & 0xff) < 0x10) {
+            if (((int)bytes[i] & 0xff) < 0x10) {
                 buf.append("0");
             }
-            buf.append(Long.toString((int) bytes[i] & 0xff, 16));
+            buf.append(Long.toString((int)bytes[i] & 0xff, 16));
         }
         return buf.toString().toUpperCase();
     }
@@ -590,13 +554,14 @@ public class StringUtil {
         for (int i = 0; i < bLen; i++) {
             int index = i * 2;
             int v = Integer.parseInt(str.substring(index, index + 2), 16);
-            bytes[i] = (byte) v;
+            bytes[i] = (byte)v;
         }
         return new String(bytes);
     }
 
     /**
      * 从url中提取domain部分,如果没有`/`符号,则返回传入内容
+     * 
      * <pre>
      * StringUtil.getDomain("http://www.uc.cn/abc")="www.uc.cn"
      * StringUtil.getDomain("www.uc.cn:8080/abc")="www.uc.cn:8080"
@@ -608,7 +573,9 @@ public class StringUtil {
      */
     public static String getDomain(String url) {
         String[] ary = url.split("/");
-        if (ary.length > 3 && (ary[0].equalsIgnoreCase("http:") || ary[0].equalsIgnoreCase("https:")) && ary[1].equals("")) {
+        if (ary.length > 3
+                && ("http:".equalsIgnoreCase(ary[0]) || "https:".equalsIgnoreCase(ary[0]))
+                && "".equals(ary[1])) {
             return ary[2];
         } else if (ary.length > 0) {
             return ary[1];
@@ -619,8 +586,9 @@ public class StringUtil {
 
     /**
      * 从url中提取domain部分,如果没有`/`符号,则返回传入内容,并去除端口号
+     * 
      * <pre>
-     * StringUtil.getDomainWithoutPort("http://www.uc.cn:8080/abc")="www.uc.cn"
+     * StringUtil.getDomainWithoutPort(&quot;http://www.uc.cn:8080/abc&quot;) = &quot;www.uc.cn&quot;
      * </pre>
      * 
      * @param url
@@ -643,10 +611,8 @@ public class StringUtil {
      * 若str.length<=len,返回str<br />
      * 若len<0 返回str
      * 
-     * @param str
-     *            被截取的字符
-     * @param len
-     *            截取长度
+     * @param str 被截取的字符
+     * @param len 截取长度
      * @return
      */
     public static String rightTrunc(String str, int len) {
@@ -661,7 +627,6 @@ public class StringUtil {
         return str.substring(strLen - len);
 
     }
-
 
     public static String map2String(Map<String, String> map, String[] notIn) {
         StringBuffer sbuf = new StringBuffer("");
@@ -678,12 +643,11 @@ public class StringUtil {
     }
 
     /**
-     * 统计c在str出现的次数
-     * <br /> src为null 返回0
-     * <br /> c为null 返回0
+     * 统计c在str出现的次数 <br />
+     * src为null 返回0 <br />
+     * c为null 返回0
      * 
-     * @param src
-     *            字符串
+     * @param src 字符串
      * @param c的单个字符
      * @return 出现的次数
      */
@@ -706,6 +670,7 @@ public class StringUtil {
      * <p/>
      * <p>
      * 如果字符串为<code>null</code>或空，则返回<code>0</code>。
+     * 
      * <pre>
      * StringUtil.countRepeat(null, *) = 0
      * StringUtil.countRepeat("", *) = 0
@@ -716,12 +681,11 @@ public class StringUtil {
      * StringUtil.countRepeat("abba", "xxx") = 0
      * StringUtil.countRepeat("aaaa", "aa") = 3
      * </pre>
+     * 
      * </p>
      * 
-     * @param str
-     *            要扫描的字符串
-     * @param subStr
-     *            子字符串
+     * @param str 要扫描的字符串
+     * @param subStr 子字符串
      * @return 子串在字符串中出现的次数，如果字符串为<code>null</code>或空，则返回<code>0</code>
      */
     public static int countRepeat(String str, String subStr) {
@@ -740,13 +704,12 @@ public class StringUtil {
         return count;
     }
 
-
     public static String getCurrentDateTimeStringDefault() {
         Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
-        String str = (String) android.text.format.DateFormat.format("yyyy年MM月dd日   hh:mm:ss", curDate);
+        String str = (String)android.text.format.DateFormat.format("yyyy年MM月dd日   hh:mm:ss",
+                curDate);
         return str;
     }
-
 
     public static String formatFloatAmount(float amount) {
         DecimalFormat df = new DecimalFormat("#0.##");
@@ -786,36 +749,29 @@ public class StringUtil {
         return "";
     }
 
-
     /**
      * 判断字符串是否为空或空白串
      * 
-     * @author wangcj@ucweb.com
-     *         <br> Create: 2012-07-19
-     * 
-     * @param s
-     *            待判断字符串
+     * @author wangcj@ucweb.com <br>
+     *         Create: 2012-07-19
+     * @param s 待判断字符串
      * @return true - 是null、空串或空白串； false - 是具有实际内容的字符串
      */
     public static boolean isNullOrEmpty(String s) {
         return (s == null || s.length() == 0 || s.trim().length() == 0);
     }
 
-
-
     /**
      * 判断输入的邮箱字符串是否合法
      * 
-     * @author chenbl@ucweb.com
-     *         <br> Create: 2012-12-03
-     * 
-     * @param emailString
-     *            带判断的字符串
-     * @return
-     *         true 输入的字符串是合法邮箱地址；false 输入的字符串不是合法邮箱地址
+     * @author chenbl@ucweb.com <br>
+     *         Create: 2012-12-03
+     * @param emailString 带判断的字符串
+     * @return true 输入的字符串是合法邮箱地址；false 输入的字符串不是合法邮箱地址
      */
     public static boolean isEmailString(String emailString) {
-        Pattern pattern = Pattern.compile("^([\\w]+([\\w-\\.+]*[\\w-]+)?)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([\\w-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$");
+        Pattern pattern = Pattern
+                .compile("^([\\w]+([\\w-\\.+]*[\\w-]+)?)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([\\w-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$");
         Matcher matcher = pattern.matcher(emailString);
         return matcher.matches();
     }
