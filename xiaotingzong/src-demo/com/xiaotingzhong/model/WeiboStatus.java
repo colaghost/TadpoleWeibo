@@ -92,10 +92,10 @@ public class WeiboStatus {
             if (item.user == null) {
                 return null;
             }
-            item.mTextSpanString = getTextSpannableString(XTZApplication.app, "@"
+            item.mTextSpanString = getTextSpannableString(XTZApplication.sApp, "@"
                     + item.user.screen_name + ":" + item.text);
         } else {
-            item.mTextSpanString = getTextSpannableString(XTZApplication.app, item.text);
+            item.mTextSpanString = getTextSpannableString(XTZApplication.sApp, item.text);
         }
 
         if (jsonObject.has("retweeted_status")) {

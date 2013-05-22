@@ -43,7 +43,7 @@ public class Emotion {
         return e;
     }
 
-    public static final HashMap<String, Emotion> map = new HashMap<String, Emotion>();
+    public static final HashMap<String, Emotion> MAP = new HashMap<String, Emotion>();
 
     public static void cacheEmotions() throws Exception {
         cacheEmotions(EMOTION_TYPE.FACE, LANGUAGE.cnname);
@@ -54,14 +54,14 @@ public class Emotion {
         ArrayList<Emotion> list = getEmotionsPreferCache(type, language);
         if (list != null) {
             for (Emotion e : list) {
-                map.put(e.phrase, e);
+                MAP.put(e.phrase, e);
             }
         }
     }
 
     public static ArrayList<Emotion> getEmotionsPreferCache(EMOTION_TYPE type, LANGUAGE language)
             throws Exception {
-        EmotionCache ec = new EmotionCache(XTZApplication.app, type, language);
+        EmotionCache ec = new EmotionCache(XTZApplication.sApp, type, language);
         ArrayList<Emotion> list = null;
         if (ec.exists()) {
             list = ec.getEmotions();

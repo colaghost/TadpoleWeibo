@@ -57,8 +57,10 @@ public class FileUtil {
             return false;
         }
         try {
-            if (!createDir(dirPath))
+            if (!createDir(dirPath)) {
                 return false;
+
+            }
 
             return file.createNewFile();
         } catch (Exception exception) {
@@ -189,8 +191,9 @@ public class FileUtil {
      * @param path can be file or dir
      */
     public static void delete(String path) {
-        if (path == null)
+        if (path == null) {
             return;
+        }
         File file = new File(path);
         if ((file == null) || (!file.exists())) {
             return;
@@ -211,8 +214,9 @@ public class FileUtil {
      * @param path
      */
     public static void deleteSubFile(String path) {
-        if (path == null)
+        if (path == null) {
             return;
+        }
         File file = new File(path);
         if ((file == null) || (!file.exists())) {
             return;
@@ -227,8 +231,9 @@ public class FileUtil {
     }
 
     public static void rename(String path, String reNamePath) {
-        if ((path == null) || (reNamePath == null))
+        if ((path == null) || (reNamePath == null)) {
             return;
+        }
         File file = new File(path);
         if (!file.exists()) {
             return;
@@ -244,8 +249,9 @@ public class FileUtil {
      * @return
      */
     public static boolean copyFile(String srcFilePath, String dstFilePath, boolean forced) {
-        if ((srcFilePath == null) || (dstFilePath == null))
+        if ((srcFilePath == null) || (dstFilePath == null)) {
             return false;
+        }
         File srcFile = new File(srcFilePath);
         if (!srcFile.exists()) {
             return false;
@@ -255,8 +261,9 @@ public class FileUtil {
             if ((!forced) && (dstFile.exists())) {
                 return false;
             }
-            if ((!dstFile.exists()) && (!dstFile.createNewFile()))
+            if ((!dstFile.exists()) && (!dstFile.createNewFile())) {
                 return false;
+            }
 
             FileInputStream fileInputStream = new FileInputStream(dstFile);
             FileOutputStream fileOutputStream = new FileOutputStream(dstFile);
@@ -297,8 +304,9 @@ public class FileUtil {
         if ((!forceOverride) && (dstFile.exists())) {
             return null;
         }
-        if ((!dstFile.exists()) && (!dstFile.createNewFile()))
+        if ((!dstFile.exists()) && (!dstFile.createNewFile())){
             return null;
+        }
 
         byte[] arrayOfByte = new byte[BUFFER_SIZE];
         FileOutputStream ouputStream = new FileOutputStream(dstFile);
@@ -313,15 +321,17 @@ public class FileUtil {
     }
 
     public static boolean copyFile(byte[] srcFileBytes, String dstFilePath, boolean forced) {
-        if ((srcFileBytes == null) || (dstFilePath == null))
+        if ((srcFileBytes == null) || (dstFilePath == null)) {
             return false;
+        }
         try {
             File dstFile = new File(dstFilePath);
             if ((!forced) && (dstFile.exists())) {
                 return false;
             }
-            if ((!dstFile.exists()) && (!dstFile.createNewFile()))
+            if ((!dstFile.exists()) && (!dstFile.createNewFile())) {
                 return false;
+            }
             FileOutputStream fileOutPutStream = new FileOutputStream(dstFile);
             fileOutPutStream.write(srcFileBytes);
             fileOutPutStream.close();

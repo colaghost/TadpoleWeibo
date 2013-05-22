@@ -93,8 +93,9 @@ public class AsyncRoundImageView extends ImageView {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        if ((w != oldw) || (h != oldh))
+        if ((w != oldw) || (h != oldh)) {
             generateMaskPath(w, h);
+        }
 
     }
 

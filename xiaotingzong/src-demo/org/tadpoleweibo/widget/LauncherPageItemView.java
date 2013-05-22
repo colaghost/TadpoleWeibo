@@ -34,9 +34,9 @@ public class LauncherPageItemView extends LinearLayout {
                 mAnimationListener.onAnimationEnd(animation);
             }
             LauncherPageItemView.this.clearAnimation();
-            if (runnable != null) {
-                runnable.run();
-                runnable = null;
+            if (mRunnable != null) {
+                mRunnable.run();
+                mRunnable = null;
             }
         }
     };
@@ -46,16 +46,16 @@ public class LauncherPageItemView extends LinearLayout {
         this.setBackgroundColor(Color.TRANSPARENT);
     }
 
-    private Runnable runnable = null;
+    private Runnable mRunnable = null;
 
     public void setEndRunnable(Runnable runable) {
-        this.runnable = runable;
+        this.mRunnable = runable;
     }
 
     public void forceAniEnd() {
-        if (runnable != null) {
-            runnable.run();
-            runnable = null;
+        if (mRunnable != null) {
+            mRunnable.run();
+            mRunnable = null;
         }
     }
 

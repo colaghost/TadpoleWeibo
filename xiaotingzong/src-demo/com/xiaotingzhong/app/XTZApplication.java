@@ -14,19 +14,19 @@ import com.xiaotingzhong.model.Emotion;
 import com.xiaotingzhong.model.User;
 
 public class XTZApplication extends Application {
-	public static XTZApplication app;
+	public static XTZApplication sApp;
 
 	private static SharedPreferences sSharedPref;
 
 	static final String PREF_XTZ = "com_xiaotingzhong.pref";
 
-	private long curUid;
+	private long mCurUid;
 
-	private User curUser = null;
+	private User mCurUser = null;
 
 	public void onCreate() {
 		super.onCreate();
-		app = this;
+		sApp = this;
 		sSharedPref = getSharedPreferences(PREF_XTZ, MODE_PRIVATE);
 	}
 
@@ -35,40 +35,40 @@ public class XTZApplication extends Application {
 	}
 
 	public static Emotion getEmotionByPhrase(String p) {
-		return Emotion.map.get(p);
+		return Emotion.MAP.get(p);
 	}
 
 	public static long getCurUid() {
-		return app.curUid;
+		return sApp.mCurUid;
 	}
 
 	public static User getCurUser() {
-		return app.curUser;
+		return sApp.mCurUser;
 	}
 
 	public static void setCurUser(User u) {
-		app.curUser = u;
-		app.curUid = u.id;
+		sApp.mCurUser = u;
+		sApp.mCurUid = u.id;
 	}
 
 	public static Oauth2AccessToken getWeiboAccessToken() {
-		return AccessTokenKeeper.readAccessToken(app);
+		return AccessTokenKeeper.readAccessToken(sApp);
 	}
 
 	public static FriendshipsAPI getFriendshipsAPI() {
-		return new FriendshipsAPI(AccessTokenKeeper.readAccessToken(app));
+		return new FriendshipsAPI(AccessTokenKeeper.readAccessToken(sApp));
 	}
 
 	public static UsersAPI getUsersAPI() {
-		return new UsersAPI(AccessTokenKeeper.readAccessToken(app));
+		return new UsersAPI(AccessTokenKeeper.readAccessToken(sApp));
 	}
 
 	public static StatusesAPI getStatusesAPI() {
-		return new StatusesAPI(AccessTokenKeeper.readAccessToken(app));
+		return new StatusesAPI(AccessTokenKeeper.readAccessToken(sApp));
 	}
 
 	public static AccountAPI getAccountAPI() {
-		return new AccountAPI(AccessTokenKeeper.readAccessToken(app));
+		return new AccountAPI(AccessTokenKeeper.readAccessToken(sApp));
 	}
 
 	public void onConfigurationChanged(Configuration paramConfiguration) {

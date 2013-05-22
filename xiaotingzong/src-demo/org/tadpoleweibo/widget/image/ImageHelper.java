@@ -45,7 +45,7 @@ public class ImageHelper {
 
     static final String TAG = "ImageHelper";
 
-    private static ImageDiskCache cache = new ImageDiskCache(null);
+    private static ImageDiskCache sDiskCache = new ImageDiskCache(null);
 
     private static final String[] PROJECTIONS = {
             MediaStore.Images.ImageColumns._ID, MediaStore.Images.ImageColumns.DISPLAY_NAME,
@@ -60,12 +60,12 @@ public class ImageHelper {
         return cursor;
     }
 
-    private static WeakHashMap<String, SoftReference<BitmapDrawable>> mCache = new WeakHashMap<String, SoftReference<BitmapDrawable>>();
+    private static WeakHashMap<String, SoftReference<BitmapDrawable>> sMemCache = new WeakHashMap<String, SoftReference<BitmapDrawable>>();
 
     public static BitmapDrawable getBitmapDrawableFromCache(Context context, Uri uri) {
         String path = uri.getPath();
-        if (mCache.containsKey(path)) {
-            BitmapDrawable d = mCache.get(path).get();
+        if (sMemCache.containsKey(path)) {
+            BitmapDrawable d = sMemCache.get(path).get();
             if (d != null) {
                 if (TadpoleConfig.DEBUG) {
                     System.out.println("getBitmapDrawableFromCache path = " + path);
@@ -80,17 +80,17 @@ public class ImageHelper {
         Bitmap b;
         try {
             String path = uri.getPath();
-            if (mCache.containsKey(path)) {
-                BitmapDrawable d = mCache.get(path).get();
+            if (sMemCache.containsKey(path)) {
+                BitmapDrawable d = sMemCache.get(path).get();
                 if (d != null) {
                     return d;
                 } else {
-                    mCache.remove(path);
+                    sMemCache.remove(path);
                 }
             }
             b = safeDecodeStream(context, uri, 60, 60);
             final BitmapDrawable bd = new BitmapDrawable(b);
-            mCache.put(path, new SoftReference<BitmapDrawable>(bd));
+            sMemCache.put(path, new SoftReference<BitmapDrawable>(bd));
             return bd;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -240,24 +240,24 @@ public class ImageHelper {
     }
 
     public static BitmapDrawable getCacheBitmap(String url) {
-        if (mCache.containsKey(url)) {
-            BitmapDrawable d = mCache.get(url).get();
+        if (sMemCache.containsKey(url)) {
+            BitmapDrawable d = sMemCache.get(url).get();
             return d;
         }
         return null;
     }
 
     public static BitmapDrawable getBitmapByUrl(Resources res, String url, ImageView imgView) {
-        if (mCache.containsKey(url)) {
-            BitmapDrawable d = mCache.get(url).get();
+        if (sMemCache.containsKey(url)) {
+            BitmapDrawable d = sMemCache.get(url).get();
             if (d != null) {
                 return d;
             } else {
-                mCache.remove(url);
+                sMemCache.remove(url);
             }
         }
         final BitmapDrawable bd = getBitmapDrawable(res, url, imgView);
-        mCache.put(url, new SoftReference<BitmapDrawable>(bd));
+        sMemCache.put(url, new SoftReference<BitmapDrawable>(bd));
         return bd;
     }
 
@@ -265,11 +265,11 @@ public class ImageHelper {
         String hash = url.hashCode() + "";
         try {
             byte[] data = null;
-            if (cache.hasCache(hash)) {
-                data = cache.readFromDisk(hash);
+            if (sDiskCache.hasCache(hash)) {
+                data = sDiskCache.readFromDisk(hash);
             } else {
                 data = openUrl(url);
-                cache.writeToDisk(hash, data);
+                sDiskCache.writeToDisk(hash, data);
             }
             Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
 
@@ -281,7 +281,7 @@ public class ImageHelper {
         } catch (Exception e) {
             e.printStackTrace();
 
-            cache.deleteFromDish(hash);
+            sDiskCache.deleteFromDish(hash);
         }
         return null;
     }
@@ -365,10 +365,12 @@ public class ImageHelper {
         int bh = bitmap.getHeight();
         int vw = imageView.getWidth();
         int vh = imageView.getHeight();
-        if (vw <= 0)
+        if (vw <= 0) {
             vw = bw;
-        if (vh <= 0)
+        }
+        if (vh <= 0) {
             vh = bh;
+        }
 
         int width, height;
         Rect srcRect;

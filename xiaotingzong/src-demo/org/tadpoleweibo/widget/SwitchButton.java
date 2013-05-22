@@ -8,10 +8,10 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 public class SwitchButton extends ImageView {
-    public static interface SwitchListener {
-        public void on();
+    public interface SwitchListener {
+        void on();
 
-        public void off();
+        void off();
     }
 
     private static final int TURN_ON = 1;

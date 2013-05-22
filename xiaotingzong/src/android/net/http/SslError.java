@@ -19,9 +19,8 @@ package android.net.http;
 import java.security.cert.X509Certificate;
 
 /**
- * One or more individual SSL errors and the associated SSL certificate
- * 
- * {@hide}
+ * One or more individual SSL errors and the associated SSL certificate {@hide
+ * }
  */
 public class SslError {
 
@@ -32,20 +31,22 @@ public class SslError {
     /**
      * The certificate is not yet valid
      */
-  public static final int SSL_NOTYETVALID = 0;
+    public static final int SSL_NOTYETVALID = 0;
+
     /**
      * The certificate has expired
      */
     public static final int SSL_EXPIRED = 1;
+
     /**
      * Hostname mismatch
      */
     public static final int SSL_IDMISMATCH = 2;
+
     /**
      * The certificate authority is not trusted
      */
     public static final int SSL_UNTRUSTED = 3;
-
 
     /**
      * The number of different SSL errors (update if you add a new SSL error!!!)
@@ -65,6 +66,7 @@ public class SslError {
 
     /**
      * Creates a new SSL error set object
+     * 
      * @param error The SSL error
      * @param certificate The associated SSL certificate
      */
@@ -75,6 +77,7 @@ public class SslError {
 
     /**
      * Creates a new SSL error set object
+     * 
      * @param error The SSL error
      * @param certificate The associated SSL certificate
      */
@@ -92,6 +95,7 @@ public class SslError {
 
     /**
      * Adds the SSL error to the error set
+     * 
      * @param error The SSL error to add
      * @return True iff the error being added is a known SSL error
      */
@@ -134,12 +138,10 @@ public class SslError {
     }
 
     /**
-     * @return A String representation of this SSL error object
-     * (used mostly for debugging).
+     * @return A String representation of this SSL error object (used mostly for
+     *         debugging).
      */
     public String toString() {
-        return "primary error: " + getPrimaryError() +
-            " certificate: " + getCertificate();
+        return "primary error: " + getPrimaryError() + " certificate: " + getCertificate();
     }
 }
-

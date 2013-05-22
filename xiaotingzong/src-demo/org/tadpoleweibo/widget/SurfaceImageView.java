@@ -19,14 +19,14 @@ import android.view.SurfaceView;
 public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callback {
     static final String TAG = "MarqueeTextSurfaceView";
     private int mDrawableWidth = 0;
-    private boolean forward = true;
-    private boolean isSurfaceValid = false;
+    private boolean mForward = true;
+    private boolean mIsSurfaceValid = false;
     private Drawable mDrawable;
     private SurfaceHolder mHolder;
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Matrix matrix = new Matrix();
-    private MyThread myThread;
-    private float xOffset = 0.0F;
+    private Matrix mMatrix = new Matrix();
+    private MyThread mMyThread;
+    private float mXOffset = 0.0F;
 
     public SurfaceImageView(Context context) {
         super(context);
@@ -49,20 +49,20 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
             return;
         }
         int width = mHolder.getSurfaceFrame().width();
-        matrix.reset();
-        if (forward) {
-            xOffset += 0.8f;
-            if (xOffset > (mDrawableWidth - width)) {
-                forward = false;
+        mMatrix.reset();
+        if (mForward) {
+            mXOffset += 0.8f;
+            if (mXOffset > (mDrawableWidth - width)) {
+                mForward = false;
             }
         } else {
-            xOffset -= 0.8f;
-            if (xOffset < 0) {
-                forward = true;
+            mXOffset -= 0.8f;
+            if (mXOffset < 0) {
+                mForward = true;
             }
         }
-        matrix.postTranslate(-xOffset, 0.0F);
-        canvas.setMatrix(matrix);
+        mMatrix.postTranslate(-mXOffset, 0.0F);
+        canvas.setMatrix(mMatrix);
         mDrawable.draw(canvas);
     }
 
@@ -73,7 +73,7 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
 
         mHolder = getHolder();
         mHolder.addCallback(this);
-        myThread = new MyThread(mHolder);
+        mMyThread = new MyThread(mHolder);
         mDrawable = getContext().getResources().getDrawable(R.drawable.rootblock_default_bg);
     }
 
@@ -82,18 +82,19 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
     }
 
     public void startScroll() {
-        if (!isSurfaceValid)
+        if (!mIsSurfaceValid){
             return;
-        myThread.canRun = true;
-        if (!myThread.isAlive()) {
-            myThread = new MyThread(mHolder);
-            myThread.start();
+        }
+        mMyThread.mCanRun = true;
+        if (!mMyThread.isAlive()) {
+            mMyThread = new MyThread(mHolder);
+            mMyThread.start();
         }
 
     }
 
     public void stopScroll() {
-        myThread.canRun = false;
+        mMyThread.mCanRun = false;
     }
 
     @Override
@@ -104,7 +105,7 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
-        isSurfaceValid = true;
+        mIsSurfaceValid = true;
         if (mDrawable != null) {
             // scale drawable to fit view height;
             int drawableHeight = mDrawable.getIntrinsicHeight();
@@ -119,11 +120,11 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
 
     public void surfaceDestroyed(SurfaceHolder holder) {
         Log.d("SurfaceImageView", "surfaceDestroyed width = " + holder.getSurfaceFrame().width() + ", height = " + holder.getSurfaceFrame().height());
-        isSurfaceValid = false;
+        mIsSurfaceValid = false;
     }
 
     class MyThread extends Thread {
-        public boolean canRun = true;
+        public boolean mCanRun = true;
         private SurfaceHolder mHolder;
 
         public MyThread(SurfaceHolder holder) {
@@ -132,8 +133,8 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
 
         public void run() {
             Canvas canvas = null;
-            while (isSurfaceValid) {
-                if (!canRun) {
+            while (mIsSurfaceValid) {
+                if (!mCanRun) {
                     continue;
                 }
                 try {

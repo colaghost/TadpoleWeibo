@@ -1,3 +1,4 @@
+
 package com.weibo.sdk.android.util;
 
 import java.io.BufferedInputStream;
@@ -20,40 +21,40 @@ public final class BitmapHelper {
      */
     public static boolean makesureSizeNotTooLarge(Rect rect) {
         final int FIVE_M = 5 * 1024 * 1024;
-        if ( rect.width() * rect.height() * 2 > FIVE_M ) {
+        if (rect.width() * rect.height() * 2 > FIVE_M) {
             // 不能超过5M
             return false;
         }
         return true;
     }
-    
-    public static int getSampleSizeOfNotTooLarge( Rect rect ) {
+
+    public static int getSampleSizeOfNotTooLarge(Rect rect) {
         final int FIVE_M = 5 * 1024 * 1024;
-        double ratio = ( ( double ) rect.width() ) * rect.height() * 2 / FIVE_M;
+        double ratio = ((double)rect.width()) * rect.height() * 2 / FIVE_M;
         return ratio >= 1 ? (int)ratio : 1;
     }
 
     /**
-     * 自适应屏幕大小 得到最大的smapleSize
-     * 同时达到此目标： 自动旋转 以适应view的宽高后, 不影响界面显示效果
+     * 自适应屏幕大小 得到最大的smapleSize 同时达到此目标： 自动旋转 以适应view的宽高后, 不影响界面显示效果
+     * 
      * @param vWidth view width
      * @param vHeight view height
      * @param bWidth bitmap width
      * @param bHeight bitmap height
      * @return
      */
-    public static int getSampleSizeAutoFitToScreen( int vWidth, int vHeight, int bWidth, int bHeight ) {
-        if( vHeight == 0 || vWidth == 0 ) {
+    public static int getSampleSizeAutoFitToScreen(int vWidth, int vHeight, int bWidth, int bHeight) {
+        if (vHeight == 0 || vWidth == 0) {
             return 1;
         }
 
-        int ratio = Math.max( bWidth / vWidth, bHeight / vHeight );
+        int ratio = Math.max(bWidth / vWidth, bHeight / vHeight);
 
-        int ratioAfterRotate = Math.max( bHeight / vWidth, bWidth / vHeight );
+        int ratioAfterRotate = Math.max(bHeight / vWidth, bWidth / vHeight);
 
-        return Math.min( ratio, ratioAfterRotate );
+        return Math.min(ratio, ratioAfterRotate);
     }
-    
+
     /**
      * 检测是否可以解析成位图
      * 
@@ -76,15 +77,14 @@ public final class BitmapHelper {
         }
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        input = input instanceof BufferedInputStream ? input
-                : new BufferedInputStream(input);
+        input = input instanceof BufferedInputStream ? input : new BufferedInputStream(input);
         BitmapFactory.decodeStream(input, null, options);
         try {
-			input.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            input.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return (options.outHeight > 0) && (options.outWidth > 0);
     }
 

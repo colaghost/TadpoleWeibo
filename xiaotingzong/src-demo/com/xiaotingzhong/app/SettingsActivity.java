@@ -4,10 +4,10 @@ package com.xiaotingzhong.app;
 import org.tadpole.R;
 import org.tadpoleweibo.widget.settings.SettingsItem;
 import org.tadpoleweibo.widget.settings.SettingsGroup;
-import org.tadpoleweibo.widget.settings.SettingsItemNav;
-import org.tadpoleweibo.widget.settings.SettingsItemOptions;
-import org.tadpoleweibo.widget.settings.SettingsItemSwitcher;
 import org.tadpoleweibo.widget.settings.SettingsListView;
+import org.tadpoleweibo.widget.settings.item.SettingsItemNav;
+import org.tadpoleweibo.widget.settings.item.SettingsItemOptions;
+import org.tadpoleweibo.widget.settings.item.SettingsItemSwitcher;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -36,7 +36,7 @@ public class SettingsActivity extends Activity {
         mSettingsView = (SettingsListView)this.findViewById(R.id.settingsview);
 
         SettingsGroup group = new SettingsGroup();
-        group.addItem(new SettingsItemOptions());
+//        group.addItem(new SettingsItemOptions());
         group.addItem(new SettingsItemNav());
         group.addItem(new SettingsItemSwitcher());
         group.addItem(new SettingsItemSwitcher());
@@ -44,7 +44,7 @@ public class SettingsActivity extends Activity {
         mSettingsView.addGroup(group);
 
         SettingsGroup group1 = new SettingsGroup();
-        group1.addItem(new SettingsItemOptions());
+//        group1.addItem(new SettingsItemOptions());
         mSettingsView.addGroup(group1);
 
         SettingsGroup group2 = new SettingsGroup();
@@ -55,7 +55,7 @@ public class SettingsActivity extends Activity {
         group4.addItem(new SettingsItemNav());
         group4.addItem(new SettingsItemNav());
         group4.addItem(new SettingsItemSwitcher());
-        group4.addItem(new SettingsItemOptions());
+//        group4.addItem(new SettingsItemOptions());
 
         mSettingsView.addGroup(group4);
     }

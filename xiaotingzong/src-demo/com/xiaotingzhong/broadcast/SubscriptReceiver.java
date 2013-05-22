@@ -21,18 +21,18 @@ public class SubscriptReceiver extends BroadcastReceiver {
 
     static final String ACTION = "com.xiaotingzhong.broadcast.SubscriptReceiver";
 
-    static final IntentFilter sIntentFilter = new IntentFilter(ACTION);
+    static final IntentFilter INTENT_FILTER = new IntentFilter(ACTION);
 
-    static final Intent intent = new Intent(ACTION);
+    static final Intent INTENT = new Intent(ACTION);
 
     private LauncherActivity mActivity;
 
     public static void sendBroadCast(Context context) {
-        context.sendBroadcast(intent);
+        context.sendBroadcast(INTENT);
     }
 
     public void register() {
-        mActivity.registerReceiver(this, sIntentFilter);
+        mActivity.registerReceiver(this, INTENT_FILTER);
     }
 
     public void unRegister() {

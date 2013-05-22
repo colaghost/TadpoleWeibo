@@ -16,7 +16,7 @@ public abstract class AbsCacheDir {
     private String mCachePath;
 
     public AbsCacheDir(Context context, String dirName) {
-        this.mCachePath = (XTZApplication.app.getFilesDir() + File.separator + dirName + File.separator);
+        this.mCachePath = (XTZApplication.sApp.getFilesDir() + File.separator + dirName + File.separator);
         FileUtil.createDir(this.mCachePath);
     }
 

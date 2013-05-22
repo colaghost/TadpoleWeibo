@@ -77,8 +77,8 @@ public abstract class BaseListAdapter<T, V extends View> extends BaseAdapter {
     public void removeItem(T item) {
         mList.remove(item);
     }
-    
-    public void has(T item){
+
+    public void has(T item) {
         mList.contains(item);
     }
 

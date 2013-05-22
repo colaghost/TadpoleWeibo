@@ -1,13 +1,18 @@
 
-package org.tadpoleweibo.widget.settings;
+package org.tadpoleweibo.widget.settings.item;
 
 import org.tadpole.R;
+import org.tadpoleweibo.widget.settings.SettingsItem;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class SettingsItemOptions extends SettingsItem {
+public class SettingsItemNav extends SettingsItem {
+
+    public SettingsItemNav(String title, String summary) {
+        super(title, summary);
+    }
 
     @Override
     public View createRightDetailView(LayoutInflater inflater, ViewGroup parent) {

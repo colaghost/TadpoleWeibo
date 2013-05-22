@@ -28,8 +28,8 @@ public abstract class WeiboAPI {
      * get请求方式
      */
     public static final String HTTPMETHOD_GET = "GET";
-    private Oauth2AccessToken oAuth2accessToken;
-    private String accessToken;
+    private Oauth2AccessToken mOAuth2accessToken;
+    private String mAccessToken;
 
     /**
      * 构造函数，使用各个API接口提供的服务前必须先获取Oauth2AccessToken
@@ -38,9 +38,9 @@ public abstract class WeiboAPI {
      *            Oauth2AccessToken
      */
     public WeiboAPI(Oauth2AccessToken oauth2AccessToken) {
-        this.oAuth2accessToken = oauth2AccessToken;
-        if (oAuth2accessToken != null) {
-            accessToken = oAuth2accessToken.getToken();
+        this.mOAuth2accessToken = oauth2AccessToken;
+        if (mOAuth2accessToken != null) {
+            mAccessToken = mOAuth2accessToken.getToken();
         }
 
     }
@@ -147,12 +147,12 @@ public abstract class WeiboAPI {
     }
 
     protected void requestAsync(final String url, final WeiboParameters params, final String httpMethod, RequestListener listener) {
-        params.add("access_token", accessToken);
+        params.add("access_token", mAccessToken);
         AsyncWeiboRunner.request(url, params, httpMethod, listener);
     }
 
     protected String requestSync(final String url, final WeiboParameters params, final String httpMethod) throws WeiboException {
-        params.add("access_token", accessToken);
+        params.add("access_token", mAccessToken);
         Log.d("WeiboAPI", "requestSync request " + url);
         String resp = HttpManager.openUrl(url, httpMethod, params, params.getValue("pic"));
         Log.d("WeiboAPI", "requestSync request " + resp);

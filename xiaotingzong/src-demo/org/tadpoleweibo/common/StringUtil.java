@@ -64,12 +64,14 @@ public class StringUtil {
      *         不符合邮箱规则返回asteriskReplace(str) 若传入参数为null，直接返回null
      */
     public static String asteriskEmailReplace(String str) {
-        if (StringUtil.isBlank(str))
+        if (StringUtil.isBlank(str)) {
             return null;
+        }
         StringBuffer replace = new StringBuffer();
         if (str.matches("^.+@.+\\..+$")) {
-            if (str.indexOf("@") > 3)
+            if (str.indexOf("@") > 3) {
                 replace.append(str.substring(0, 3));
+            }
             replace.append("*****");
             replace.append(str.substring(str.indexOf("@"), str.length()));
         } else {
@@ -97,8 +99,9 @@ public class StringUtil {
      * @return
      */
     public static String asteriskReplace(String str) {
-        if (StringUtil.isBlank(str))
+        if (StringUtil.isBlank(str)) {
             return null;
+        }
         StringBuffer replace = new StringBuffer();
         if (str.length() > 6) {
             replace.append(str.substring(0, 3));
@@ -595,14 +598,16 @@ public class StringUtil {
      * @return
      */
     public static String getDomainWithoutPort(String url) {
-        if (url == null)
+        if (url == null) {
             return null;
+        }
         String domain = getDomain(url);
         String[] arrs = domain.split(":");
-        if (arrs.length == 2)
+        if (arrs.length == 2) {
             return arrs[0];
-        else
+        } else {
             return domain;
+        }
     }
 
     /**

@@ -1,3 +1,4 @@
+
 package com.weibo.sdk.android.sso;
 
 import android.Manifest;
@@ -25,17 +26,18 @@ import com.weibo.sdk.android.Weibo;
 import com.weibo.sdk.android.WeiboAuthListener;
 import com.weibo.sdk.android.WeiboDialogError;
 import com.weibo.sdk.android.util.Utility;
+
 /**
  * 该类用于处理sso 认证功能，通过sso，无需输入用户名、密码即可以通过微博账号访问经过授权的第三方应用，\r\n
- * 使用SSO登录前，请检查手机上是否已经安装新浪微博客户端，目前仅3.0.0及以上微博客户端版本支持SSO；
- * 如果未安装，将自动转为Oauth2.0进行认证
+ * 使用SSO登录前，请检查手机上是否已经安装新浪微博客户端，目前仅3.0.0及以上微博客户端版本支持SSO； 如果未安装，将自动转为Oauth2.0进行认证
  * 
  * @author xiaowei6@staff.sina.com.cn
- *
  */
 public class SsoHandler {
-    private ServiceConnection conn = null;
+    private ServiceConnection mConn = null;
+
     private static final int DEFAULT_AUTH_ACTIVITY_CODE = 32973;
+
     private static final String WEIBO_SIGNATURE = "30820295308201fea00302010202044b4ef1bf300d"
             + "06092a864886f70d010105050030818d310b300906035504061302434e3110300e0603550408130"
             + "74265694a696e673110300e060355040713074265694a696e67312c302a060355040a132353696e"
@@ -55,19 +57,26 @@ public class SsoHandler {
             + "2fb8795f736a20c95cda776402099054fccefb4a1a558664ab8d637288feceba9508aa907fc1fe2"
             + "b1ae5a0dec954ed831c0bea4";
 
-//    private String[] mAuthPermissions;
+    // private String[] mAuthPermissions;
     private int mAuthActivityCode;
-    private static String ssoPackageName = "";// "com.sina.weibo";
-    private static String ssoActivityName = "";// "com.sina.weibo.MainTabActivity";
+
+    private static String sSsoPackageName = ""; // "com.sina.weibo";
+
+    private static String sSoActivityName = ""; // "com.sina.weibo.MainTabActivity";
+
     private WeiboAuthListener mAuthDialogListener;
+
     private Oauth2AccessToken mAccessToken = null;
+
     private Activity mAuthActivity;
+
     private Weibo mWeibo;
-    public SsoHandler(Activity activity,Weibo weibo) {
+
+    public SsoHandler(Activity activity, Weibo weibo) {
         mAuthActivity = activity;
-        mWeibo=weibo;
-        Weibo.isWifi=Utility.isWifi(activity);
-        conn = new ServiceConnection() {
+        mWeibo = weibo;
+        Weibo.isWifi = Utility.isWifi(activity);
+        mConn = new ServiceConnection() {
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 mWeibo.startAuthDialog(mAuthActivity, mAuthDialogListener);
@@ -75,16 +84,14 @@ public class SsoHandler {
 
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                RemoteSSO remoteSSOservice = RemoteSSO.Stub
-                        .asInterface(service);
+                RemoteSSO remoteSSOservice = RemoteSSO.Stub.asInterface(service);
                 try {
-                    ssoPackageName = remoteSSOservice.getPackageName();
-                    ssoActivityName = remoteSSOservice.getActivityName();
-                    boolean singleSignOnStarted = startSingleSignOn(
-                            mAuthActivity, Weibo.app_key, new String[]{},
-                            mAuthActivityCode);
+                    sSsoPackageName = remoteSSOservice.getPackageName();
+                    sSoActivityName = remoteSSOservice.getActivityName();
+                    boolean singleSignOnStarted = startSingleSignOn(mAuthActivity, Weibo.app_key,
+                            new String[] {}, mAuthActivityCode);
                     if (!singleSignOnStarted) {
-//                        startDialogAuth(mAuthActivity, new String[]{});
+                        // startDialogAuth(mAuthActivity, new String[]{});
                         mWeibo.startAuthDialog(mAuthActivity, mAuthDialogListener);
                     }
                 } catch (RemoteException e) {
@@ -99,16 +106,13 @@ public class SsoHandler {
      * 进行sso认证
      * 
      * @param activity 发起认证的Activity
-     * 
      * @param listener 用于接收认证信息的监听者
      */
-    public void authorize( final WeiboAuthListener listener) {
-        authorize( DEFAULT_AUTH_ACTIVITY_CODE,
-                listener);
+    public void authorize(WeiboAuthListener listener) {
+        authorize(DEFAULT_AUTH_ACTIVITY_CODE, listener);
     }
 
-    private void authorize(
-            int activityCode, final WeiboAuthListener listener) {
+    private void authorize(int activityCode, final WeiboAuthListener listener) {
         mAuthActivityCode = activityCode;
 
         boolean bindSucced = false;
@@ -118,10 +122,10 @@ public class SsoHandler {
         bindSucced = bindRemoteSSOService(mAuthActivity);
         // Otherwise fall back to traditional dialog.
         if (!bindSucced) {
-            if(mWeibo!=null){
+            if (mWeibo != null) {
                 mWeibo.startAuthDialog(mAuthActivity, mAuthDialogListener);
             }
-            
+
         }
 
     }
@@ -129,15 +133,15 @@ public class SsoHandler {
     private boolean bindRemoteSSOService(Activity activity) {
         Context context = activity.getApplicationContext();
         Intent intent = new Intent("com.sina.weibo.remotessoservice");
-        return context.bindService(intent, conn, Context.BIND_AUTO_CREATE);
+        return context.bindService(intent, mConn, Context.BIND_AUTO_CREATE);
     }
 
     private boolean startSingleSignOn(Activity activity, String applicationId,
             String[] permissions, int activityCode) {
         boolean didSucceed = true;
         Intent intent = new Intent();
-        intent.setClassName(ssoPackageName, ssoActivityName);
-        intent.putExtra("appKey", applicationId);// applicationId //"2745207810"
+        intent.setClassName(sSsoPackageName, sSoActivityName);
+        intent.putExtra("appKey", applicationId); // applicationId //"2745207810"
         intent.putExtra("redirectUri", Weibo.redirecturl);
 
         if (permissions.length > 0) {
@@ -155,22 +159,20 @@ public class SsoHandler {
             didSucceed = false;
         }
 
-        activity.getApplication().unbindService(conn);
+        activity.getApplication().unbindService(mConn);
         return didSucceed;
     }
 
-    private boolean validateAppSignatureForIntent(Activity activity,
-            Intent intent) {
-        ResolveInfo resolveInfo = activity.getPackageManager().resolveActivity(
-                intent, 0);
+    private boolean validateAppSignatureForIntent(Activity activity, Intent intent) {
+        ResolveInfo resolveInfo = activity.getPackageManager().resolveActivity(intent, 0);
         if (resolveInfo == null) {
             return false;
         }
 
         String packageName = resolveInfo.activityInfo.packageName;
         try {
-            PackageInfo packageInfo = activity.getPackageManager()
-                    .getPackageInfo(packageName, PackageManager.GET_SIGNATURES);
+            PackageInfo packageInfo = activity.getPackageManager().getPackageInfo(packageName,
+                    PackageManager.GET_SIGNATURES);
             for (Signature signature : packageInfo.signatures) {
                 if (WEIBO_SIGNATURE.equals(signature.toCharsString())) {
                     return true;
@@ -184,16 +186,15 @@ public class SsoHandler {
     }
 
     /**
-     * 重要:发起认证的Activity必须重写onActivityResult， 这个方法必须在onActivityResult 方法内调用，
-     * 例如：<br/>
+     * 重要:发起认证的Activity必须重写onActivityResult， 这个方法必须在onActivityResult 方法内调用， 例如：<br/>
      * 
-     * @Override
-     * protected void onActivityResult(int requestCode, int resultCode, Intent data) {<br/>
-     *    super.onActivityResult(requestCode, resultCode, data);<br/>
-     *    if(mSsoHandler!=null){<br/>
-     *       mSsoHandler.authorizeCallBack(requestCode, resultCode, data);<br/>
-     *   }<br/>
-     * }
+     * @Override protected void onActivityResult(int requestCode, int
+     *           resultCode, Intent data) {<br/>
+     *           super.onActivityResult(requestCode, resultCode, data);<br/>
+     *           if(mSsoHandler!=null){<br/>
+     *           mSsoHandler.authorizeCallBack(requestCode, resultCode, data);<br/>
+     *           }<br/>
+     *           }
      */
     public void authorizeCallBack(int requestCode, int resultCode, Intent data) {
         if (requestCode == mAuthActivityCode) {
@@ -209,19 +210,17 @@ public class SsoHandler {
 
                 // error occurred.
                 if (error != null) {
-                    if (error.equals("access_denied")
-                            || error.equals("OAuthAccessDeniedException")) {
+                    if (error.equals("access_denied") || error.equals("OAuthAccessDeniedException")) {
                         Log.d("Weibo-authorize", "Login canceled by user.");
                         mAuthDialogListener.onCancel();
                     } else {
-                        String description = data
-                                .getStringExtra("error_description");
+                        String description = data.getStringExtra("error_description");
                         if (description != null) {
                             error = error + ":" + description;
                         }
                         Log.d("Weibo-authorize", "Login failed: " + error);
-                        mAuthDialogListener.onError(new WeiboDialogError(error,
-                                resultCode, description));
+                        mAuthDialogListener.onError(new WeiboDialogError(error, resultCode,
+                                description));
                     }
 
                     // No errors.
@@ -230,22 +229,17 @@ public class SsoHandler {
                         mAccessToken = new Oauth2AccessToken();
                     }
                     mAccessToken.setToken(data.getStringExtra(Weibo.KEY_TOKEN));
-                    mAccessToken.setExpiresIn(data
-                            .getStringExtra(Weibo.KEY_EXPIRES));
-                    mAccessToken.setRefreshToken(data
-                            .getStringExtra(Weibo.KEY_REFRESHTOKEN));
+                    mAccessToken.setExpiresIn(data.getStringExtra(Weibo.KEY_EXPIRES));
+                    mAccessToken.setRefreshToken(data.getStringExtra(Weibo.KEY_REFRESHTOKEN));
                     if (mAccessToken.isSessionValid()) {
                         Log.d("Weibo-authorize",
-                                "Login Success! access_token="
-                                        + mAccessToken.getToken() + " expires="
-                                        + mAccessToken.getExpiresTime()
-                                        + "refresh_token="
-                                        + mAccessToken.getRefreshToken());
+                                "Login Success! access_token=" + mAccessToken.getToken()
+                                        + " expires=" + mAccessToken.getExpiresTime()
+                                        + "refresh_token=" + mAccessToken.getRefreshToken());
                         mAuthDialogListener.onComplete(data.getExtras());
                     } else {
-                        Log.d("Weibo-authorize",
-                                "Failed to receive access token by SSO");
-//                        startDialogAuth(mAuthActivity, mAuthPermissions);
+                        Log.d("Weibo-authorize", "Failed to receive access token by SSO");
+                        // startDialogAuth(mAuthActivity, mAuthPermissions);
                         mWeibo.startAuthDialog(mAuthActivity, mAuthDialogListener);
                     }
                 }
@@ -255,12 +249,11 @@ public class SsoHandler {
 
                 // An Android error occured.
                 if (data != null) {
-                    Log.d("Weibo-authorize",
-                            "Login failed: " + data.getStringExtra("error"));
-                    mAuthDialogListener.onError(new WeiboDialogError(data
-                            .getStringExtra("error"), data.getIntExtra(
-                            "error_code", -1), data
-                            .getStringExtra("failing_url")));
+                    Log.d("Weibo-authorize", "Login failed: " + data.getStringExtra("error"));
+                    mAuthDialogListener
+                            .onError(new WeiboDialogError(data.getStringExtra("error"), data
+                                    .getIntExtra("error_code", -1), data
+                                    .getStringExtra("failing_url")));
 
                     // User pressed the 'back' button.
                 } else {

@@ -91,15 +91,12 @@ class SettingsGroupView extends LinearLayout {
         itemView.addView(itemContentView, SettingsListView.LP_F_F);
         addView(itemView, SettingsListView.LP_F_W);
 
-        final SwitchButton switchBtn = (SwitchButton)itemContentView.findViewById(R.id.switchbtn);
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                item.onClick();
-                switchBtn.toggle();
+                item.onItemClick((ViewGroup)v);
             }
         });
-
         return itemView;
     }
 

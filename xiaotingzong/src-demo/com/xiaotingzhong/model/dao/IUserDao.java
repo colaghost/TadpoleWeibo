@@ -11,9 +11,9 @@ import java.util.ArrayList;
 
 public interface IUserDao {
 
-    public boolean exist(long uid);
+    boolean exist(long uid);
 
-    public boolean saveUser(long uid, String response);
+    boolean saveUser(long uid, String response);
 
-    public User readUser(long uid) throws Exception;
+    User readUser(long uid) throws Exception;
 }

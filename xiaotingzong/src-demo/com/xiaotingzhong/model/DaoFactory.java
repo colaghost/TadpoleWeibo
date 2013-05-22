@@ -16,7 +16,7 @@ public class DaoFactory {
      * @return
      */
     public static IFriendsDao getFriendsDao(long ownerUid) {
-        return new FriendsCache(XTZApplication.app, ownerUid);
+        return new FriendsCache(XTZApplication.sApp, ownerUid);
     }
 
     /**
@@ -24,11 +24,11 @@ public class DaoFactory {
      * @return
      */
     public static ISubscriptionDao getSubscriptionDao(long ownerUid) {
-        return new SubscriptionCache(XTZApplication.app, ownerUid);
+        return new SubscriptionCache(XTZApplication.sApp, ownerUid);
     }
 
     public static IUserDao getUserDao(long ownerUid) {
-        return new UsersCache(XTZApplication.app);
+        return new UsersCache(XTZApplication.sApp);
     }
 
 }

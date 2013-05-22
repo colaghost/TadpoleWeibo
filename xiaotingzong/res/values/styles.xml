@@ -69,5 +69,21 @@
     </style>
 
     <style name="DialogAnimation" parent="@android:style/Animation.Dialog"></style>
+    
+    
+    <style name="Tadpole.Dialog.ContextMenu" parent="@android:style/Theme.Dialog">
+		<item name="android:windowFrame">@null</item>
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowIsTranslucent">true</item>
+		<item name="android:windowBackground">@android:color/transparent</item>
+		<item name="android:backgroundDimEnabled">false</item>
+		<item name="android:windowContentOverlay">@null</item>
+    </style>
+    
+    <style name="Tadpole.Dialog.ContextMenu.Anim" parent="android:Animation">
+         <item name="android:windowEnterAnimation">@anim/fade_in</item>
+         <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+    
 
 </resources>

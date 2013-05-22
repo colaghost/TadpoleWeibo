@@ -49,11 +49,11 @@ public class MainActivity extends Activity {
 
     private static final String REDIRECT_URL = "http://www.sina.com";
 
-    private Button authBtn, ssoBtn, cancelBtn;
+    private Button mAuthBtn, mSsoBtn, mCancelBtn;
 
     private TextView mText;
 
-    public static Oauth2AccessToken accessToken;
+    public static Oauth2AccessToken sAccessToken;
 
     public static final String TAG = "sinasdk";
 
@@ -71,23 +71,23 @@ public class MainActivity extends Activity {
 
         mWeibo = Weibo.getInstance(CONSUMER_KEY, REDIRECT_URL);
 
-        authBtn = (Button)findViewById(R.id.auth);
-        authBtn.setOnClickListener(new OnClickListener() {
+        mAuthBtn = (Button)findViewById(R.id.auth);
+        mAuthBtn.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 mWeibo.authorize(MainActivity.this, new AuthDialogListener());
             }
         });
-        ssoBtn = (Button)findViewById(R.id.sso);// 触发sso的按钮
+        mSsoBtn = (Button)findViewById(R.id.sso);// 触发sso的按钮
         try {
             Class sso = Class.forName("com.weibo.sdk.android.sso.SsoHandler");
-            ssoBtn.setVisibility(View.VISIBLE);
+            mSsoBtn.setVisibility(View.VISIBLE);
         } catch (ClassNotFoundException e) {
             Log.i(TAG, "com.weibo.sdk.android.sso.SsoHandler not found");
 
         }
-        ssoBtn.setOnClickListener(new OnClickListener() {
+        mSsoBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 /**
@@ -98,21 +98,21 @@ public class MainActivity extends Activity {
                 mSsoHandler.authorize(new AuthDialogListener());
             }
         });
-        cancelBtn = (Button)findViewById(R.id.apiCancel);
-        cancelBtn.setOnClickListener(new OnClickListener() {
+        mCancelBtn = (Button)findViewById(R.id.apiCancel);
+        mCancelBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 AccessTokenKeeper.clear(MainActivity.this);
-                authBtn.setVisibility(View.VISIBLE);
-                ssoBtn.setVisibility(View.VISIBLE);
-                cancelBtn.setVisibility(View.INVISIBLE);
+                mAuthBtn.setVisibility(View.VISIBLE);
+                mSsoBtn.setVisibility(View.VISIBLE);
+                mCancelBtn.setVisibility(View.INVISIBLE);
                 mText.setText("");
             }
         });
 
         mText = (TextView)findViewById(R.id.show);
-        MainActivity.accessToken = AccessTokenKeeper.readAccessToken(this);
-        if (MainActivity.accessToken.isSessionValid()) {
+        MainActivity.sAccessToken = AccessTokenKeeper.readAccessToken(this);
+        if (MainActivity.sAccessToken.isSessionValid()) {
             Weibo.isWifi = Utility.isWifi(this);
             try {
                 Class sso = Class.forName("com.weibo.sdk.android.api.WeiboAPI");// 如果支持weiboapi的话，显示api功能演示入口按钮
@@ -121,13 +121,13 @@ public class MainActivity extends Activity {
                 Log.i(TAG, "com.weibo.sdk.android.api.WeiboAPI not found");
 
             }
-            authBtn.setVisibility(View.INVISIBLE);
-            ssoBtn.setVisibility(View.INVISIBLE);
-            cancelBtn.setVisibility(View.VISIBLE);
+            mAuthBtn.setVisibility(View.INVISIBLE);
+            mSsoBtn.setVisibility(View.INVISIBLE);
+            mCancelBtn.setVisibility(View.VISIBLE);
             String date = new java.text.SimpleDateFormat("yyyy/MM/dd hh:mm:ss")
-                    .format(new java.util.Date(MainActivity.accessToken.getExpiresTime()));
+                    .format(new java.util.Date(MainActivity.sAccessToken.getExpiresTime()));
             mText.setText("access_token 仍在有效期内,无需再次登录: \naccess_token:"
-                    + MainActivity.accessToken.getToken() + "\n有效期：" + date);
+                    + MainActivity.sAccessToken.getToken() + "\n有效期：" + date);
             startLauncherActivity();
         } else {
             mText.setText("使用SSO登录前，请检查手机上是否已经安装新浪微博客户端，目前仅3.0.0及以上微博客户端版本支持SSO；如果未安装，将自动转为Oauth2.0进行认证");
@@ -140,10 +140,10 @@ public class MainActivity extends Activity {
         public void onComplete(Bundle values) {
             String token = values.getString("access_token");
             String expires_in = values.getString("expires_in");
-            MainActivity.accessToken = new Oauth2AccessToken(token, expires_in);
-            if (MainActivity.accessToken.isSessionValid()) {
+            MainActivity.sAccessToken = new Oauth2AccessToken(token, expires_in);
+            if (MainActivity.sAccessToken.isSessionValid()) {
                 String date = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
-                        .format(new java.util.Date(MainActivity.accessToken.getExpiresTime()));
+                        .format(new java.util.Date(MainActivity.sAccessToken.getExpiresTime()));
                 mText.setText("认证成功: \r\n access_token: " + token + "\r\n" + "expires_in: "
                         + expires_in + "\r\n有效期：" + date);
                 try {
@@ -153,8 +153,8 @@ public class MainActivity extends Activity {
                     Log.i(TAG, "com.weibo.sdk.android.api.WeiboAPI not found");
 
                 }
-                cancelBtn.setVisibility(View.VISIBLE);
-                AccessTokenKeeper.keepAccessToken(MainActivity.this, accessToken);
+                mCancelBtn.setVisibility(View.VISIBLE);
+                AccessTokenKeeper.keepAccessToken(MainActivity.this, sAccessToken);
                 Toast.makeText(MainActivity.this, "认证成功", Toast.LENGTH_SHORT).show();
 
                 MainActivity.this.startLauncherActivity();

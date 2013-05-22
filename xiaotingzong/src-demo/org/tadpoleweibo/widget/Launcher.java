@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 public class Launcher extends ViewPagerEX {
 
-    static boolean DEBUG = false;
+    static final boolean DEBUG = false;
 
     static final int ANI_DURATION = 500;
 
@@ -90,7 +90,7 @@ public class Launcher extends ViewPagerEX {
 
     };
 
-    private boolean isHandlingDelete = false;
+    private boolean mIsHandlingDelete = false;
 
     public Launcher(Context context) {
         super(context);
@@ -324,7 +324,7 @@ public class Launcher extends ViewPagerEX {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (isHandlingDelete == true) {
+        if (mIsHandlingDelete == true) {
             return true;
         }
 
@@ -406,7 +406,7 @@ public class Launcher extends ViewPagerEX {
         final int pageCount = getPageCount();
         Log.d(TAG, "totalPageCountAfterReduce = " + totalPageCountAfterReduce);
 
-        isHandlingDelete = true;
+        mIsHandlingDelete = true;
 
         final Launcher me = this;
 
@@ -414,7 +414,7 @@ public class Launcher extends ViewPagerEX {
         mLauncherPageList.get(pageIndex).onDelete(pageItemPos, launcherPageItemPos, new Runnable() {
             @Override
             public void run() {
-                isHandlingDelete = false;
+                mIsHandlingDelete = false;
                 if (pageCount > totalPageCountAfterReduce) {
                     if (getCurrentItem() == totalPageCountAfterReduce) {
                         setCurrentItem(totalPageCountAfterReduce - 1, true);
@@ -446,13 +446,13 @@ public class Launcher extends ViewPagerEX {
     // -----------------------------------------------------------
     // 动画层
     // -----------------------------------------------------------
-    private ViewGroup aniViewGroup = null;
+    private ViewGroup mAniViewGroup = null;
 
     public int lastPageItem = INVALID_POSITION;
 
     public View copyViewInAniLayer(View view, int[] location, int height, int width) {
-        if (aniViewGroup == null) {
-            aniViewGroup = createAnimLayout();
+        if (mAniViewGroup == null) {
+            mAniViewGroup = createAnimLayout();
         }
         ImageView imageView = new ImageView(getContext());
         view.destroyDrawingCache();
@@ -492,8 +492,8 @@ public class Launcher extends ViewPagerEX {
     public View addViewToAnimLayout(final View view, int[] location, int height, int width) {
         int x = location[0];
         int y = location[1];
-        if (aniViewGroup == null) {
-            aniViewGroup = createAnimLayout();
+        if (mAniViewGroup == null) {
+            mAniViewGroup = createAnimLayout();
         }
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width, height);
         lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
@@ -501,7 +501,7 @@ public class Launcher extends ViewPagerEX {
         lp.leftMargin = x;
         lp.topMargin = y;
         view.setLayoutParams(lp);
-        aniViewGroup.addView(view);
+        mAniViewGroup.addView(view);
         return view;
     }
 
@@ -529,8 +529,8 @@ public class Launcher extends ViewPagerEX {
                     listener.onAnimationEnd(animation);
                 }
                 view.clearAnimation();
-                if (aniViewGroup != null) {
-                    aniViewGroup.removeView(view);
+                if (mAniViewGroup != null) {
+                    mAniViewGroup.removeView(view);
                 }
             }
         });

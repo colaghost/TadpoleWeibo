@@ -30,7 +30,7 @@ import android.widget.ListAdapter;
 public class LauncherPage extends ViewGroup {
     static final String TAG = "LauncherPage";
 
-    static final Rect sRect = new Rect();
+    static final Rect RECT = new Rect();
 
     private int mPageDraPos = INVALID_POSITION;
 
@@ -44,7 +44,7 @@ public class LauncherPage extends ViewGroup {
 
     private WindowManager mWindowManager;
 
-    private int array[] = new int[] {
+    private int mArray[] = new int[] {
             0, 1, 2, 3, 4, 5, 6, 7
     };
 
@@ -187,7 +187,7 @@ public class LauncherPage extends ViewGroup {
 
     void onDragging(int x, int y) {
         int hitPosition = getHitPosition(x, y);
-        final int[] arr = array;
+        final int[] arr = mArray;
 
         // 非拖动元素所属该页
         if (mPageDraPos == INVALID_POSITION) {
@@ -272,8 +272,8 @@ public class LauncherPage extends ViewGroup {
 
     public HashMap<Integer, Integer> getRealArrayHashMap() {
         HashMap<Integer, Integer> hashMap = new HashMap<Integer, Integer>();
-        for (int i = 0; i < array.length; i++) {
-            hashMap.put(array[i], i);
+        for (int i = 0; i < mArray.length; i++) {
+            hashMap.put(mArray[i], i);
         }
         return hashMap;
     }
@@ -310,9 +310,9 @@ public class LauncherPage extends ViewGroup {
 
     private void resetDragParams() {
         mItemCount = mLauncher.mNumColumns * mLauncher.mNumRows;
-        array = new int[mItemCount];
+        mArray = new int[mItemCount];
         for (int i = 0; i < mItemCount; i++) {
-            array[i] = i;
+            mArray[i] = i;
         }
 
         mPageDraPos = INVALID_POSITION;
@@ -417,8 +417,8 @@ public class LauncherPage extends ViewGroup {
 
             Activity act = (Activity)view.getContext();
             Window window = act.getWindow();
-            window.getDecorView().getWindowVisibleDisplayFrame(sRect);
-            statusBarHeight = sRect.top;
+            window.getDecorView().getWindowVisibleDisplayFrame(RECT);
+            statusBarHeight = RECT.top;
 
             int contentViewTop = window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
             titleBarHeight = contentViewTop - statusBarHeight;

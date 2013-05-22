@@ -11,6 +11,6 @@ public interface ISubscriptionDao {
 
     void subscript(long id);
 
-    public void saveSubscript(ArrayList<Long> uidLst);
+    void saveSubscript(ArrayList<Long> uidLst);
 
 }
