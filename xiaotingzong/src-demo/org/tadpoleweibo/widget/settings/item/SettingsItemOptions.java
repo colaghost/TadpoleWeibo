@@ -55,7 +55,6 @@ public class SettingsItemOptions extends SettingsItem<Integer> implements ISetti
 
     }
     
-    
     public static void main(String[] args) {
         SettingsItemOptions sio = new SettingsItemOptions("", "", new String[]{});
     }

@@ -14,11 +14,7 @@ public class SwitchButton extends ImageView {
         void off();
     }
 
-    private static final int TURN_ON = 1;
-
-    private static final int TURN_OFF = 2;
-
-    private int mState = TURN_ON;
+    private boolean mIsTurnOn = false;
 
     private SwitchListener mListener = null;
 
@@ -40,15 +36,11 @@ public class SwitchButton extends ImageView {
     public void init() {
         setScaleType(ScaleType.FIT_END);
         setImageResource(R.drawable.switch_left);
-        setDefaultTurnOff();
+        mIsTurnOn = false;
     }
 
-    public void setDefaultTurnOn() {
-        mState = TURN_ON;
-    }
-
-    public void setDefaultTurnOff() {
-        mState = TURN_OFF;
+    public void setTurnOn(boolean isTurnOn) {
+        mIsTurnOn = isTurnOn;
     }
 
     public void setSwitchListener(SwitchListener l) {
@@ -56,24 +48,44 @@ public class SwitchButton extends ImageView {
     }
 
     public void toggle() {
-        if (TURN_OFF == mState) {
-            mState = TURN_ON;
-            setImageResource(R.drawable.switch_right);
-            // fire listener;
-        } else {
-            mState = TURN_OFF;
-            setImageResource(R.drawable.switch_left);
-        }
+        switchAction(!mIsTurnOn);
+    }
 
+    public void turnOn() {
+        switchAction(true);
+
+    }
+
+    public void turnOff() {
+        switchAction(false);
+    }
+
+    private void notifyListener() {
         if (mListener == null) {
             return;
         }
-
-        if (TURN_ON == mState) {
+        if (mIsTurnOn == true) {
             mListener.on();
         } else {
             mListener.off();
         }
-
     }
+
+    private void switchAction(boolean b) {
+        if (mIsTurnOn == b) {
+            return;
+        }
+        mIsTurnOn = b;
+        setImageByState();
+        notifyListener();
+    }
+
+    private void setImageByState() {
+        if (mIsTurnOn = false) {
+            setImageResource(R.drawable.switch_left);
+        } else {
+            setImageResource(R.drawable.switch_right);
+        }
+    }
+
 }

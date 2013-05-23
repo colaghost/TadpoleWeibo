@@ -2,6 +2,7 @@
 package org.tadpoleweibo.widget.settings;
 
 import org.tadpole.R;
+import org.tadpoleweibo.common.TLog;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public abstract class SettingsItem<T> {
+    
+    public static final String TAG = "SettingsItem";
 
     public interface SettingsItemListener<T> {
         public void onSettingsAction(SettingsItem item, T params);
@@ -41,6 +44,7 @@ public abstract class SettingsItem<T> {
 
     protected void notifyListener(T params) {
         mListener.onSettingsAction(this, params);
+        TLog.debug(TAG, "notifyListener params = " + params);
     }
 
     public void onItemClick(ViewGroup itemRoot) {
