@@ -86,10 +86,10 @@ public class Oauth2AccessToken {
     /**
      * 设置refreshToken
      * 
-     * @param mRefreshToken
+     * @param refreshToken
      */
-    public void setRefreshToken(String mRefreshToken) {
-        this.mRefreshToken = mRefreshToken;
+    public void setRefreshToken(String refreshToken) {
+        this.mRefreshToken = refreshToken;
     }
 
     /**
@@ -111,10 +111,10 @@ public class Oauth2AccessToken {
     /**
      * 设置过期时刻点 时间值
      * 
-     * @param mExpiresTime 单位：毫秒，表示从格林威治时间1970年01月01日00时00分00秒起至现在的总 毫秒数
+     * @param expiresTime 单位：毫秒，表示从格林威治时间1970年01月01日00时00分00秒起至现在的总 毫秒数
      */
-    public void setExpiresTime(long mExpiresTime) {
-        this.mExpiresTime = mExpiresTime;
+    public void setExpiresTime(long expiresTime) {
+        this.mExpiresTime = expiresTime;
     }
 
     /**

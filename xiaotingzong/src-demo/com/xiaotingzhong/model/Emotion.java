@@ -5,11 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.tadpoleweibo.common.JSONUtil;
 
-import com.weibo.sdk.android.WeiboException;
 import com.weibo.sdk.android.api.WeiboAPI.EMOTION_TYPE;
 import com.weibo.sdk.android.api.WeiboAPI.LANGUAGE;
 import com.xiaotingzhong.app.XTZApplication;

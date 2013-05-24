@@ -29,10 +29,10 @@ import com.weibo.sdk.android.Weibo;
 import com.weibo.sdk.android.WeiboParameters;
 
 public class Utility {
-    private static char[] encodes = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+    private static char[] sEncodes = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
             .toCharArray();
 
-    private static byte[] decodes = new byte[256];
+    private static byte[] sDecodes = new byte[256];
 
     public static Bundle parseUrl(String url) {
         try {
@@ -48,9 +48,9 @@ public class Utility {
     public static Bundle decodeUrl(String s) {
         Bundle params = new Bundle();
         if (s != null) {
-            String array[] = s.split("&");
+            String[] array = s.split("&");
             for (String parameter : array) {
-                String v[] = parameter.split("=");
+                String[] v = parameter.split("=");
                 params.putString(URLDecoder.decode(v[0]), URLDecoder.decode(v[1]));
             }
         }
@@ -132,20 +132,15 @@ public class Utility {
             val = (val << 8) | (data[i] & 0xFF);
             pos += 8;
             while (pos > 5) {
-                char c = encodes[val >> (pos -= 6)];
-                sb.append(
-                /**/c == 'i' ? "ia" :
-                /**/c == '+' ? "ib" :
-                /**/c == '/' ? "ic" : c);
-                val &= ((1 << pos) - 1);
+                pos -= 6;
+                char c = sEncodes[val >> pos];
+                sb.append(c == 'i' ? "ia" : c == '+' ? "ib" : c == '/' ? "ic" : c);
+                val &= 1 << pos - 1;
             }
         }
         if (pos > 0) {
-            char c = encodes[val << (6 - pos)];
-            sb.append(
-            /**/c == 'i' ? "ia" :
-            /**/c == '+' ? "ib" :
-            /**/c == '/' ? "ic" : c);
+            char c = sEncodes[val << (6 - pos)];
+            sb.append(c == 'i' ? "ia" : c == '+' ? "ib" : c == '/' ? "ic" : c);
         }
         return sb.toString();
     }
@@ -169,7 +164,7 @@ public class Utility {
                 c = data[++i];
                 c = c == 'a' ? 'i' : c == 'b' ? '+' : c == 'c' ? '/' : data[--i];
             }
-            val = (val << 6) | decodes[c];
+            val = (val << 6) | sDecodes[c];
             pos += 6;
             while (pos > 7) {
                 baos.write(val >> (pos -= 8));
@@ -473,6 +468,8 @@ public class Utility {
             return false;
         }
 
+        private static final int MAX_TRIAL = 5;
+
         /**
          * 如果加载时遇到OutOfMemoryError,则将图片加载尺寸缩小一半并重新加载
          * 
@@ -490,7 +487,6 @@ public class Utility {
             Bitmap bmp = null;
             FileInputStream input = null;
 
-            final int MAX_TRIAL = 5;
             for (int i = 0; i < MAX_TRIAL; ++i) {
                 try {
                     input = new FileInputStream(bmpFile);

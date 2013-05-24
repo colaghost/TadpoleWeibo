@@ -1092,7 +1092,7 @@ public class ViewPagerEX extends ViewGroup {
 
         Parcelable adapterState;
 
-        ClassLoader loader;
+        ClassLoader mLoader;
 
         public SavedState(Parcelable superState) {
             super(superState);
@@ -1131,7 +1131,7 @@ public class ViewPagerEX extends ViewGroup {
             }
             position = in.readInt();
             adapterState = in.readParcelable(loader);
-            this.loader = loader;
+            this.mLoader = loader;
         }
     }
 
@@ -1157,12 +1157,12 @@ public class ViewPagerEX extends ViewGroup {
         super.onRestoreInstanceState(ss.getSuperState());
 
         if (mAdapter != null) {
-            mAdapter.restoreState(ss.adapterState, ss.loader);
+            mAdapter.restoreState(ss.adapterState, ss.mLoader);
             setCurrentItemInternal(ss.position, false, true);
         } else {
             mRestoredCurItem = ss.position;
             mRestoredAdapterState = ss.adapterState;
-            mRestoredClassLoader = ss.loader;
+            mRestoredClassLoader = ss.mLoader;
         }
     }
 
@@ -1762,9 +1762,13 @@ public class ViewPagerEX extends ViewGroup {
                 break;
             }
 
-            case MotionEventCompat.ACTION_POINTER_UP:
+            case MotionEventCompat.ACTION_POINTER_UP: {
                 onSecondaryPointerUp(ev);
                 break;
+            }
+            default: {
+                break;
+            }
         }
 
         if (mVelocityTracker == null) {
@@ -1898,6 +1902,9 @@ public class ViewPagerEX extends ViewGroup {
                 mLastMotionX = MotionEventCompat.getX(ev,
                         MotionEventCompat.findPointerIndex(ev, mActivePointerId));
                 break;
+            default: {
+                break;
+            }
         }
         if (needsInvalidate) {
             ViewCompat.postInvalidateOnAnimation(this);
@@ -2351,6 +2358,8 @@ public class ViewPagerEX extends ViewGroup {
                         }
                     }
                     break;
+                default:
+                    break;
             }
         }
         return handled;
@@ -2470,9 +2479,8 @@ public class ViewPagerEX extends ViewGroup {
         // this is
         // to avoid the focus search finding layouts when a more precise search
         // among the focusable children would be more interesting.
-        if (descendantFocusability != FOCUS_AFTER_DESCENDANTS ||
         // No focusable descendants
-                (focusableCount == views.size())) {
+        if (descendantFocusability != FOCUS_AFTER_DESCENDANTS || (focusableCount == views.size())) {
             // Note that we can't call the superclass here, because it will
             // add all views in. So we need to do the same thing View does.
             if (!isFocusable()) {
@@ -2621,10 +2629,13 @@ public class ViewPagerEX extends ViewGroup {
                         setCurrentItem(mCurItem - 1);
                         return true;
                     }
-                }
                     return false;
+                }
+
+                default: {
+                    return false;
+                }
             }
-            return false;
         }
     }
 

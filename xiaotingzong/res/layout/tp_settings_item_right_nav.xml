@@ -4,4 +4,5 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
     android:scaleType="fitEnd"
-    android:src="@drawable/icon_lastpage_normal" />
+    android:src="@drawable/icon_lastpage_normal"
+    android:textColor="@color/simple_grey" />

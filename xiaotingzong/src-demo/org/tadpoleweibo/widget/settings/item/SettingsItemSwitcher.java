@@ -2,7 +2,6 @@
 package org.tadpoleweibo.widget.settings.item;
 
 import org.tadpole.R;
-import org.tadpoleweibo.common.TLog;
 import org.tadpoleweibo.widget.SwitchButton;
 import org.tadpoleweibo.widget.SwitchButton.SwitchListener;
 import org.tadpoleweibo.widget.settings.SettingsItem;

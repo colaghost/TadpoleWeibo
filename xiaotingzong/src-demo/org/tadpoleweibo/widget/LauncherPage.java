@@ -12,9 +12,7 @@ import org.tadpoleweibo.common.TLog;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.Rect;
-import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +34,7 @@ public class LauncherPage extends ViewGroup {
 
     private int mPageDropPos = INVALID_POSITION;
 
-    public static final int LOCALTION[] = {
+    public static final int[] LOCALTION = {
             0, 0
     };
 
@@ -44,7 +42,7 @@ public class LauncherPage extends ViewGroup {
 
     private WindowManager mWindowManager;
 
-    private int mArray[] = new int[] {
+    private int[] mArray = new int[] {
             0, 1, 2, 3, 4, 5, 6, 7
     };
 
@@ -125,7 +123,8 @@ public class LauncherPage extends ViewGroup {
                         LauncherPageItemView dragView = createLauncherPageItemView(index);
                         mLauncher.startDragging(v, index, mPageIndex, dragView);
                         // covert by pageIndex;
-                        mPageDraPos = mPageDropPos = index - mPageIndex * mLauncher.mPageItemCount;
+                        mPageDraPos = index - mPageIndex * mLauncher.mPageItemCount;
+                        mPageDropPos = mPageDraPos;
 
                         return false;
                     }
@@ -155,7 +154,7 @@ public class LauncherPage extends ViewGroup {
 
     private int getHitPosition(int x, int y) {
         Rect rect = new Rect();
-        int location[] = null;
+        int[] location = null;
         for (int i = 0; i < mItemCount; i++) {
             location = getLocationByPos(i);
             rect.set(location[0], location[1], location[0] + mFeatureMetrics.childW, location[1]
@@ -168,13 +167,13 @@ public class LauncherPage extends ViewGroup {
     }
 
     int[] getLocationPrevPageByPos(int position) {
-        int location[] = getLocationByPos(position);
+        int[] location = getLocationByPos(position);
         location[0] -= getWidth();
         return location;
     }
 
     int[] getLocationNextPageByPos(int position) {
-        int location[] = getLocationByPos(position);
+        int[] location = getLocationByPos(position);
         location[0] += getWidth();
         return location;
     }
@@ -203,7 +202,8 @@ public class LauncherPage extends ViewGroup {
                 mLauncher.notifyDataUpdate(mPageIndex - 1);
 
                 // Cur Page
-                mPageDraPos = mPageDropPos = 0;
+                mPageDraPos = 0;
+                mPageDropPos = 0;
 
                 fromLocation = getLocationByPos(0);
                 toLocation = getLocationPrevPageByPos(mLauncher.mPageItemCount - 1);
@@ -217,7 +217,8 @@ public class LauncherPage extends ViewGroup {
                 mLauncher.notifyDataUpdate(mPageIndex + 1);
 
                 // Cur Page
-                mPageDraPos = mPageDropPos = mLauncher.mPageItemCount - 1;
+                mPageDraPos = mLauncher.mPageItemCount - 1;
+                mPageDropPos = mPageDraPos;
                 fromLocation = getLocationByPos(mLauncher.mPageItemCount - 1);
                 toLocation = getLocationNextPageByPos(0);
             }
@@ -301,7 +302,7 @@ public class LauncherPage extends ViewGroup {
 
     private void putViewToPostion(View view, int position) {
         this.addView(view);
-        int location[] = getLocationByPos(position);
+        int[] location = getLocationByPos(position);
         view.measure(MeasureSpec.makeMeasureSpec(mFeatureMetrics.childW, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(mFeatureMetrics.childH, MeasureSpec.EXACTLY));
         view.layout(location[0], location[1], location[0] + mFeatureMetrics.childW, location[1]

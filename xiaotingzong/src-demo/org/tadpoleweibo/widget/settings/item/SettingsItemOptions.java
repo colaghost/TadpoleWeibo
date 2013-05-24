@@ -1,18 +1,16 @@
 
 package org.tadpoleweibo.widget.settings.item;
 
-import java.util.ArrayList;
-
 import org.tadpole.R;
 import org.tadpoleweibo.widget.settings.SettingsContextMenu;
 import org.tadpoleweibo.widget.settings.SettingsContextMenu.ISettingMenuListener;
 import org.tadpoleweibo.widget.settings.SettingsItem;
-import org.tadpoleweibo.widget.settings.SettingsItemInfo;
 
-import android.media.audiofx.BassBoost.Settings;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class SettingsItemOptions extends SettingsItem<Integer> implements ISettingMenuListener {
 
@@ -21,6 +19,8 @@ public class SettingsItemOptions extends SettingsItem<Integer> implements ISetti
     private String[] mOptions = null;
 
     private int mSelectedIndex = INVALID_SELECT_INDEX;
+
+    private TextView mTextViewOptions = null;
 
     public SettingsItemOptions(String title, String summary, String[] options) {
         super(title, summary);
@@ -35,14 +35,32 @@ public class SettingsItemOptions extends SettingsItem<Integer> implements ISetti
 
     @Override
     public View createRightDetailView(LayoutInflater inflater, ViewGroup parent) {
-        return inflater.inflate(R.layout.tp_settings_item_right_nav, parent, false);
+        mTextViewOptions = (TextView)inflater.inflate(R.layout.tp_settings_item_right_options,
+                parent, false);
+        return mTextViewOptions;
     }
 
     @Override
     public void onItemClick(ViewGroup itemRoot) {
         super.onItemClick(itemRoot);
+
+        Resources res = itemRoot.getContext().getResources();
+
+        int[] location = {
+                0, 0
+        };
+
+        itemRoot.getLocationInWindow(location);
+
+        int x = (int)(location[0] + itemRoot.getWidth() - res
+                .getDimension(R.dimen.tp_settingsitem_menu_right));
+        int y = (int)(location[1] - res.getDimension(R.dimen.tp_settingsitem_menu_top));
+
         SettingsContextMenu menu = new SettingsContextMenu(itemRoot.getContext());
+        menu.setPos(x, y);
         menu.setOptions(mOptions, mSelectedIndex, this);
+        menu.show();
+
     }
 
     @Override
@@ -54,8 +72,5 @@ public class SettingsItemOptions extends SettingsItem<Integer> implements ISetti
     public void onSettingContextMenuDismiss() {
 
     }
-    
-    public static void main(String[] args) {
-        SettingsItemOptions sio = new SettingsItemOptions("", "", new String[]{});
-    }
+
 }

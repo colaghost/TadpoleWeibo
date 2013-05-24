@@ -2,6 +2,7 @@
 package org.tadpoleweibo.widget.settings;
 
 import org.tadpole.R;
+import org.tadpoleweibo.common.StringUtil;
 import org.tadpoleweibo.common.TLog;
 
 import android.view.LayoutInflater;
@@ -10,11 +11,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public abstract class SettingsItem<T> {
-    
+
     public static final String TAG = "SettingsItem";
 
     public interface SettingsItemListener<T> {
-        public void onSettingsAction(SettingsItem item, T params);
+        public void onSettingsAction(SettingsItem<T> item, T params);
     }
 
     private Object mTag = null;
@@ -60,13 +61,18 @@ public abstract class SettingsItem<T> {
         TextView txtViewSummary = (TextView)view.findViewById(R.id.txtview_summary);
 
         txtViewTitle.setText(mTitle);
-        txtViewSummary.setText(mSummary);
+
+        if (StringUtil.isBlank(mSummary)) {
+            txtViewSummary.setVisibility(View.GONE);
+        } else {
+            txtViewSummary.setText(mSummary);
+        }
 
         ViewGroup viewGroupRight = (ViewGroup)view.findViewById(R.id.right);
         View viewRightDetail = createRightDetailView(inflater, viewGroupRight);
         if (null != viewRightDetail) {
             viewGroupRight.removeAllViews();
-            viewGroupRight.addView(viewRightDetail, SettingsListView.LP_F_F);
+            viewGroupRight.addView(viewRightDetail);
         }
         return view;
     }

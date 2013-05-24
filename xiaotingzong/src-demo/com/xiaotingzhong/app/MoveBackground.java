@@ -2,7 +2,6 @@ package com.xiaotingzhong.app;
 
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
 
 public class MoveBackground {

@@ -244,7 +244,7 @@ public class Launcher extends ViewPagerEX {
         final int statusBarHeight = getStatusHeight((Activity)getContext());
 
         v.setVisibility(View.INVISIBLE);
-        int locations[] = {
+        int[] locations = {
                 0, 0
         };
         v.getLocationInWindow(locations);

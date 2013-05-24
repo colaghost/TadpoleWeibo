@@ -15,9 +15,7 @@
         </item>
         <item android:state_pressed="true">
             <shape>
-                <gradient
-                    android:endColor="#FF000000"
-                    android:startColor="#FFFFFFFF" />
+                <gradient android:endColor="#e6e6e6" android:startColor="#e6e6e6" />
 
                 <corners
                     android:topLeftRadius="@dimen/radius_szie"

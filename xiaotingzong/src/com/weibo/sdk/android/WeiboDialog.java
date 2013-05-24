@@ -45,7 +45,7 @@ import com.weibo.sdk.android.util.Utility;
  * @author xiaowei6@staff.sina.com.cn
  */
 public class WeiboDialog extends Dialog {
-    
+
     public final static String TAG = "Weibo-WebView";
 
     private static FrameLayout.LayoutParams FILL = new FrameLayout.LayoutParams(
@@ -72,7 +72,6 @@ public class WeiboDialog extends Dialog {
     private RelativeLayout webViewContainer;
 
     private RelativeLayout mContent;
-
 
     public WeiboDialog(Context context, String url, WeiboAuthListener listener) {
         super(context, theme);
@@ -276,7 +275,7 @@ public class WeiboDialog extends Dialog {
                 ret = true;
                 while (eventCode != XmlPullParser.END_DOCUMENT) {
                     switch (eventCode) {
-                        case XmlPullParser.START_TAG:
+                        case XmlPullParser.START_TAG: {
                             if (xmlpull.getName().equals("dimen")) {
                                 String name = xmlpull.getAttributeValue(null, "name");
                                 if ("weibosdk_dialog_left_margin".equals(name)) {
@@ -294,6 +293,10 @@ public class WeiboDialog extends Dialog {
                                 }
                             }
                             break;
+                        }
+                        default: {
+                            break;
+                        }
                     }
                     eventCode = xmlpull.next();// 没有结束xml文件就推到下个进行解析
                 }

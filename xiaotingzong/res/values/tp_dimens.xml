@@ -1,7 +1,10 @@
 <resources>
-    
+
     <!-- Tp Settings -->
     <dimen name="tp_settings_vertical_margin">20dp</dimen>
     <dimen name="tp_settingsitem_height">49dp</dimen>
-    
+    <dimen name="tp_settingsitem_menu_top">18.6dp</dimen>
+    <dimen name="tp_settingsitem_menu_right">18.6dp</dimen>
+    <dimen name="tp_settings_contextmenu_item_height">36dp</dimen>
+
 </resources>

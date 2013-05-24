@@ -18,11 +18,11 @@ import android.widget.TextView;
 
 public class SubscriptFriendListAdapter extends PageListViewAdapter<User> {
 
-    private ISubscriptionDao subscriptMgr = null;;
+    private ISubscriptionDao mSubscriptMgr = null;;
 
     public SubscriptFriendListAdapter(Activity act, User user) {
         super(act);
-        subscriptMgr = new SubscriptionCache(act, user.id);
+        mSubscriptMgr = new SubscriptionCache(act, user.id);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class SubscriptFriendListAdapter extends PageListViewAdapter<User> {
         holder.txtViewScreenName.setText(user.screen_name);
 
         final ImageButton finalSubsctriptBtn = holder.subscriptBtn;
-        if (subscriptMgr.isSubscripted(user.id)) {
+        if (mSubscriptMgr.isSubscripted(user.id)) {
             finalSubsctriptBtn.setImageResource(R.drawable.rootblock_add_cell_setok);
         } else {
             finalSubsctriptBtn.setImageResource(R.drawable.icon_addmsg);
@@ -55,11 +55,11 @@ public class SubscriptFriendListAdapter extends PageListViewAdapter<User> {
 
         holder.subscriptBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View paramView) {
-                if (subscriptMgr.isSubscripted(user.id)) {
-                    subscriptMgr.unSubscript(user.id);
+                if (mSubscriptMgr.isSubscripted(user.id)) {
+                    mSubscriptMgr.unSubscript(user.id);
                     finalSubsctriptBtn.setImageResource(R.drawable.icon_addmsg);
                 } else {
-                    subscriptMgr.subscript(user.id);
+                    mSubscriptMgr.subscript(user.id);
                     finalSubsctriptBtn.setImageResource(R.drawable.rootblock_add_cell_setok);
                 }
             }

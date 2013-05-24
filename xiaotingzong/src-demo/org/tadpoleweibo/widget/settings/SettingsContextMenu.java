@@ -8,6 +8,8 @@ import org.tadpole.R;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Handler;
 import android.view.Gravity;
@@ -22,6 +24,9 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 public class SettingsContextMenu extends Dialog implements View.OnClickListener, OnTouchListener {
+
+    private static final LayoutParams LP_W_W = new LayoutParams(LayoutParams.WRAP_CONTENT,
+            LayoutParams.WRAP_CONTENT);
 
     public interface ISettingMenuListener {
         public void onSettingContextMenuClick(int index);
@@ -47,6 +52,10 @@ public class SettingsContextMenu extends Dialog implements View.OnClickListener,
 
     private ISettingMenuListener mListener;
 
+    private Resources mRes;
+
+    private LayoutInflater mLayoutInflater;
+
     public SettingsContextMenu(Context context) {
         super(context, R.style.Tadpole_Dialog_ContextMenu);
         init(context);
@@ -61,11 +70,14 @@ public class SettingsContextMenu extends Dialog implements View.OnClickListener,
     }
 
     private void init(Context context) {
+        mRes = context.getResources();
+        mLayoutInflater = LayoutInflater.from(context);
+
+        mContainer = (LinearLayout)mLayoutInflater.inflate(R.layout.tp_settings_contextmenu, null);
+        mContainer.setLayoutParams(LP_W_W);
         mShowPos = new Point(0, 0);
         mViewPool = new ArrayList<View>();
-        mContainer = new LinearLayout(context);
         mTouchHandler = new Handler();
-        mContainer.setOrientation(LinearLayout.VERTICAL);
         mRecoverySelectedExec = new Runnable() {
             @Override
             public void run() {
@@ -74,22 +86,21 @@ public class SettingsContextMenu extends Dialog implements View.OnClickListener,
                 }
             }
         };
-
         setContentView(mContainer);
         setCanceledOnTouchOutside(true);
+
         this.getWindow().setWindowAnimations(R.style.Tadpole_Dialog_ContextMenu_Anim);
     }
 
     private TextView createView(Context context, int num) {
-        LayoutInflater layoutInflater = LayoutInflater.from(context);
         TextView textView = null;
         for (int i = 0; i < num; i++) {
-            textView = (TextView)layoutInflater.inflate(R.layout.tp_settings_contextmenu_item,
+            textView = (TextView)mLayoutInflater.inflate(R.layout.tp_settings_contextmenu_item,
                     mContainer, false);
-            textView.setBackgroundResource(R.drawable.tp_settings_contextmenu_bg_selector);
-            // textView.setPadding(paddingLeft, 0, 0, 0);
             textView.setOnClickListener(this);
             textView.setOnTouchListener(this);
+            textView.setBackgroundDrawable(mRes
+                    .getDrawable(R.drawable.tp_settings_contextmenu_item_bg));
             mViewPool.add(textView);
         }
         return textView;

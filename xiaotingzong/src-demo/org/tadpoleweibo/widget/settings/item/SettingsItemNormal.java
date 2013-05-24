@@ -9,17 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-public class SettingsItemNav extends SettingsItem<String> {
+public class SettingsItemNormal extends SettingsItem<String> {
 
-    public SettingsItemNav(String title, String summary) {
+    public SettingsItemNormal(String title, String summary) {
         super(title, summary);
     }
 
     @Override
     public View createRightDetailView(LayoutInflater inflater, ViewGroup parent) {
-        ImageView imageView = (ImageView)inflater.inflate(R.layout.tp_settings_item_right_nav,
-                parent, false);
-        return imageView;
+        return null;
     }
 
 }

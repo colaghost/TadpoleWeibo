@@ -1,18 +1,9 @@
 
 package com.xiaotingzhong.app;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.weibo.sdk.android.WeiboException;
-import com.weibo.sdk.android.api.WeiboAPI.FEATURE;
-import com.weibo.sdk.android.net.RequestListener;
-import com.xiaotingzhong.broadcast.SubscriptReceiver;
-import com.xiaotingzhong.model.User;
-import com.xiaotingzhong.model.WeiboStatus;
-import com.xiaotingzhong.model.cache.userprivate.StatusesCache;
-import com.xiaotingzhong.model.state.UserState;
-import com.xiaotingzhong.widget.WeiboStatusesListAdapter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.tadpole.R;
 import org.tadpoleweibo.widget.PageList;
@@ -25,13 +16,21 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
+import com.weibo.sdk.android.WeiboException;
+import com.weibo.sdk.android.api.WeiboAPI.FEATURE;
+import com.weibo.sdk.android.net.RequestListener;
+import com.xiaotingzhong.broadcast.SubscriptReceiver;
+import com.xiaotingzhong.model.User;
+import com.xiaotingzhong.model.WeiboStatus;
+import com.xiaotingzhong.model.cache.userprivate.StatusesCache;
+import com.xiaotingzhong.model.state.UserState;
+import com.xiaotingzhong.widget.WeiboStatusesListAdapter;
 
 /**
  * diplay single user weibo statues

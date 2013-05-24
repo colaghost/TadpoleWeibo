@@ -2,7 +2,6 @@
 package com.xiaotingzhong.model.cache.userprivate;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -12,7 +11,6 @@ import org.tadpoleweibo.widget.PageList;
 
 import android.content.Context;
 
-import com.xiaotingzhong.model.User;
 import com.xiaotingzhong.model.WeiboStatus;
 import com.xiaotingzhong.model.cache.BaseUserPrivateDir;
 

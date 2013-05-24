@@ -2,12 +2,7 @@ package com.xiaotingzhong.model;
 
 import org.json.JSONObject;
 
-import android.content.SharedPreferences;
-import android.media.audiofx.AcousticEchoCanceler;
-
-import com.weibo.sdk.android.Oauth2AccessToken;
 import com.weibo.sdk.android.api.AccountAPI;
-import com.weibo.sdk.android.keep.AccessTokenKeeper;
 import com.xiaotingzhong.app.XTZApplication;
 import com.xiaotingzhong.model.cache.TokenAccountCache;
 

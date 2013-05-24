@@ -15,7 +15,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ */
 -->
 <resources>
 
@@ -40,6 +40,8 @@
     <color name="stroke_color">#646464</color>
     
     
+    <!-- Tadpole Settings -->
     <color name="tp_settings_background_color">#E6E6E6</color>
+    <color name="tp_settings_menu_bg_color">#E6E6E6</color>
 
 </resources>

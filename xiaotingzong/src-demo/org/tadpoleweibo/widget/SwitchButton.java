@@ -35,12 +35,21 @@ public class SwitchButton extends ImageView {
 
     public void init() {
         setScaleType(ScaleType.FIT_END);
-        setImageResource(R.drawable.switch_left);
-        mIsTurnOn = false;
+        setTurnOn(false);
+        setImageByState();
     }
 
-    public void setTurnOn(boolean isTurnOn) {
+    public boolean setTurnOn(boolean isTurnOn) {
+        if (isTurnOn == mIsTurnOn) {
+            return false;
+        }
         mIsTurnOn = isTurnOn;
+        setImageByState();
+        return true;
+    }
+
+    public boolean isTurnOn() {
+        return mIsTurnOn;
     }
 
     public void setSwitchListener(SwitchListener l) {
@@ -48,7 +57,8 @@ public class SwitchButton extends ImageView {
     }
 
     public void toggle() {
-        switchAction(!mIsTurnOn);
+        boolean b = !mIsTurnOn;
+        switchAction(b);
     }
 
     public void turnOn() {
@@ -64,7 +74,7 @@ public class SwitchButton extends ImageView {
         if (mListener == null) {
             return;
         }
-        if (mIsTurnOn == true) {
+        if (isTurnOn()) {
             mListener.on();
         } else {
             mListener.off();
@@ -72,19 +82,17 @@ public class SwitchButton extends ImageView {
     }
 
     private void switchAction(boolean b) {
-        if (mIsTurnOn == b) {
+        if (setTurnOn(b)) {
             return;
         }
-        mIsTurnOn = b;
-        setImageByState();
         notifyListener();
     }
 
     private void setImageByState() {
-        if (mIsTurnOn = false) {
-            setImageResource(R.drawable.switch_left);
+        if (isTurnOn()) {
+            setImageResource(R.drawable.switch_on);
         } else {
-            setImageResource(R.drawable.switch_right);
+            setImageResource(R.drawable.switch_off);
         }
     }
 

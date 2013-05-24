@@ -304,7 +304,7 @@ public class FileUtil {
         if ((!forceOverride) && (dstFile.exists())) {
             return null;
         }
-        if ((!dstFile.exists()) && (!dstFile.createNewFile())){
+        if ((!dstFile.exists()) && (!dstFile.createNewFile())) {
             return null;
         }
 

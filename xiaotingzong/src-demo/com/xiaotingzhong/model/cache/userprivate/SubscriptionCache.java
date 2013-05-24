@@ -1,18 +1,7 @@
 
 package com.xiaotingzhong.model.cache.userprivate;
 
-import com.xiaotingzhong.model.cache.BaseUserPrivateDir;
-import com.xiaotingzhong.model.dao.ISubscriptionDao;
-
-import org.json.JSONObject;
-import org.tadpoleweibo.common.FileUtil;
-import org.tadpoleweibo.common.StringUtil;
-
-import android.R.color;
-import android.content.Context;
-
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,6 +11,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+
+import org.tadpoleweibo.common.StringUtil;
+
+import android.content.Context;
+
+import com.xiaotingzhong.model.cache.BaseUserPrivateDir;
+import com.xiaotingzhong.model.dao.ISubscriptionDao;
 
 public class SubscriptionCache extends BaseUserPrivateDir implements ISubscriptionDao {
     static final String SUBSCRIPT_DIR = "subscript";

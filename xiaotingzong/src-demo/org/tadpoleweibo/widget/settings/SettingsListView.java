@@ -1,11 +1,8 @@
 
 package org.tadpoleweibo.widget.settings;
 
-import org.tadpole.R;
-
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.widget.ListAdapter;
 import android.widget.ListView;

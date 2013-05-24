@@ -1,16 +1,14 @@
 
 package com.weibo.sdk.android;
 
-import com.weibo.sdk.android.util.Utility;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
 import android.webkit.CookieSyncManager;
+
+import com.weibo.sdk.android.util.Utility;
 
 /**
  * @author luopeng (luopeng@staff.sina.com.cn)

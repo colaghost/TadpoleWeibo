@@ -503,6 +503,7 @@ public class StringUtil {
                 try {
                     value = URLDecoder.decode(value, enc);
                 } catch (UnsupportedEncodingException ignored) {
+                    ignored.printStackTrace();
                 }
                 if (paramsMap.containsKey(param)) {
                     values = paramsMap.get(param);

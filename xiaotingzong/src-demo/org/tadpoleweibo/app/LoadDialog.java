@@ -4,8 +4,6 @@ import org.tadpole.R;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.provider.ContactsContract.CommonDataKinds.Im;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 

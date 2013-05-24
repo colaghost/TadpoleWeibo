@@ -1,8 +1,12 @@
 
 package org.tadpoleweibo.widget.image;
 
-import com.weibo.sdk.android.WeiboException;
-import com.weibo.sdk.android.net.NetStateManager;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.lang.ref.SoftReference;
+import java.util.WeakHashMap;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -34,12 +38,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.lang.ref.SoftReference;
-import java.util.WeakHashMap;
+import com.weibo.sdk.android.net.NetStateManager;
 
 public class ImageHelper {
 

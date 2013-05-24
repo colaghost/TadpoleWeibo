@@ -1,18 +1,13 @@
 
 package com.xiaotingzhong.app;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 import org.tadpole.R;
-import org.tadpoleweibo.app.LoadDialog;
 import org.tadpoleweibo.app.LoadDialogAsyncTask;
-import org.tadpoleweibo.common.ActivityUtil;
-import org.tadpoleweibo.widget.Launcher;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,17 +21,11 @@ import com.weibo.sdk.android.Weibo;
 import com.weibo.sdk.android.WeiboAuthListener;
 import com.weibo.sdk.android.WeiboDialogError;
 import com.weibo.sdk.android.WeiboException;
-import com.weibo.sdk.android.api.AccountAPI;
-import com.weibo.sdk.android.api.UsersAPI;
 import com.weibo.sdk.android.keep.AccessTokenKeeper;
-import com.weibo.sdk.android.net.RequestListener;
 import com.weibo.sdk.android.sso.SsoHandler;
 import com.weibo.sdk.android.util.Utility;
-import com.xiaotingzhong.app.LauncherActivity;
-import com.xiaotingzhong.app.XTZApplication;
 import com.xiaotingzhong.model.Account;
 import com.xiaotingzhong.model.Emotion;
-import com.xiaotingzhong.model.User;
 
 /**
  * @author liyan (liyan9@staff.sina.com.cn)

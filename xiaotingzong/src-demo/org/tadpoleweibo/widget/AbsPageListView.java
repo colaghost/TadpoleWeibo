@@ -1,16 +1,15 @@
 
 package org.tadpoleweibo.widget;
 
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-
 import org.tadpole.R;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public abstract class AbsPageListView<T> extends PullToRefreshListView {
     private static final String TAG = "PageListView";

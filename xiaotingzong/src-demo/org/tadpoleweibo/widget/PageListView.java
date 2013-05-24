@@ -1,11 +1,8 @@
 package org.tadpoleweibo.widget;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 
 public class PageListView<T> extends AbsPageListView<T> {
 
