@@ -37,8 +37,12 @@ public class SettingsItemOptions extends SettingsItem<Integer> implements ISetti
     public View createRightDetailView(LayoutInflater inflater, ViewGroup parent) {
         mTextViewOptions = (TextView)inflater.inflate(R.layout.tp_settings_item_right_options,
                 parent, false);
+        
+        updateText();
+
         return mTextViewOptions;
     }
+    
 
     @Override
     public void onItemClick(ViewGroup itemRoot) {
@@ -53,18 +57,21 @@ public class SettingsItemOptions extends SettingsItem<Integer> implements ISetti
         itemRoot.getLocationInWindow(location);
 
         int x = (int)(location[0] + itemRoot.getWidth() - res
-                .getDimension(R.dimen.tp_settingsitem_menu_right));
-        int y = (int)(location[1] - res.getDimension(R.dimen.tp_settingsitem_menu_top));
+                .getDimension(R.dimen.tp_settings_menu_right));
+        int y = (int)(location[1] - res.getDimension(R.dimen.tp_settings_menu_top));
 
         SettingsContextMenu menu = new SettingsContextMenu(itemRoot.getContext());
         menu.setPos(x, y);
         menu.setOptions(mOptions, mSelectedIndex, this);
         menu.show();
 
+        
     }
 
     @Override
     public void onSettingContextMenuClick(int index) {
+        mSelectedIndex = index;
+        updateText();
         notifyListener(Integer.valueOf(index));
     }
 
@@ -73,4 +80,10 @@ public class SettingsItemOptions extends SettingsItem<Integer> implements ISetti
 
     }
 
+    
+    private void updateText(){
+        if (INVALID_SELECT_INDEX != mSelectedIndex) {
+            mTextViewOptions.setText(mOptions[mSelectedIndex]);
+        }
+    }
 }

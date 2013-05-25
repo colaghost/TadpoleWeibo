@@ -6,7 +6,7 @@
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:minHeight="@dimen/tp_settingsitem_height"
+    android:minHeight="@dimen/tp_settings_item_height"
     android:orientation="horizontal" >
 
 </LinearLayout>

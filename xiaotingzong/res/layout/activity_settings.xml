@@ -14,6 +14,11 @@
         android:layout_height="fill_parent"
         android:background="@color/tp_settings_background_color"
         android:cacheColorHint="@color/tp_settings_background_color"
-        android:descendantFocusability="blocksDescendants" />
+        android:descendantFocusability="blocksDescendants"
+        android:paddingBottom="@dimen/padding_medium"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingRight="@dimen/padding_medium"
+        android:paddingTop="0dp" >
+    </org.tadpoleweibo.widget.settings.SettingsListView>
 
 </LinearLayout>

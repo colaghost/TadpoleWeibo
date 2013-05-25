@@ -2,9 +2,40 @@
 
     <!-- Tp Settings -->
     <dimen name="tp_settings_vertical_margin">20dp</dimen>
-    <dimen name="tp_settingsitem_height">49dp</dimen>
-    <dimen name="tp_settingsitem_menu_top">18.6dp</dimen>
-    <dimen name="tp_settingsitem_menu_right">18.6dp</dimen>
-    <dimen name="tp_settings_contextmenu_item_height">36dp</dimen>
+    <dimen name="tp_settings_item_height">49dp</dimen>
+
+    <!-- Tp SettingsMenu -->
+    <dimen name="tp_settings_menu_top">18.6dp</dimen>
+    <dimen name="tp_settings_menu_right">-5dp</dimen>
+    <dimen name="tp_settings_menu_padding_top">8dp</dimen>
+    <dimen name="tp_settings_menu_padding_bottom">23.3dp</dimen>
+    <dimen name="tp_settings_menu_padding_leftright">15dp</dimen>
+    <dimen name="tp_settings_menu_item_width">108dp</dimen>
+    <dimen name="tp_settings_menu_item_height">40dp</dimen>
+    <dimen name="tp_settings_menu_item_textsize">13.3sp</dimen>
+    <dimen name="tp_settings_menu_item_text_padding_left">15dp</dimen>
+    <dimen name="tp_settings_menu_item_text_padding_right">15dp</dimen>
+
+    <!-- Setting Window -->
+    <dimen name="setting_item_height">49dp</dimen>
+    <dimen name="setting_grouptitle_margin_top">9dp</dimen>
+    <dimen name="setting_grouptitle_margin_bottom">9dp</dimen>
+    <dimen name="setting_grouptitle_textsize">14.66sp</dimen>
+    <dimen name="setting_grouptitle_empty_textsize">1sp</dimen>
+
+    <integer-array name="setting_fontsize_options_values">
+        <item>1</item>
+        <item>12</item>
+        <item>16</item>
+        <item>20</item>
+        <item>26</item>
+    </integer-array>
+    <integer-array name="setting_fontsize_options_realvalues">
+        <item>16</item>
+        <item>12</item>
+        <item>16</item>
+        <item>20</item>
+        <item>26</item>
+    </integer-array>
 
 </resources>

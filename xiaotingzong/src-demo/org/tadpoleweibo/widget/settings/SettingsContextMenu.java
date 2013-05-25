@@ -73,7 +73,7 @@ public class SettingsContextMenu extends Dialog implements View.OnClickListener,
         mRes = context.getResources();
         mLayoutInflater = LayoutInflater.from(context);
 
-        mContainer = (LinearLayout)mLayoutInflater.inflate(R.layout.tp_settings_contextmenu, null);
+        mContainer = (LinearLayout)mLayoutInflater.inflate(R.layout.tp_settings_menu, null);
         mContainer.setLayoutParams(LP_W_W);
         mShowPos = new Point(0, 0);
         mViewPool = new ArrayList<View>();
@@ -95,12 +95,10 @@ public class SettingsContextMenu extends Dialog implements View.OnClickListener,
     private TextView createView(Context context, int num) {
         TextView textView = null;
         for (int i = 0; i < num; i++) {
-            textView = (TextView)mLayoutInflater.inflate(R.layout.tp_settings_contextmenu_item,
+            textView = (TextView)mLayoutInflater.inflate(R.layout.tp_settings_menu_item,
                     mContainer, false);
             textView.setOnClickListener(this);
             textView.setOnTouchListener(this);
-            textView.setBackgroundDrawable(mRes
-                    .getDrawable(R.drawable.tp_settings_contextmenu_item_bg));
             mViewPool.add(textView);
         }
         return textView;
@@ -127,7 +125,7 @@ public class SettingsContextMenu extends Dialog implements View.OnClickListener,
 
                 if (0 != index) {
                     View line = new View(getContext());
-                    line.setBackgroundResource(R.drawable.tp_settings_contextmenu_item_line);
+                    line.setBackgroundResource(R.drawable.tp_settings_menu_item_line);
                     // 数字都是指1个像素
                     LayoutParams lp = new LayoutParams(
                             android.view.ViewGroup.LayoutParams.MATCH_PARENT, 1);
