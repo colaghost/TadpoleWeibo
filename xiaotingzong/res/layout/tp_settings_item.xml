@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_margin="@dimen/padding_medium"
+    android:layout_height="wrap_content"
     android:background="@drawable/selector_setting_item_bg_top"
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:minHeight="@dimen/tp_settingsitem_height"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:padding="@dimen/padding_medium" >
 
 </LinearLayout>

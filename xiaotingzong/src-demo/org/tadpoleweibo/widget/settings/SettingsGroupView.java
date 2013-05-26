@@ -82,13 +82,10 @@ class SettingsGroupView extends LinearLayout {
         if (item == null || mInflater == null) {
             return null;
         }
-        ViewGroup itemView = (ViewGroup)mInflater.inflate(R.layout.tp_settings_item, null);
-        itemView.setBackgroundResource(backgroundResId);
-
         // populate ItemView from SettingsItem
-        View itemContentView = item.getContentView(mInflater, itemView);
-        itemView.addView(itemContentView, SettingsListView.LP_F_F);
-        addView(itemView, SettingsListView.LP_F_W);
+        View itemView = item.getItemView(mInflater, this);
+        itemView.setBackgroundResource(backgroundResId);
+        addView(itemView);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -4,10 +4,10 @@
     android:layout_height="wrap_content"
     android:background="@drawable/tp_settings_contextmenu_bg"
     android:orientation="vertical"
-    android:paddingBottom="22dp"
-    android:paddingLeft="20dp"
-    android:paddingRight="15dp"
-    android:paddingTop="15dp" >
+    android:paddingBottom="20dp"
+    android:paddingLeft="40dp"
+    android:paddingRight="40dp"
+    android:paddingTop="20dp" >
 
     <include layout="@layout/tp_settings_contextmenu_item" />
 

@@ -14,6 +14,8 @@ public abstract class SettingsItem<T> {
 
     public static final String TAG = "SettingsItem";
 
+    private ViewGroup mBackground;
+
     public interface SettingsItemListener<T> {
         public void onSettingsAction(SettingsItem<T> item, T params);
     }
@@ -43,19 +45,25 @@ public abstract class SettingsItem<T> {
         mListener = l;
     }
 
-    protected void notifyListener(T params) {
-        mListener.onSettingsAction(this, params);
-        TLog.debug(TAG, "notifyListener params = " + params);
-    }
-
     public void onItemClick(ViewGroup itemRoot) {
         // override me
         System.out.println("SettingsItem Must Be Override . Object = " + this);
     }
 
-    public View getContentView(LayoutInflater inflater, ViewGroup parent) {
-        View view = inflater.inflate(R.layout.tp_settings_item_content, null);
-        view.setLayoutParams(SettingsListView.LP_F_F);
+    protected void notifyListener(T params) {
+        mListener.onSettingsAction(this, params);
+        TLog.debug(TAG, "notifyListener params = " + params);
+    }
+
+    View getItemView(LayoutInflater inflater, ViewGroup parent) {
+        mBackground = (ViewGroup)inflater.inflate(R.layout.tp_settings_item, parent, false);
+        return getContentView(inflater, mBackground);
+    }
+
+    View getContentView(LayoutInflater inflater, ViewGroup parent) {
+
+        View view = inflater.inflate(R.layout.tp_settings_item_content, parent, true);
+        // view.setLayoutParams(SettingsListView.LP_F_F);
 
         TextView txtViewTitle = (TextView)view.findViewById(R.id.txtview_title);
         TextView txtViewSummary = (TextView)view.findViewById(R.id.txtview_summary);
