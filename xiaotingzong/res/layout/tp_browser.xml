@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/background"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/bottom_bar" />
+
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/bottom_bar_size"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/black"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="@dimen/bottom_bar_icon_size"
+            android:layout_height="@dimen/bottom_bar_icon_size"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:src="@drawable/webview_back" />
+
+        <ImageView
+            android:layout_width="@dimen/bottom_bar_icon_size"
+            android:layout_height="@dimen/bottom_bar_icon_size"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:src="@drawable/webview_previous" />
+
+        <ImageView
+            android:layout_width="@dimen/bottom_bar_icon_size"
+            android:layout_height="@dimen/bottom_bar_icon_size"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:src="@drawable/webview_forward" />
+
+        <ImageView
+            android:layout_width="@dimen/bottom_bar_icon_size"
+            android:layout_height="@dimen/bottom_bar_icon_size"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:src="@drawable/webview_refresh" />
+    </LinearLayout>
+
+</RelativeLayout>
