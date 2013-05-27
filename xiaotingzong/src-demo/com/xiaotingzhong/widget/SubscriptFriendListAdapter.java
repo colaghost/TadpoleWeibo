@@ -6,10 +6,13 @@ import com.xiaotingzhong.model.cache.userprivate.SubscriptionCache;
 import com.xiaotingzhong.model.dao.ISubscriptionDao;
 
 import org.tadpole.R;
+import org.tadpoleweibo.graphic.drawable.PressStateDrawable;
 import org.tadpoleweibo.widget.AsyncRoundImageView;
 import org.tadpoleweibo.widget.PageListViewAdapter;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +45,8 @@ public class SubscriptFriendListAdapter extends PageListViewAdapter<User> {
         } else {
             holder = (ViewHolder)view.getTag();
         }
+        
+        view.setBackgroundResource(R.drawable.selector_setting_item_bg_single);
 
         holder.asyncImgViewProfile.setImageURL(user.profile_image_url);
         holder.txtViewScreenName.setText(user.screen_name);

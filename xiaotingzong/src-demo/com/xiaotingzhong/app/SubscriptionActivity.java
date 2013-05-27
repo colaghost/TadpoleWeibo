@@ -13,6 +13,8 @@ import org.tadpoleweibo.widget.PageListViewAdapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -58,10 +60,6 @@ public class SubscriptionActivity extends NavBarActivity {
     }
 
     private EditText mEditTxtSearch = null;
-
-    private ImageButton mImgBtnLeft = null;
-
-    private ImageButton mImgBtnRight = null;
 
     private ArrayList<User> mListFriendsAll = null;
 
@@ -118,7 +116,6 @@ public class SubscriptionActivity extends NavBarActivity {
         this.mListViewFriends.setAdapter(this.mAdapterFriends);
         // TODO 将这些设置转移到xml配置文件。
         ListView listView = (ListView)this.mListViewFriends.getRefreshableView();
-        listView.setDividerHeight(1);
         listView.setDivider(getResources().getDrawable(R.drawable.divider));
         listView.setVerticalScrollBarEnabled(false);
 

@@ -30,7 +30,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class LauncherActivity extends Activity implements AdapterView.OnItemClickListener,
-        OnPageChangeListener {
+        OnPageChangeListener, View.OnClickListener {
     static final String TAG = "LauncherActivity";
 
     static final int REQUEST_CODE_SUBSCRIPT = 1;
@@ -62,7 +62,7 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
 
     private Launcher mLauncher;
 
-    private AsyncRoundImageView mAsyncImgView;
+    private AsyncRoundImageView mAsyncImgViewMy;
 
     private ArrayList<User> mUserList = new ArrayList();
 
@@ -90,21 +90,10 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
         mTxtViewPageTip = (TextView)findViewById(R.id.txtview_page_tip);
 
         this.mImgBtnAdd = ((ImageButton)findViewById(R.id.imgbtn_add));
-        this.mImgBtnAdd.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                SubscriptionActivity.startForResult(me, mUserSelf, REQUEST_CODE_SUBSCRIPT);
-            }
-        });
+        this.mImgBtnAdd.setOnClickListener(this);
 
         mImgBtnSet = (ImageButton)findViewById(R.id.imgbtn_set);
-        mImgBtnSet.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Activity act = (Activity)v.getContext();
-                SettingsActivity.start(act);
-            }
-        });
+        mImgBtnSet.setOnClickListener(this);
 
         mLauncherAdapter = new LauncherListAdapter<User>(mUserList) {
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -148,8 +137,9 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
 
         mLauncher.setOnPageChangeListener(this);
 
-        mAsyncImgView = (AsyncRoundImageView)findViewById(R.id.asyncimgview_my);
-        mAsyncImgView.setImageURL(mUserSelf.profile_image_url);
+        mAsyncImgViewMy = (AsyncRoundImageView)findViewById(R.id.asyncimgview_my);
+        mAsyncImgViewMy.setImageURL(mUserSelf.profile_image_url);
+        mAsyncImgViewMy.setOnClickListener(this);
 
         // register subscription change
         mSubscriptReceiver = new SubscriptReceiver(this);
@@ -157,6 +147,24 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
 
         // fetchUserInfo
         fetchUserFriends();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.imgbtn_set:
+                SettingsActivity.start(this);
+                break;
+            case R.id.imgbtn_add:
+                SubscriptionActivity.startForResult(this, mUserSelf, REQUEST_CODE_SUBSCRIPT);
+                break;
+            case R.id.asyncimgview_my:
+                StatusesActivity.start(this, mUserSelf, mUserSelf.getRelateUserState(mUserSelf));
+                break;
+            default:
+                break;
+        }
+
     }
 
     @Override
@@ -254,4 +262,5 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

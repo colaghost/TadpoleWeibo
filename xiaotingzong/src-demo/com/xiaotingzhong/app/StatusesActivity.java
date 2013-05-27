@@ -61,10 +61,6 @@ public class StatusesActivity extends NavBarActivity implements OnRefreshListene
         activity.startActivity(intent);
     }
 
-    private ImageButton mImgBtnLeft = null;
-
-    private ImageButton mImgBtnRight = null;
-
     private WeiboStatusesListAdapter mPageAdapter = null;
 
     private PageListView<WeiboStatus> mListStatuses = null;

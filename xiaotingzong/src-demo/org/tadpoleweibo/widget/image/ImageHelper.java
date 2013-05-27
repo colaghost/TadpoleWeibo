@@ -90,6 +90,7 @@ public class ImageHelper {
             b = safeDecodeStream(context, uri, 60, 60);
             final BitmapDrawable bd = new BitmapDrawable(b);
             sMemCache.put(path, new SoftReference<BitmapDrawable>(bd));
+            
             return bd;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
