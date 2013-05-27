@@ -16,6 +16,7 @@ import org.tadpoleweibo.widget.SurfaceImageView;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPagerEX.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,7 +29,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class LauncherActivity extends Activity implements AdapterView.OnItemClickListener {
+public class LauncherActivity extends Activity implements AdapterView.OnItemClickListener,
+        OnPageChangeListener {
     static final String TAG = "LauncherActivity";
 
     static final int REQUEST_CODE_SUBSCRIPT = 1;
@@ -54,9 +56,13 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
 
     private ImageButton mImgBtnSet;
 
+    private TextView mTxtViewPageTip;
+
     private SurfaceImageView mImgViewBg;
 
     private Launcher mLauncher;
+
+    private AsyncRoundImageView mAsyncImgView;
 
     private ArrayList<User> mUserList = new ArrayList();
 
@@ -80,6 +86,8 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
         setContentView(R.layout.activity_launcher);
         this.mLauncher = ((Launcher)findViewById(R.id.launcher));
         this.mImgViewBg = ((SurfaceImageView)findViewById(R.id.surfaceimgview_bg));
+
+        mTxtViewPageTip = (TextView)findViewById(R.id.txtview_page_tip);
 
         this.mImgBtnAdd = ((ImageButton)findViewById(R.id.imgbtn_add));
         this.mImgBtnAdd.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +132,7 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
         mLauncher.setOnDataChangeListener(new OnDataChangeListener() {
             @Override
             public void onChange() {
+                updatePageTip();
 
                 ArrayList<Long> uidList = new ArrayList<Long>();
 
@@ -134,15 +143,48 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
 
                 // resave launcher items to change order
                 DaoFactory.getSubscriptionDao(mUserSelf.id).saveSubscript(uidList);
-
             }
         });
-        // fetchUserInfo
-        fetchUserFriends();
+
+        mLauncher.setOnPageChangeListener(this);
+
+        mAsyncImgView = (AsyncRoundImageView)findViewById(R.id.asyncimgview_my);
+        mAsyncImgView.setImageURL(mUserSelf.profile_image_url);
 
         // register subscription change
         mSubscriptReceiver = new SubscriptReceiver(this);
         mSubscriptReceiver.register();
+
+        // fetchUserInfo
+        fetchUserFriends();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        updatePageTip();
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    private void updatePageTip() {
+        if (null == mLauncher) {
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder("");
+        sb.append(mLauncher.getCurrentItem() + 1);
+        sb.append("/");
+        sb.append(mLauncher.getPageCount());
+
+        mTxtViewPageTip.setText(sb.toString());
     }
 
     @Override
@@ -160,7 +202,6 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
     }
 
     public void fillLauncherData(final ArrayList<User> userList) {
-        userList.add(0, mUserSelf);
         Log.d(TAG, "fillLauncherData " + userList.size());
         mUserList = userList;
         mLauncherAdapter.setList(mUserList);
@@ -168,6 +209,7 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
             @Override
             public void run() {
                 mLauncherAdapter.notifyDataSetChanged();
+                updatePageTip();
             }
         });
     }

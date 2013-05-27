@@ -1,21 +1,6 @@
 
 package com.xiaotingzhong.app;
 
-import java.text.SimpleDateFormat;
-
-import org.tadpole.R;
-import org.tadpoleweibo.app.LoadDialogAsyncTask;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.weibo.sdk.android.Oauth2AccessToken;
 import com.weibo.sdk.android.Weibo;
 import com.weibo.sdk.android.WeiboAuthListener;
@@ -27,6 +12,22 @@ import com.weibo.sdk.android.util.Utility;
 import com.xiaotingzhong.model.Account;
 import com.xiaotingzhong.model.Emotion;
 
+import org.tadpole.R;
+import org.tadpoleweibo.app.LoadDialogAsyncTask;
+import org.tadpoleweibo.common.ActivityUtil;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+
 /**
  * @author liyan (liyan9@staff.sina.com.cn)
  */
@@ -34,11 +35,11 @@ public class MainActivity extends Activity {
 
     private Weibo mWeibo;
 
-    private Button mAuthBtn;
+    private static final String CONSUMER_KEY = "4196388314";// 替换为开发者的appkey，例如"1646212860";
 
-    private Button mSsoBtn;
+    private static final String REDIRECT_URL = "http://www.sina.com";
 
-    private Button mCancelBtn;
+    private Button mAuthBtn, mSsoBtn, mCancelBtn;
 
     private TextView mText;
 
@@ -56,7 +57,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mWeibo = Weibo.getInstance(WeiboConfig.CONSUMER_KEY, WeiboConfig.REDIRECT_URL);
+        System.out.println("isFullscreen = " + new ActivityUtil(this).isFullscreen());
+
+        mWeibo = Weibo.getInstance(CONSUMER_KEY, REDIRECT_URL);
 
         mAuthBtn = (Button)findViewById(R.id.auth);
         mAuthBtn.setOnClickListener(new OnClickListener() {

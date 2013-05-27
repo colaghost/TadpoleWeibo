@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.tadpole.R;
+import org.tadpoleweibo.app.NavBarActivity;
 import org.tadpoleweibo.widget.PageList;
 import org.tadpoleweibo.widget.PageListView;
 import org.tadpoleweibo.widget.PageListViewAdapter;
@@ -30,7 +31,7 @@ import com.xiaotingzhong.model.User;
 import com.xiaotingzhong.model.cache.userprivate.FriendsCache;
 import com.xiaotingzhong.widget.SubscriptFriendListAdapter;
 
-public class SubscriptionActivity extends Activity {
+public class SubscriptionActivity extends NavBarActivity {
     static final String TAG = "SubscriptionActivity";
 
     static final String USER = "user";
@@ -80,19 +81,9 @@ public class SubscriptionActivity extends Activity {
 
         setContentView(R.layout.activity_subscription);
         final SubscriptionActivity me = this;
-
-        this.mImgBtnLeft = ((ImageButton)findViewById(R.id.imgbtn_left));
-        this.mImgBtnLeft.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View paramView) {
-                finish();
-            }
-        });
-        this.mImgBtnRight = ((ImageButton)findViewById(R.id.imgbtn_right));
-        this.mImgBtnRight.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View paramView) {
-                finish();
-            }
-        });
+        
+        getNavBar().setTitle("好友列表");
+        
         this.mEditTxtSearch = ((EditText)findViewById(R.id.edittext_search));
         this.mEditTxtSearch.addTextChangedListener(new TextWatcher() {
 

@@ -2,7 +2,7 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"
     android:layout_width="wrap_content"
-    android:layout_height="@dimen/tp_settings_contextmenu_item_height"
+    android:layout_height="@dimen/tp_settings_menu_item_height"
     android:contentDescription="@string/app_name"
     android:gravity="center_vertical"
     android:paddingBottom="@dimen/padding_medium"

@@ -19,9 +19,14 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.weibo.sdk.android.demo.MainActivity"
+            android:name="com.xiaotingzhong.app.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.Tadpole" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.xiaotingzhong.app.LauncherActivity"
@@ -46,11 +51,6 @@
             android:name="com.xiaotingzhong.app.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/Theme.Tadpole" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

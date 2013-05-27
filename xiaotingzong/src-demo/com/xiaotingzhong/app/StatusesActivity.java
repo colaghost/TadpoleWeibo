@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.tadpole.R;
+import org.tadpoleweibo.app.NavBarActivity;
+import org.tadpoleweibo.app.NavBarActivity.NavBar;
 import org.tadpoleweibo.widget.PageList;
 import org.tadpoleweibo.widget.PageListView;
 
@@ -37,7 +39,7 @@ import com.xiaotingzhong.widget.WeiboStatusesListAdapter;
  * 
  * @author chenzh
  */
-public class StatusesActivity extends BaseActivity implements OnRefreshListener2<ListView> {
+public class StatusesActivity extends NavBarActivity implements OnRefreshListener2<ListView> {
     static final String TAG = "StatuesActivity";
 
     static final String EXTRA_USER = "user";
@@ -83,19 +85,20 @@ public class StatusesActivity extends BaseActivity implements OnRefreshListener2
         mUserState = (UserState)extra.getSerializable(EXTRA_USER_STATE);
 
         setContentView(R.layout.activity_statuses);
-        final StatusesActivity me = this;
 
-        this.mImgBtnLeft = ((ImageButton)findViewById(R.id.imgbtn_left));
-        this.mImgBtnLeft.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View paramView) {
+        getNavBar().setTitle("微博列表");
+        getNavBar().setListener(new NavBarListener() {
+            @Override
+            public void onDefaultLeftBtnClick(NavBar navBar, View v) {
                 finish();
             }
-        });
 
-        this.mImgBtnRight = ((ImageButton)findViewById(R.id.imgbtn_right));
-        this.mImgBtnRight.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View paramView) {
+            @Override
+            public void onDefaultRightBtnClick(NavBar navBar, View v) {
                 mHasSubscriptChange = true;
+
+                Log.d(TAG, " getCurUser = " + XTZApplication.getCurUser());
+
                 if (mUserState.hasSubscript) {
                     XTZApplication.getCurUser().unSubscript(mUserSelf);
                 } else {
@@ -104,6 +107,7 @@ public class StatusesActivity extends BaseActivity implements OnRefreshListener2
                 mUserState.hasSubscript = !mUserState.hasSubscript;
                 updateImgBtnRightImage();
             }
+
         });
         updateImgBtnRightImage();
 
@@ -130,9 +134,10 @@ public class StatusesActivity extends BaseActivity implements OnRefreshListener2
     public void updateImgBtnRightImage() {
         // 根据是否好友显示右边按钮的内容
         if (mUserState.hasSubscript) {
-            this.mImgBtnRight.setImageResource(R.drawable.selector_rootblock_add_toolbar_added);
+            getNavBar().getBtnRight().setImageResource(
+                    R.drawable.selector_rootblock_add_toolbar_added);
         } else {
-            this.mImgBtnRight.setImageResource(R.drawable.selector_icon_add);
+            getNavBar().getBtnRight().setImageResource(R.drawable.selector_icon_add);
         }
     }
 

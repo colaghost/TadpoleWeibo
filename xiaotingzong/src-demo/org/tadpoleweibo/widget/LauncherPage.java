@@ -576,9 +576,9 @@ public class LauncherPage extends ViewGroup {
 
         Log.d(TAG,
                 "onDelete fromPos = " + fromPos + ", mLauncher.getPageCount() = "
-                        + mLauncher.getPageCount() + ", mLauncher.mListAdapter.getCount() =  "
+                        + mLauncher.getPageCountFromPageAdapter() + ", mLauncher.mListAdapter.getCount() =  "
                         + mLauncher.mListAdapter.getCount());
-        if ((mLauncher.getPageCount() <= (mPageIndex + 1))
+        if ((mLauncher.getPageCountFromPageAdapter() <= (mPageIndex + 1))
                 || (fromPos > (mLauncher.mListAdapter.getCount() - 1))) {
             isNeedDragFromNextPage = false;
         }

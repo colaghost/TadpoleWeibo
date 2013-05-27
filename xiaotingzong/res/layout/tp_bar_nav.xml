@@ -4,13 +4,14 @@
     android:orientation="horizontal" >
 
     <ImageButton
-        android:id="@+id/tp_imgbtn_left"
+        android:id="@+id/tp_nav_btn_left"
         style="@style/Tadpole.ImageButton.TopBar"
         android:layout_gravity="center_vertical"
         android:src="@drawable/tostart" >
     </ImageButton>
 
     <TextView
+        android:id="@+id/tp_nav_title"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="center"
@@ -22,7 +23,7 @@
     </TextView>
 
     <ImageButton
-        android:id="@+id/tp_imgbtn_right"
+        android:id="@+id/tp_nav_btn_right"
         style="@style/Tadpole.ImageButton.TopBar"
         android:layout_gravity="center_vertical"
         android:src="@drawable/selector_rootblock_add_toolbar_added" >

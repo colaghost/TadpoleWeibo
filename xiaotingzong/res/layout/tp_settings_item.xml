@@ -4,9 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/selector_setting_item_bg_top"
     android:clickable="true"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:minHeight="@dimen/tp_settingsitem_height"
+    android:minHeight="@dimen/tp_settings_item_height"
     android:orientation="horizontal"
     android:padding="@dimen/padding_medium" >
 

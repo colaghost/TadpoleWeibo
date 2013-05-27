@@ -31,8 +31,8 @@
     </style>
 
     <style name="Tadpole.ImageButton.TopBar" parent="Tadpole.ImageButton">
-        <item name="android:layout_width">36dp</item>
-        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_width">@dimen/top_bar_size</item>
+        <item name="android:layout_height">@dimen/top_bar_size</item>
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
@@ -69,21 +69,19 @@
     </style>
 
     <style name="DialogAnimation" parent="@android:style/Animation.Dialog"></style>
-    
-    
+
     <style name="Tadpole.Dialog.ContextMenu" parent="@android:style/Theme.Dialog">
-		<item name="android:windowFrame">@null</item>
-		<item name="android:windowNoTitle">true</item>
-		<item name="android:windowIsTranslucent">true</item>
-		<item name="android:windowBackground">@android:color/transparent</item>
-		<item name="android:backgroundDimEnabled">false</item>
-		<item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
-    
+
     <style name="Tadpole.Dialog.ContextMenu.Anim" parent="android:Animation">
-         <item name="android:windowEnterAnimation">@anim/fade_in</item>
-         <item name="android:windowExitAnimation">@anim/fade_out</item>
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
     </style>
-    
 
 </resources>

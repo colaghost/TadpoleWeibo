@@ -22,5 +22,7 @@
     <color name="tp_divider">#ededee</color>
     <color name="tp_border">#ededee</color>
     <color name="tp_settings_color_pressed">#ededee</color>
-
+ 	<color name="tp_settings_menu_text_color">#666666</color>
+ 	<color name="tp_settings_menu_item_bg_selected_color">#d3e9fc</color>
+ 	
 </resources>

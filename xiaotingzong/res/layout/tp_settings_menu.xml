@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/tp_settings_contextmenu_bg"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/tp_settings_menu_padding_bottom"
+    android:paddingLeft="@dimen/tp_settings_menu_padding_leftright"
+    android:paddingRight="@dimen/tp_settings_menu_padding_leftright"
+    android:paddingTop="@dimen/tp_settings_menu_padding_top" >
+
+    <include layout="@layout/tp_settings_menu_item" />
+    <include layout="@layout/tp_settings_menu_item" />
+
+</LinearLayout>

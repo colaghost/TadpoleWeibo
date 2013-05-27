@@ -4,17 +4,25 @@ package org.tadpoleweibo.widget.settings;
 import java.util.ArrayList;
 
 import org.tadpole.R;
+import org.tadpoleweibo.common.StringUtil;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnTouchListener;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 class SettingsGroupView extends LinearLayout {
 
     private LayoutInflater mInflater;
+
+    private ViewGroup mHeader;
+
+    private LinearLayout mContent;
 
     public SettingsGroupView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -29,13 +37,29 @@ class SettingsGroupView extends LinearLayout {
     public void init() {
         setOrientation(LinearLayout.VERTICAL);
         mInflater = LayoutInflater.from(getContext());
+        mHeader = (ViewGroup)mInflater.inflate(R.layout.tp_settings_group_header, this);
+        mContent = (LinearLayout)mInflater.inflate(R.layout.tp_settings_group_content, this);
     }
 
     public void setGroup(SettingsGroup group) {
         if (group == null) {
             throw new IllegalArgumentException("SettingsGroup can't not be null");
         }
+        addHeader(group);
         addItems(group.getItems());
+    }
+
+    private void addHeader(SettingsGroup group) {
+        String title = group.getTitle();
+        if (StringUtil.isBlank(title)) {
+            return;
+        }
+
+        View headerView = mInflater.inflate(R.layout.tp_settings_group_header, this, false);
+        TextView textViewTitle = (TextView)headerView.findViewById(R.id.txtview_title);
+        textViewTitle.setText(title);
+        mHeader.removeAllViews();
+        mHeader.addView(headerView);
     }
 
     private void addSingleItem(SettingsItem item) {

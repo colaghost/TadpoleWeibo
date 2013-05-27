@@ -2,6 +2,8 @@
 package com.xiaotingzhong.app;
 
 import org.tadpole.R;
+import org.tadpoleweibo.app.NavBarActivity;
+import org.tadpoleweibo.app.NavBarActivity.NavBarListener;
 import org.tadpoleweibo.widget.settings.SettingsGroup;
 import org.tadpoleweibo.widget.settings.SettingsItem;
 import org.tadpoleweibo.widget.settings.SettingsItem.SettingsItemListener;
@@ -17,8 +19,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends NavBarActivity {
 
     public static final String TAG = "SettingsActivity";
 
@@ -42,20 +45,22 @@ public class SettingsActivity extends Activity {
         setContentView(R.layout.activity_settings);
         mSettingsView = (SettingsListView)this.findViewById(R.id.settingsview);
 
-        mSettingsView.addGroup(createAppSettingsGroup());
+        mSettingsView.addGroup(createSettingsGroupApp());
 
         mSettingsView.addGroup(createSettingsGroupAboutMeInfo());
 
-        SettingsGroup group1 = new SettingsGroup();
-        group1.addItem(new SettingsItemNav("关于作者", null));
-        mSettingsView.addGroup(group1);
+        mSettingsView.addGroup(createSettingsGroupOther());
+
+        getNavBar().setTitle("设置");
+        getNavBar().getBtnRight().setVisibility(View.INVISIBLE);
     }
 
     /**
      * 应用设置
      */
-    private SettingsGroup createAppSettingsGroup() {
+    private SettingsGroup createSettingsGroupApp() {
         SettingsGroup group = new SettingsGroup();
+        group.setTitle("应用设置");
 
         // 浏览器选择
         SettingsItemSwitcher itemBrowser = new SettingsItemSwitcher("使用内置浏览器",
@@ -74,7 +79,8 @@ public class SettingsActivity extends Activity {
                 "只看图片", "只看文字"
         };
 
-        SettingsItemOptions itemMode = new SettingsItemOptions("阅读模式", "亲！请根据流量切换模式哦", modeStrArr);
+        SettingsItemOptions itemMode = new SettingsItemOptions("阅读模式", "亲！请根据流量切换模式哦", modeStrArr,
+                0);
         itemMode.setListener(new SettingsItemListener<Integer>() {
             @Override
             public void onSettingsAction(SettingsItem item, Integer params) {
@@ -87,39 +93,51 @@ public class SettingsActivity extends Activity {
     }
 
     /**
-     * 关于我们
+     * 作者简介
      */
     private SettingsGroup createSettingsGroupAboutMeInfo() {
         SettingsGroup group = new SettingsGroup();
+        group.setTitle("作者简介");
 
         // Browser
-        SettingsItemNormal item = new SettingsItemNormal("作者英文名字", "Zenip");
+        SettingsItemNormal item = new SettingsItemNormal("英文名字", "Zenip");
         group.addItem(item);
 
         // Team
-        item = new SettingsItemNormal("作者团队", "挨踢公寓");
+        item = new SettingsItemNormal("团队", "挨踢公寓");
         group.addItem(item);
 
         // Author QQ
-        item = new SettingsItemNormal("作者QQ", "365916703");
+        item = new SettingsItemNormal("QQ", "365916703");
         group.addItem(item);
 
         // Author Email
-        item = new SettingsItemNormal("作者Email", "lxyczh@gmail.com");
+        item = new SettingsItemNormal("Email", "lxyczh@gmail.com");
         group.addItem(item);
 
         return group;
     }
 
+    /**
+     * 应用推荐
+     * 
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
+    private SettingsGroup createSettingsGroupOther() {
+        SettingsGroup g1 = new SettingsGroup();
+        g1.setTitle("应用推荐");
+        g1.addItem(new SettingsItemNav("为小听众打分", null));
+        return g1;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add("hello ");
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        mSettingsView.notiyDataSetChanged();
         return super.onOptionsItemSelected(item);
     }
+
 }

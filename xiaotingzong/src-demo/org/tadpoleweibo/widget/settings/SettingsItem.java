@@ -5,6 +5,8 @@ import org.tadpole.R;
 import org.tadpoleweibo.common.StringUtil;
 import org.tadpoleweibo.common.TLog;
 
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +52,15 @@ public abstract class SettingsItem<T> {
         System.out.println("SettingsItem Must Be Override . Object = " + this);
     }
 
+    protected void setBackgroundSelected(final boolean b) {
+//        mBackground.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                mBackground.setPressed(b);
+//            }
+//        }, 100);
+    }
+
     protected void notifyListener(T params) {
         mListener.onSettingsAction(this, params);
         TLog.debug(TAG, "notifyListener params = " + params);
@@ -57,7 +68,8 @@ public abstract class SettingsItem<T> {
 
     View getItemView(LayoutInflater inflater, ViewGroup parent) {
         mBackground = (ViewGroup)inflater.inflate(R.layout.tp_settings_item, parent, false);
-        return getContentView(inflater, mBackground);
+        getContentView(inflater, mBackground);
+        return mBackground;
     }
 
     View getContentView(LayoutInflater inflater, ViewGroup parent) {

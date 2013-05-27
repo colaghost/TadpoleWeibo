@@ -129,7 +129,11 @@ public class Launcher extends ViewPagerEX {
         populateDataFromAdapter();
     }
 
-    public int getPageCountFromAdapter() {
+    public int getPageCount() {
+        return getPageCountFromPageAdapter();
+    }
+
+    private int getPageCountFromAdapter() {
         if (mListAdapter == null) {
             return 0;
         }
@@ -346,7 +350,8 @@ public class Launcher extends ViewPagerEX {
         Log.d(TAG, "rightDistance = " + (getWidth() - mDragWinLP.x - mDragWinLP.width));
 
         // 检测是否往下，还是往前
-        if ((getWidth() - mDragWinLP.x - mDragWinLP.width) <= 0 && currentItem < getPageCount()) {
+        if ((getWidth() - mDragWinLP.x - mDragWinLP.width) <= 0
+                && currentItem < getPageCountFromPageAdapter()) {
             mEdgeStopCount++;
             if (mEdgeStopCount > 30) {
                 mEdgeStopCount = 0;
@@ -403,7 +408,7 @@ public class Launcher extends ViewPagerEX {
         int pageItemPos = launcherPageItemPos % mPageItemCount;
 
         final int totalPageCountAfterReduce = (mListAdapter.getCount() - 2) / mPageItemCount + 1;
-        final int pageCount = getPageCount();
+        final int pageCount = getPageCountFromPageAdapter();
         Log.d(TAG, "totalPageCountAfterReduce = " + totalPageCountAfterReduce);
 
         mIsHandlingDelete = true;
@@ -436,7 +441,7 @@ public class Launcher extends ViewPagerEX {
         });
     }
 
-    public int getPageCount() {
+    /* package */int getPageCountFromPageAdapter() {
         if (mPageAdapter != null) {
             return mPageAdapter.getCount();
         }
