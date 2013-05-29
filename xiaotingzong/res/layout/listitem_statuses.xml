@@ -19,14 +19,30 @@
         android:orientation="vertical"
         android:paddingLeft="@dimen/padding_small" >
 
-        <TextView
-            android:id="@+id/txtview_screen_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:text="代震军"
-            android:textAppearance="@style/TextAppearance.Medium"
-            android:textColor="@color/simple_grey" />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/txtview_screen_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:padding="3dp"
+                android:text="代震军"
+                android:textAppearance="@style/TextAppearance.Medium"
+                android:textColor="@color/simple_grey" />
+
+            <TextView
+                android:id="@+id/txtview_create_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:padding="3dp"
+                android:text="17:00"
+                android:textAppearance="@style/TextAppearance.Small"
+                android:textColor="@color/simple_grey" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -81,6 +97,56 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_launcher" />
         </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/txtview_reposts_count_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+                    android:text="转发："
+                    android:textAppearance="@style/TextAppearance.Small"
+                    android:textColor="@color/simple_grey" />
+
+                <TextView
+                    android:id="@+id/txtview_reposts_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:padding="3dp"
+                    android:text="1"
+                    android:textAppearance="@style/TextAppearance.Small"
+                    android:textColor="@color/simple_grey" />
+
+                <TextView
+                    android:id="@+id/txtview_comments_count_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+                    android:text="评论："
+                    android:textAppearance="@style/TextAppearance.Small"
+                    android:textColor="@color/simple_grey" />
+
+                <TextView
+                    android:id="@+id/txtview_comments_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:padding="3dp"
+                    android:text="1"
+                    android:textAppearance="@style/TextAppearance.Small"
+                    android:textColor="@color/simple_grey" />
+            </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
 </LinearLayout>

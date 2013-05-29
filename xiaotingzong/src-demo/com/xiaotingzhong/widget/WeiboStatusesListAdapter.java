@@ -57,6 +57,11 @@ public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatus> {
                     .findViewById(R.id.asyncimgview_retweeted_pic);
             holder.asycnImgViewRetweetedPic.setCornerRadius(0);
 
+            holder.txtViewCreateAt = (TextView) view.findViewById(R.id.txtview_create_at);
+            
+            holder.txtViewRepostsCount = (TextView) view.findViewById(R.id.txtview_reposts_count);
+            holder.txtViewCommentsCount = (TextView) view.findViewById(R.id.txtview_comments_count);
+            
             view.setTag(holder);
         } else {
             holder = (ViewHolder)view.getTag();
@@ -65,6 +70,9 @@ public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatus> {
         holder.txtViewText.setText(weiboStatus.text);
         holder.asycnImgViewProfile.setImageURL(mCurUser.profile_image_url);
         holder.txtViewText.setText(weiboStatus.getTextSpannaleString());
+        holder.txtViewCreateAt.setText(weiboStatus.getCreateAt());
+        holder.txtViewRepostsCount.setText("" + weiboStatus.reposts_count);
+        holder.txtViewCommentsCount.setText("" + weiboStatus.comments_count);
 
         if (!StringUtil.isEmpty(weiboStatus.thumbnail_pic)) {
             holder.asycnImgViewPic.setVisibility(View.VISIBLE);
@@ -109,6 +117,13 @@ public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatus> {
      * =========================
      */
     static class ViewHolder {
+        
+        public TextView txtViewRepostsCount;
+        
+        public TextView txtViewCommentsCount;
+        
+        public TextView txtViewCreateAt;
+
         TextView txtViewScreenName;
 
         TextView txtViewText;
