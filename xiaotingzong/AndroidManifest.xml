@@ -52,6 +52,11 @@
             android:label="@string/title_activity_settings"
             android:theme="@style/Theme.Tadpole" >
         </activity>
+        <activity
+            android:name="com.xiaotingzhong.app.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.Tadpole" >
+        </activity>
     </application>
 
 </manifest>

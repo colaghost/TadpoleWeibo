@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.tadpole.R;
+import org.tadpoleweibo.view.TadpoleBrowser;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -73,6 +74,8 @@ public class WeiboDialog extends Dialog {
 
     private RelativeLayout mContent;
 
+    private TadpoleBrowser mTadpoleBrowser;
+
     public WeiboDialog(Context context, String url, WeiboAuthListener listener) {
         super(context, theme);
         mUrl = url;
@@ -97,11 +100,24 @@ public class WeiboDialog extends Dialog {
         });
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFeatureDrawableAlpha(Window.FEATURE_OPTIONS_PANEL, 0);
-        mContent = new RelativeLayout(getContext());
-        setUpWebView();
 
-        addContentView(mContent, new LayoutParams(LayoutParams.FILL_PARENT,
+        mTadpoleBrowser = createTadpoleBrowser();
+        mTadpoleBrowser.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
                 LayoutParams.FILL_PARENT));
+        setContentView(mTadpoleBrowser);
+        
+        mTadpoleBrowser.loadUrl(mUrl);
+    }
+    
+    private TadpoleBrowser createTadpoleBrowser(){
+        TadpoleBrowser tadpoleBrowser = new TadpoleBrowser(getContext());
+        WebView webView = tadpoleBrowser.getWebView();
+        webView.setVerticalScrollBarEnabled(false);
+        webView.setHorizontalScrollBarEnabled(false);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WeiboDialog.WeiboWebViewClient());
+        
+        return tadpoleBrowser;
     }
 
     protected void onBack() {
@@ -119,13 +135,7 @@ public class WeiboDialog extends Dialog {
     private void setUpWebView() {
         webViewContainer = new RelativeLayout(getContext());
         mWebView = new WebView(getContext());
-        mWebView.setVerticalScrollBarEnabled(false);
-        mWebView.setHorizontalScrollBarEnabled(false);
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.setWebViewClient(new WeiboDialog.WeiboWebViewClient());
-        mWebView.loadUrl(mUrl);
-        mWebView.setLayoutParams(FILL);
-        mWebView.setVisibility(View.INVISIBLE);
+      
 
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT,
                 LayoutParams.FILL_PARENT);

@@ -35,8 +35,6 @@ public class MainActivity extends Activity {
 
     private Weibo mWeibo;
 
-    private static final String CONSUMER_KEY = "4196388314";// 替换为开发者的appkey，例如"1646212860";
-
     private static final String REDIRECT_URL = "http://www.sina.com";
 
     private Button mAuthBtn, mSsoBtn, mCancelBtn;
@@ -59,7 +57,7 @@ public class MainActivity extends Activity {
 
         System.out.println("isFullscreen = " + new ActivityUtil(this).isFullscreen());
 
-        mWeibo = Weibo.getInstance(CONSUMER_KEY, REDIRECT_URL);
+        mWeibo = Weibo.getInstance(WeiboConfig.CONSUMER_KEY, REDIRECT_URL);
 
         mAuthBtn = (Button)findViewById(R.id.auth);
         mAuthBtn.setOnClickListener(new OnClickListener() {

@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <WebView
+    <org.tadpoleweibo.view.TadpoleWebView
         android:id="@+id/webview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -20,31 +20,39 @@
         android:orientation="horizontal" >
 
         <ImageView
+            android:id="@+id/back"
             android:layout_width="@dimen/bottom_bar_icon_size"
             android:layout_height="@dimen/bottom_bar_icon_size"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
+            android:scaleType="center"
             android:src="@drawable/webview_back" />
 
         <ImageView
+            android:id="@+id/previous"
             android:layout_width="@dimen/bottom_bar_icon_size"
             android:layout_height="@dimen/bottom_bar_icon_size"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
+            android:scaleType="center"
             android:src="@drawable/webview_previous" />
 
         <ImageView
+            android:id="@+id/forward"
             android:layout_width="@dimen/bottom_bar_icon_size"
             android:layout_height="@dimen/bottom_bar_icon_size"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
+            android:scaleType="center"
             android:src="@drawable/webview_forward" />
 
         <ImageView
+            android:id="@+id/refresh"
             android:layout_width="@dimen/bottom_bar_icon_size"
             android:layout_height="@dimen/bottom_bar_icon_size"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
+            android:scaleType="center"
             android:src="@drawable/webview_refresh" />
     </LinearLayout>
 
