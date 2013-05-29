@@ -21,6 +21,7 @@
         <activity
             android:name="com.xiaotingzhong.app.MainActivity"
             android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Tadpole" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,26 +31,36 @@
         </activity>
         <activity
             android:name="com.xiaotingzhong.app.LauncherActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Tadpole" >
         </activity>
         <activity
             android:name="com.xiaotingzhong.app.SubscriptionActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Tadpole.Dialog"
             android:windowSoftInputMode="stateHidden|adjustPan" >
         </activity>
         <activity
             android:name="com.xiaotingzhong.app.StatusesActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Tadpole" >
         </activity>
-        <activity android:name="org.tadpole.APITypeListActivity" >
+        <activity
+            android:name="org.tadpole.APITypeListActivity"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.weibo.sdk.android.demo.ShareActivity" >
+        <activity
+            android:name="com.weibo.sdk.android.demo.ShareActivity"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.weibo.sdk.android.demo.BlogFunActivity" >
+        <activity
+            android:name="com.weibo.sdk.android.demo.BlogFunActivity"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.xiaotingzhong.app.SettingsActivity"
             android:label="@string/title_activity_settings"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Tadpole" >
         </activity>
         <activity

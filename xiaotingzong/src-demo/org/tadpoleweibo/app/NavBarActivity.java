@@ -3,13 +3,14 @@ package org.tadpoleweibo.app;
 
 import org.tadpole.R;
 
-import android.R.interpolator;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class NavBarActivity extends Activity {
@@ -64,6 +65,8 @@ public class NavBarActivity extends Activity {
     private static class NavBarImpl implements NavBar, View.OnClickListener {
 
         private static final String TAG = "NavBarImpl";
+        
+        private static final LayoutParams LP_F_F = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 
         private TextView mTextViewTitle;
 
@@ -93,7 +96,19 @@ public class NavBarActivity extends Activity {
                 return;
             }
 
-            vg.removeView(contentView);
+            if (false == (vg instanceof LinearLayout)) {
+                LinearLayout layer = new LinearLayout(mActivity);
+                layer.setOrientation(LinearLayout.VERTICAL);
+                
+                vg.removeView(contentView);
+                vg.addView(layer, LP_F_F);
+                
+                vg = layer;
+            }else{
+                ((LinearLayout)vg).setOrientation(LinearLayout.VERTICAL);
+                vg.removeView(contentView);
+            }
+
             View view = mActivity.getLayoutInflater().inflate(R.layout.tp_bar_nav, vg, false);
             vg.addView(view);
             vg.addView(contentView);

@@ -3,6 +3,9 @@ package com.xiaotingzhong.app;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.tadpole.R;
@@ -15,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -220,6 +224,18 @@ public class StatusesActivity extends NavBarActivity implements OnRefreshListene
                 });
     }
 
+    private Comparator<WeiboStatus> mComparator = new Comparator<WeiboStatus>() {
+
+        @Override
+        public int compare(WeiboStatus lhs, WeiboStatus rhs) {
+            if (lhs.getCreateAtLong() >= rhs.getCreateAtLong()) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+    };
+
     public void onWeiboStatusesLoad(final ArrayList<WeiboStatus> list, final boolean isAdd) {
         mHandler.post(new Runnable() {
             @Override
@@ -230,6 +246,7 @@ public class StatusesActivity extends NavBarActivity implements OnRefreshListene
                 } else {
                     adapterList = list;
                 }
+                Collections.sort(adapterList, mComparator);
                 mPageAdapter.setList(adapterList);
                 mPageAdapter.notifyDataSetChanged();
                 mListStatuses.proxyOnRefreshComplete();
