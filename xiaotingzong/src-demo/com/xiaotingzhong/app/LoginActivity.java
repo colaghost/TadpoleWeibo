@@ -1,12 +1,14 @@
 
 package com.xiaotingzhong.app;
 
+import com.weibo.sdk.android.Weibo;
 import com.xiaotingzhong.broadcast.SubscriptReceiver;
 import com.xiaotingzhong.model.DaoFactory;
 import com.xiaotingzhong.model.User;
 import com.xiaotingzhong.model.cache.userprivate.SubscriptionCache;
 
 import org.tadpole.R;
+import org.tadpoleweibo.app.NavBarActivity;
 import org.tadpoleweibo.widget.AsyncRoundImageView;
 import org.tadpoleweibo.widget.Launcher;
 import org.tadpoleweibo.widget.Launcher.OnDataChangeListener;
@@ -23,13 +25,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends NavBarActivity {
     static final String TAG = "LauncherActivity";
 
     static final int REQUEST_CODE_SUBSCRIPT = 1;
@@ -37,6 +40,8 @@ public class LoginActivity extends Activity {
     static final String UID = "uid";
 
     static final String USER = "user";
+    
+    private WebView mWebView;
 
     /**
      * Use Explicit Intent start Activity
@@ -54,8 +59,10 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
         setContentView(R.layout.activity_login);
+        
+        getNavBar().setTitle("登录");
+        getNavBar().getBtnRight().setVisibility(View.INVISIBLE);
     }
 
 }

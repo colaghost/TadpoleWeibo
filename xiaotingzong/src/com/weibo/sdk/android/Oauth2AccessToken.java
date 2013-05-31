@@ -17,6 +17,13 @@ public class Oauth2AccessToken {
     private String mRefreshToken = "";
 
     private long mExpiresTime = 0;
+    
+
+    @Override
+    public String toString() {
+        return "Oauth2AccessToken [mAccessToken=" + mAccessToken + ", mRefreshToken="
+                + mRefreshToken + ", mExpiresTime=" + mExpiresTime + "]";
+    }
 
     // private String mOauth_verifier = "";
     // protected String[] responseStr = null;

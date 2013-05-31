@@ -112,6 +112,7 @@ public class NavBarActivity extends Activity {
             View view = mActivity.getLayoutInflater().inflate(R.layout.tp_bar_nav, vg, false);
             vg.addView(view);
             vg.addView(contentView);
+            contentView.setVisibility(View.INVISIBLE);
 
             mTextViewTitle = (TextView)view.findViewById(R.id.tp_nav_title);
             mBtnLeft = (ImageButton)view.findViewById(R.id.tp_nav_btn_left);

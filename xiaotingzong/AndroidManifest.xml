@@ -23,11 +23,6 @@
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tadpole" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.xiaotingzhong.app.LauncherActivity"
@@ -67,6 +62,11 @@
             android:name="com.xiaotingzhong.app.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.Tadpole" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

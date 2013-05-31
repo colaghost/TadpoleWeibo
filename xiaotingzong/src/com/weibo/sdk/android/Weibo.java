@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import com.weibo.sdk.android.util.Utility;
@@ -75,7 +76,7 @@ public class Weibo {
             @Override
             public void onComplete(Bundle values) {
                 // ensure any cookies set by the dialog are saved
-                CookieSyncManager.getInstance().sync();
+//                CookieSyncManager.getInstance().sync();
                 if (null == accessToken) {
                     accessToken = new Oauth2AccessToken();
                 }
@@ -120,7 +121,14 @@ public class Weibo {
         parameters.add("response_type", "token");
         parameters.add("redirect_uri", redirecturl);
         parameters.add("display", "mobile");
-
+        
+        
+        CookieSyncManager.createInstance(context);
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.removeAllCookie();
+        
+        System.out.println("accessToken = " +  accessToken);
+        
         if (accessToken != null && accessToken.isSessionValid()) {
             parameters.add(KEY_TOKEN, accessToken.getToken());
         }
