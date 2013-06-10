@@ -7,6 +7,9 @@ import com.xiaotingzhong.app.XTZApplication;
 import com.xiaotingzhong.model.cache.TokenAccountCache;
 
 public class Account {
+    
+    private static final String TAG = "Account";
+    
 	public int uid;
 
 	public static Account fromGetUid(String response) throws Exception {
@@ -25,11 +28,12 @@ public class Account {
 		TokenAccountCache tokenAccount = new TokenAccountCache(
 				XTZApplication.getWeiboAccessToken());
 		if (tokenAccount.exist()) {
+		    XTZApplication.debug(TAG, "getUserPreferCache useCache = " + true);
 			return tokenAccount.getUser();
 		}
-
 		// 请求服务器
 		else {
+		    XTZApplication.debug(TAG, "getUserPreferCache useCache = " + false);
 			AccountAPI acountAPI = XTZApplication.getAccountAPI();
 			Account account = fromGetUid(acountAPI.getUid());
 			String response = User.getResponseFromShowJson(account.uid);

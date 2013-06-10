@@ -2,7 +2,7 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <translate
-        android:duration="400"
+        android:duration="@integer/tp_config_animationDuration"
         android:fromYDelta="100%" >
     </translate>
 

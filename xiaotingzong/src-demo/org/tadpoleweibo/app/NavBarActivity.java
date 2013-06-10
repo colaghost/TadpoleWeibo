@@ -4,6 +4,7 @@ package org.tadpoleweibo.app;
 import org.tadpole.R;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,7 +16,12 @@ import android.widget.TextView;
 
 public class NavBarActivity extends Activity {
 
-    private NavBar mNavBar;
+    private static final ViewGroup.LayoutParams LP_F_F = new LayoutParams(LayoutParams.FILL_PARENT,
+            LayoutParams.FILL_PARENT);
+
+    private NavBarImpl mNavBar;
+
+    private LinearLayout mLinearLayout;;
 
     public static interface NavBar {
         public NavBar setTitle(String title);
@@ -25,6 +31,7 @@ public class NavBarActivity extends Activity {
         public NavButton getBtnLeft();
 
         public NavButton getBtnRight();
+
     }
 
     public static interface NavBarListener {
@@ -53,9 +60,44 @@ public class NavBarActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public void setContentView(int layoutResID) {
+        View view = getLayoutInflater().inflate(layoutResID, null);
+        setContentView(view, null);
+    }
+
+    @Override
+    public void setContentView(View view, LayoutParams params) {
+        if (null == mLinearLayout) {
+            mLinearLayout = new LinearLayout(this);
+            mLinearLayout.setOrientation(LinearLayout.VERTICAL);
+            mLinearLayout.setBackgroundColor(Color.RED);
+            mLinearLayout.setLayoutParams(LP_F_F);
+        }
+   
+        if (null != mLinearLayout.getParent()) {
+            ((ViewGroup)(mLinearLayout.getParent())).removeView(mLinearLayout);
+        }
+
+        super.setContentView(mLinearLayout);
+        getNavBarImpl().createAndAttacthTo(mLinearLayout);
+        mLinearLayout.addView(view, LP_F_F);
+
+    }
+
+    @Override
+    public void setContentView(View view) {
+        setContentView(view, null);
     }
 
     public NavBar getNavBar() {
+        return getNavBarImpl();
+    }
+
+    private NavBarImpl getNavBarImpl() {
         if (mNavBar == null) {
             mNavBar = new NavBarImpl(this);
         }
@@ -65,8 +107,9 @@ public class NavBarActivity extends Activity {
     private static class NavBarImpl implements NavBar, View.OnClickListener {
 
         private static final String TAG = "NavBarImpl";
-        
-        private static final LayoutParams LP_F_F = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+
+        private static final LayoutParams LP_F_F = new LayoutParams(LayoutParams.FILL_PARENT,
+                LayoutParams.FILL_PARENT);
 
         private TextView mTextViewTitle;
 
@@ -80,39 +123,11 @@ public class NavBarActivity extends Activity {
 
         public NavBarImpl(Activity activity) {
             mActivity = activity;
-            createAndAttacthTo();
         }
 
-        public void createAndAttacthTo() {
-            View contentView = mActivity.findViewById(android.R.id.content);
-            if (null == contentView) {
-                Log.d(TAG, "findViewById(android.R.id.content) return null");
-                return;
-            }
-
-            ViewGroup vg = (ViewGroup)contentView.getParent();
-            if (null == vg) {
-                Log.d(TAG, "findViewById(android.R.id.content).getParent() return null");
-                return;
-            }
-
-            if (false == (vg instanceof LinearLayout)) {
-                LinearLayout layer = new LinearLayout(mActivity);
-                layer.setOrientation(LinearLayout.VERTICAL);
-                
-                vg.removeView(contentView);
-                vg.addView(layer, LP_F_F);
-                
-                vg = layer;
-            }else{
-                ((LinearLayout)vg).setOrientation(LinearLayout.VERTICAL);
-                vg.removeView(contentView);
-            }
-
-            View view = mActivity.getLayoutInflater().inflate(R.layout.tp_bar_nav, vg, false);
-            vg.addView(view);
-            vg.addView(contentView);
-            contentView.setVisibility(View.INVISIBLE);
+        public void createAndAttacthTo(LinearLayout layout) {
+            View view = mActivity.getLayoutInflater().inflate(R.layout.tp_bar_nav, layout, false);
+            layout.addView(view);
 
             mTextViewTitle = (TextView)view.findViewById(R.id.tp_nav_title);
             mBtnLeft = (ImageButton)view.findViewById(R.id.tp_nav_btn_left);

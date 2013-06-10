@@ -1,34 +1,43 @@
 
 package org.tadpoleweibo.widget;
 
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.Animator.AnimatorListener;
+import com.nineoldandroids.animation.ObjectAnimator;
+
 import org.tadpole.R;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callback {
-    static final String TAG = "MarqueeTextSurfaceView";
+public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callback,
+        AnimatorListener, ThreadListener {
+
+    private boolean mCanRun = true;
+
+    private static final String TAG = "SurfaceImageView";
+
+    private static final boolean DEBUG = false;
+
+    private static final int ANIMATIION_DURATION = 15000;
 
     private int mDrawableWidth = 0;
-
-    private boolean mForward = true;
 
     private boolean mIsSurfaceValid = false;
 
     private Drawable mDrawable;
 
     private SurfaceHolder mHolder;
-
-    private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private Matrix mMatrix = new Matrix();
 
@@ -51,26 +60,34 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
         init();
     }
 
+    public float getXOffset() {
+        return mXOffset;
+    }
+
+    public void setXOffset(float xOffset) {
+        this.mXOffset = xOffset;
+    }
+
+    /**
+     * 0 --> (mDrawableWidth - width) (mDrawableWidth - width) --> 0
+     * instruction。
+     * 
+     * @param canvas
+     */
+
     private void handlerDrawInternal(Canvas canvas) {
-        // Log.d("SurfaceImageView", "handlerDrawInternal canvas = " + canvas +
-        // ", mDrawable = " + mDrawable);
+        if (DEBUG) {
+            Log.d("SurfaceImageView", "handlerDrawInternal canvas = " + canvas + ", mDrawable = "
+                    + mDrawable);
+        }
+
         if (canvas == null || mDrawable == null) {
             return;
         }
-        int width = mHolder.getSurfaceFrame().width();
+
         mMatrix.reset();
-        if (mForward) {
-            mXOffset += 0.8f;
-            if (mXOffset > (mDrawableWidth - width)) {
-                mForward = false;
-            }
-        } else {
-            mXOffset -= 0.8f;
-            if (mXOffset < 0) {
-                mForward = true;
-            }
-        }
         mMatrix.postTranslate(-mXOffset, 0.0F);
+
         canvas.setMatrix(mMatrix);
         mDrawable.draw(canvas);
     }
@@ -94,16 +111,30 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
         if (!mIsSurfaceValid) {
             return;
         }
-        mMyThread.mCanRun = true;
+
+        mCanRun = true;
         if (!mMyThread.isAlive()) {
             mMyThread = new MyThread(mHolder);
-            mMyThread.start();
+            mMyThread.start(this);
         }
+    }
 
+    private void translateToRightAnimation() {
+        ObjectAnimator a = ObjectAnimator.ofFloat(this, "xOffset", 0f,
+                (float)(mDrawableWidth - mHolder.getSurfaceFrame().width()));
+        if (DEBUG) {
+            Log.d(TAG, "mDrawableWidth  - mHolder.getSurfaceFrame().width() = "
+                    + (mDrawableWidth - mHolder.getSurfaceFrame().width()));
+        }
+        a.setRepeatMode(ObjectAnimator.REVERSE);
+        a.setRepeatCount(ObjectAnimator.INFINITE);
+        a.setDuration(ANIMATIION_DURATION);
+        a.addListener(this);
+        a.start();
     }
 
     public void stopScroll() {
-        mMyThread.mCanRun = false;
+        mCanRun = false;
     }
 
     @Override
@@ -125,44 +156,98 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
             mDrawable.setBounds(new Rect(0, 0, mDrawableWidth, height));
         }
         startScroll();
-        Log.d("SurfaceImageView", "surfaceCreated width = " + holder.getSurfaceFrame().width()
-                + ", height = " + holder.getSurfaceFrame().height());
+        if (DEBUG) {
+            Log.d(TAG, "surfaceCreated width = " + holder.getSurfaceFrame().width() + ", height = "
+                    + holder.getSurfaceFrame().height());
+        }
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.d("SurfaceImageView", "surfaceDestroyed width = " + holder.getSurfaceFrame().width()
-                + ", height = " + holder.getSurfaceFrame().height());
+        if (DEBUG) {
+            Log.d(TAG, "surfaceDestroyed width = " + holder.getSurfaceFrame().width()
+                    + ", height = " + holder.getSurfaceFrame().height());
+        }
         mIsSurfaceValid = false;
     }
 
+    public void requestFrame() {
+        System.out.println("requestFrame start ");
+        Canvas canvas = null;
+        try {
+            if (!mCanRun) {
+                return;
+            }
+            canvas = mHolder.lockCanvas();
+            handlerDrawInternal(canvas);
+            mHolder.unlockCanvasAndPost(canvas);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("requestFrame end ");
+    }
+
     class MyThread extends Thread {
-        public boolean mCanRun = true;
+
+        private ThreadListener mCallback;
+
+        Handler handler;
 
         private SurfaceHolder mHolder;
 
-        public MyThread(SurfaceHolder holder) {
-            mHolder = holder;
+        public MyThread() {
         }
 
         public void run() {
-            Canvas canvas = null;
-            while (mIsSurfaceValid) {
-                if (!mCanRun) {
-                    continue;
-                }
-                try {
-                    canvas = mHolder.lockCanvas();
-                    handlerDrawInternal(canvas);
-                    mHolder.unlockCanvasAndPost(canvas);
-                    try {
-                        Thread.sleep(40);
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            Looper.prepare();
+            handler = new Handler(Looper.myLooper());
+            if (mCallback != null) {
+                mCallback.looperReady();
             }
+            Looper.loop();
         }
+
+        public synchronized void start(ThreadListener cb) {
+            mCallback = cb;
+            super.start();
+        }
+
+    }
+
+    @Override
+    public void onAnimationStart(Animator animation) {
+    }
+
+    @Override
+    public void onAnimationEnd(Animator animation) {
+    }
+
+    @Override
+    public void onAnimationCancel(Animator animation) {
+    }
+
+    @Override
+    public void onAnimationRepeat(Animator animation) {
+    }
+
+    private void startRefresh() {
+        mMyThread.handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("startRefresh == ");
+                requestFrame();
+                startRefresh();
+            }
+        }, 40);
+    }
+
+    @Override
+    public void looperReady() {
+        startRefresh();
+        mMyThread.handler.post(new Runnable() {
+            @Override
+            public void run() {
+                translateToRightAnimation();
+            }
+        });
     }
 }

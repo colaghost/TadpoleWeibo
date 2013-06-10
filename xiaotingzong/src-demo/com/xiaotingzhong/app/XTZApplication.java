@@ -3,6 +3,7 @@ package com.xiaotingzhong.app;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.util.Log;
 
 import com.weibo.sdk.android.Oauth2AccessToken;
 import com.weibo.sdk.android.api.AccountAPI;
@@ -50,6 +51,10 @@ public class XTZApplication extends Application {
 		sApp.mCurUser = u;
 		sApp.mCurUid = u.id;
 	}
+	
+	public static void debug(String TAG, String msg){
+        Log.d(TAG, msg);
+    }
 
 	public static Oauth2AccessToken getWeiboAccessToken() {
 		return AccessTokenKeeper.readAccessToken(sApp);

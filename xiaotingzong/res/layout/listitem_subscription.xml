@@ -32,10 +32,10 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="36dp"
         android:layout_gravity="center_vertical"
-        android:paddingBottom="@dimen/padding_small"
-        android:paddingTop="@dimen/padding_small"
+        android:paddingBottom="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_medium"
         android:scaleType="fitXY"
         android:src="@drawable/social_split_line" >
     </ImageView>

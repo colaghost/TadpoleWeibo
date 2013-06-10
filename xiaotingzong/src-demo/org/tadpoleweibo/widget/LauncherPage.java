@@ -141,11 +141,11 @@ public class LauncherPage extends ViewGroup {
     }
 
     private int getRowSpacing() {
-        return 20;
+        return getContext().getResources().getDimensionPixelOffset(R.dimen.tp_launcher_page_row_spacing);
     }
 
     private int getColumnSpacing() {
-        return 20;
+        return getContext().getResources().getDimensionPixelOffset(R.dimen.tp_launcher_page_column_spacing);
     }
 
     private View mHideView;

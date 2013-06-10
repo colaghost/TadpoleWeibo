@@ -41,9 +41,15 @@ public abstract class AbsPageListView<T> extends PullToRefreshListView {
         this.postDelayed(new Runnable() {
             @Override
             public void run() {
-                setRefreshing();
+                
+                if(getHeaderSize() == 0){
+                    firePullDownToRefresh();
+                } else {
+                    setRefreshing();
+                }
+               
             }
-        }, 100);
+        }, getContext().getResources().getInteger(R.integer.tp_config_animationDuration));
     }
 
     public void proxyOnRefreshComplete() {

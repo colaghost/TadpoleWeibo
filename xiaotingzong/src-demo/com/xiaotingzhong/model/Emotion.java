@@ -48,6 +48,13 @@ public class Emotion {
         cacheEmotions(EMOTION_TYPE.FACE, LANGUAGE.twname);
     }
 
+    /**
+     * 从微博服务器，或者本地。缓存表情书局到内存。
+     * 
+     * @param type
+     * @param language
+     * @throws Exception
+     */
     private static void cacheEmotions(EMOTION_TYPE type, LANGUAGE language) throws Exception {
         ArrayList<Emotion> list = getEmotionsPreferCache(type, language);
         if (list != null) {

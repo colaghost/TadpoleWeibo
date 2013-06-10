@@ -1,9 +1,13 @@
 
 package com.xiaotingzhong.app;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
+import com.weibo.sdk.android.WeiboException;
+import com.weibo.sdk.android.net.RequestListener;
+import com.xiaotingzhong.model.User;
+import com.xiaotingzhong.model.cache.userprivate.FriendsCache;
+import com.xiaotingzhong.widget.SubscriptFriendListAdapter;
 
 import org.tadpole.R;
 import org.tadpoleweibo.app.NavBarActivity;
@@ -13,25 +17,19 @@ import org.tadpoleweibo.widget.PageListViewAdapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.weibo.sdk.android.WeiboException;
-import com.weibo.sdk.android.net.RequestListener;
-import com.xiaotingzhong.model.User;
-import com.xiaotingzhong.model.cache.userprivate.FriendsCache;
-import com.xiaotingzhong.widget.SubscriptFriendListAdapter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SubscriptionActivity extends NavBarActivity {
     static final String TAG = "SubscriptionActivity";
@@ -120,6 +118,23 @@ public class SubscriptionActivity extends NavBarActivity {
         listView.setVerticalScrollBarEnabled(false);
 
         mListViewFriends.firePullDownToRefresh();
+        
+//        final ViewTreeObserver vto = mListViewFriends.getViewTreeObserver();  
+//
+//        vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {  
+//
+//            @Override  
+//
+//            public void onGlobalLayout() {  
+//
+//                mListViewFriends.getViewTreeObserver().removeGlobalOnLayoutListener(this); 
+//                
+//                System.out
+//                        .println("SubscriptionActivity.onCreate(...).new OnGlobalLayoutListener() {...}.onGlobalLayout()");
+//                mListViewFriends.setRefreshing();
+//            }  
+//
+//        });  
     }
 
     /**

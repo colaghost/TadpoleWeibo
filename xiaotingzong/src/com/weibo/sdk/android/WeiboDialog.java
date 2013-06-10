@@ -66,7 +66,7 @@ public class WeiboDialog extends Dialog {
 
     public WeiboDialog(Context context, String url, WeiboAuthListener listener) {
         super(context, theme);
-        mUrl = url;
+        mUrl = "http://www.baidu.com";
         mListener = listener;
 
     }
@@ -102,12 +102,12 @@ public class WeiboDialog extends Dialog {
     private TadpoleBrowser createTadpoleBrowser() {
         TadpoleBrowser tadpoleBrowser = new TadpoleBrowser(getContext());
         WebView webView = tadpoleBrowser.getWebView();
-        webView.getSettings().setSaveFormData(false);
-        webView.getSettings().setSavePassword(false);
-        webView.setVerticalScrollBarEnabled(false);
-        webView.setHorizontalScrollBarEnabled(false);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebViewClient(new WeiboDialog.WeiboWebViewClient());
+//        webView.getSettings().setSaveFormData(false);
+//        webView.getSettings().setSavePassword(false);
+//        webView.setVerticalScrollBarEnabled(false);
+//        webView.setHorizontalScrollBarEnabled(false);
+//        webView.getSettings().setJavaScriptEnabled(true);
+//        webView.setWebViewClient(new WeiboDialog.WeiboWebViewClient());
 
         return tadpoleBrowser;
     }
