@@ -1,10 +1,6 @@
 
 package org.tadpoleweibo.widget;
 
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.Animator.AnimatorListener;
-import com.nineoldandroids.animation.ObjectAnimator;
-
 import org.tadpole.R;
 
 import android.content.Context;
@@ -20,6 +16,10 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.Animator.AnimatorListener;
+import com.nineoldandroids.animation.ObjectAnimator;
+
 public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callback,
         AnimatorListener, ThreadListener {
 
@@ -29,7 +29,7 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
 
     private static final boolean DEBUG = false;
 
-    private static final int ANIMATIION_DURATION = 15000;
+    private static final int ANIMATIION_DURATION = 50000;
 
     private int mDrawableWidth = 0;
 
@@ -99,7 +99,7 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
 
         mHolder = getHolder();
         mHolder.addCallback(this);
-        mMyThread = new MyThread(mHolder);
+        mMyThread = new MyThread();
         mDrawable = getContext().getResources().getDrawable(R.drawable.rootblock_default_bg);
     }
 
@@ -114,7 +114,7 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
 
         mCanRun = true;
         if (!mMyThread.isAlive()) {
-            mMyThread = new MyThread(mHolder);
+            mMyThread = new MyThread();
             mMyThread.start(this);
         }
     }
@@ -171,7 +171,6 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
     }
 
     public void requestFrame() {
-        System.out.println("requestFrame start ");
         Canvas canvas = null;
         try {
             if (!mCanRun) {
@@ -183,7 +182,6 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("requestFrame end ");
     }
 
     class MyThread extends Thread {
@@ -233,8 +231,9 @@ public class SurfaceImageView extends SurfaceView implements SurfaceHolder.Callb
         mMyThread.handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                System.out.println("startRefresh == ");
-                requestFrame();
+                if (mIsSurfaceValid) {
+                    requestFrame();
+                }
                 startRefresh();
             }
         }, 40);

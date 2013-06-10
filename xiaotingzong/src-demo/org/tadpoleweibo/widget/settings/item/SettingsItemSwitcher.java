@@ -34,7 +34,6 @@ public class SettingsItemSwitcher extends SettingsItem<Boolean> implements Switc
 
     @Override
     public void onItemClick(ViewGroup itemRoot) {
-        super.onItemClick(itemRoot);
         mSwitcher.toggle();
     }
 

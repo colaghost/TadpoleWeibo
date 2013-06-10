@@ -29,6 +29,7 @@ import android.view.View;
 
 import com.xiaotingzhong.app.XTZApplication;
 import com.xiaotingzhong.widget.WeiboStatusesListAdapter.ShowUserAsyncTask;
+import com.xiaotingzhong.widget.span.StatusAtClickableSpan;
 
 /**
  * https://api.weibo.com/2/statuses
@@ -186,33 +187,30 @@ public class WeiboStatus {
             return "";
         }
         SpannableString spannableString = new SpannableString(text);
-        /*
-         * @[^\\s:：]+[:：\\s] 匹配@某人 \\[[^0-9]{1,4}\\] 匹配表情 #([^\\#|.]+)# 匹配#某主题
-         * http://t\\.cn/\\w+ 匹配网址
-         */
+
+        // @[^\\s:：]+[:：\\s] 匹配@某人
+        // \\[[^0-9]{1,4}\\] 匹配表情
+        // #([^\\#|.]+)# 匹配#某主题
+        // http://t\\.cn/\\w+ 匹配网址
         Pattern pattern = Pattern
                 .compile("@[\\u4e00-\\u9fa5\\w\\-]+|#([^\\#|.]+)#|http://t\\.cn/\\w+|\\[[^0-9]{1,4}\\]");
         Matcher matcher = pattern.matcher(spannableString);
         final Context mcontext = context;
         while (matcher.find()) {
             final String match = matcher.group();
+
+            int start = matcher.start();
+            int end = matcher.end();
+
             if (match.startsWith("@")) { // @某人，加亮字体
-                spannableString.setSpan(new ClickableSpan() {
-                    // 在onClick方法中可以编写单击链接时要执行的动作
-                    @Override
-                    public void onClick(View v) {
-                        String screen_name = match;
-                        screen_name = screen_name.replace("@", "");
-                        screen_name = screen_name.replace(":", "");
-                        screen_name = screen_name.trim();
-                        Log.d("getTextSpannableString", "screen_name = " + screen_name);
-                        new ShowUserAsyncTask(v.getContext(), XTZApplication.getCurUser(), 0,
-                                screen_name).execute("");
-                    }
-                }, matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannableString.setSpan(new ForegroundColorSpan(0xff0077ff), matcher.start(),
-                        matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            } else if (match.startsWith("#")) { // #某主题
+                spannableString.setSpan(new StatusAtClickableSpan(match), start, end,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(new ForegroundColorSpan(0xff0077ff), start, end,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
+            // #某主题
+            else if (match.startsWith("#")) {
                 spannableString.setSpan(new ClickableSpan() {
                     // 在onClick方法中可以编写单击链接时要执行的动作
                     @Override
@@ -221,21 +219,22 @@ public class WeiboStatus {
                         theme = theme.replace("#", "");
                         // TODO 话题這個版本不做
                     }
-                }, matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannableString.setSpan(new ForegroundColorSpan(0xff0077ff), matcher.start(),
-                        matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            } else if (match.startsWith("http://")) { // 匹配网址
+                }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(new ForegroundColorSpan(0xff0077ff), start, end,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
+            // 匹配网址
+            else if (match.startsWith("http://")) {
                 spannableString.setSpan(new ClickableSpan() {
                     // 在onClick方法中可以编写单击链接时要执行的动作
                     @Override
                     public void onClick(View v) {
-                        Uri uri = Uri.parse(match);
-                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                        v.getContext().startActivity(intent);
+                       
                     }
-                }, matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannableString.setSpan(new ForegroundColorSpan(0xff0077ff), matcher.start(),
-                        matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(new ForegroundColorSpan(0xff0077ff), start, end,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             } else if (match.startsWith("[")) { // 表情
 
                 int[] attrs = {
@@ -256,7 +255,7 @@ public class WeiboStatus {
                     if (drawable != null) {
                         drawable.setBounds(0, 0, pixel, pixel);
                         ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM);
-                        spannableString.setSpan(imageSpan, matcher.start(), matcher.end(),
+                        spannableString.setSpan(imageSpan, start, end,
                                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
                 }

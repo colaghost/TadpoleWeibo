@@ -13,5 +13,11 @@
 
             <corners android:bottomLeftRadius="@dimen/radius_szie" android:bottomRightRadius="@dimen/radius_szie" />
         </shape></item>
+        
+    <item android:state_selected="true"><shape>
+            <gradient android:endColor="#e6e6e6" android:startColor="#e6e6e6" />
+
+            <corners android:bottomLeftRadius="@dimen/radius_szie" android:bottomRightRadius="@dimen/radius_szie" />
+        </shape></item>
 
 </selector>

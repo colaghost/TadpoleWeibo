@@ -1,7 +1,6 @@
 
 package com.xiaotingzhong.model.cache;
 
-import com.xiaotingzhong.model.AbsCacheDir;
 import com.xiaotingzhong.model.User;
 import com.xiaotingzhong.model.dao.IUserDao;
 

@@ -71,6 +71,7 @@ public class SwitchButton extends ImageView {
     }
 
     private void notifyListener() {
+        System.out.println("SwitchButton.notifyListener()");
         if (mListener == null) {
             return;
         }
@@ -82,7 +83,8 @@ public class SwitchButton extends ImageView {
     }
 
     private void switchAction(boolean b) {
-        if (setTurnOn(b)) {
+        // nothing change
+        if (!setTurnOn(b)) {
             return;
         }
         notifyListener();

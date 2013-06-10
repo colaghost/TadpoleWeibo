@@ -45,8 +45,7 @@ public class SettingsItemOptions extends SettingsItem<Integer> implements ISetti
 
     @Override
     public void onItemClick(ViewGroup itemRoot) {
-        super.onItemClick(itemRoot);
-        setBackgroundSelected(true);
+//        setBackgroundSelected(true);
 
         Resources res = itemRoot.getContext().getResources();
 

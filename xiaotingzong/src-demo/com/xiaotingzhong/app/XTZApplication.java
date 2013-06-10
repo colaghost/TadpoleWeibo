@@ -12,6 +12,7 @@ import com.weibo.sdk.android.api.StatusesAPI;
 import com.weibo.sdk.android.api.UsersAPI;
 import com.weibo.sdk.android.keep.AccessTokenKeeper;
 import com.xiaotingzhong.model.Emotion;
+import com.xiaotingzhong.model.SettingsModel;
 import com.xiaotingzhong.model.User;
 
 public class XTZApplication extends Application {
@@ -87,5 +88,9 @@ public class XTZApplication extends Application {
 	public void onTerminate() {
 		super.onTerminate();
 	}
+
+    public static SettingsModel getSettingsModel() {
+        return new SettingsModel(sSharedPref);
+    }
 
 }

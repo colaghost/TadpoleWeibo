@@ -9,7 +9,7 @@
     <dimen name="tp_settings_item_height">49dp</dimen>
 
     <!-- Tp SettingsMenu -->
-    <dimen name="tp_settings_menu_top">18.6dp</dimen>
+    <dimen name="tp_settings_menu_top">0.6dp</dimen>
     <dimen name="tp_settings_menu_right">-5dp</dimen>
     <dimen name="tp_settings_menu_padding_top">8dp</dimen>
     <dimen name="tp_settings_menu_padding_bottom">23.3dp</dimen>

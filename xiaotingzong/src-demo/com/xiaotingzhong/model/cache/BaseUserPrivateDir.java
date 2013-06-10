@@ -1,7 +1,6 @@
 
 package com.xiaotingzhong.model.cache;
 
-import com.xiaotingzhong.model.AbsCacheDir;
 
 import android.content.Context;
 

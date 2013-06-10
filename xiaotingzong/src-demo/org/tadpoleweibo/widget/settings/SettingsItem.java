@@ -53,12 +53,12 @@ public abstract class SettingsItem<T> {
     }
 
     protected void setBackgroundSelected(final boolean b) {
-//        mBackground.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mBackground.setPressed(b);
-//            }
-//        }, 100);
+        mBackground.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mBackground.setPressed(b);
+            }
+        }, 100);
     }
 
     protected void notifyListener(T params) {

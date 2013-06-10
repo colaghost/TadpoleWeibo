@@ -3,6 +3,8 @@ package org.tadpoleweibo.widget.settings;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -33,8 +35,10 @@ public class SettingsListView extends ListView {
     }
 
     private void init() {
+        setSelector(new ColorDrawable(Color.TRANSPARENT));
         setDivider(null);
         setDividerHeight(0);
+        setFocusableInTouchMode(false);
         this.setVerticalScrollBarEnabled(false);
         setAdapter(new SettingsAdapter(getActivity()));
     }

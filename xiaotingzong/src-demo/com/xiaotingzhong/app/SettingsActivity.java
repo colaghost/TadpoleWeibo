@@ -13,6 +13,8 @@ import org.tadpoleweibo.widget.settings.item.SettingsItemNormal;
 import org.tadpoleweibo.widget.settings.item.SettingsItemOptions;
 import org.tadpoleweibo.widget.settings.item.SettingsItemSwitcher;
 
+import com.xiaotingzhong.model.SettingsModel;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +28,8 @@ public class SettingsActivity extends NavBarActivity {
     public static final String TAG = "SettingsActivity";
 
     private SettingsListView mSettingsView;
+    
+    private SettingsModel mSettingsModel;
 
     /**
      * Use Explicit Intent start Activity
@@ -42,6 +46,9 @@ public class SettingsActivity extends NavBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        mSettingsModel = XTZApplication.getSettingsModel();
+        
         setContentView(R.layout.activity_settings);
         mSettingsView = (SettingsListView)this.findViewById(R.id.settingsview);
 
@@ -64,11 +71,13 @@ public class SettingsActivity extends NavBarActivity {
 
         // 浏览器选择
         SettingsItemSwitcher itemBrowser = new SettingsItemSwitcher("使用内置浏览器",
-                "内置浏览器如果不能使用请用外部浏览器", true);
+                "内置浏览器如果不能使用请用外部浏览器", mSettingsModel.getUseInnerBrowser());
         itemBrowser.setListener(new SettingsItemListener<Boolean>() {
             @Override
             public void onSettingsAction(SettingsItem<Boolean> item, Boolean params) {
                 Log.d(TAG, "onSettingsAction = " + params);
+                mSettingsModel.setUseInnerBrowser(params);
+                
             }
         });
         group.addItem(itemBrowser);
@@ -76,15 +85,37 @@ public class SettingsActivity extends NavBarActivity {
         // 图片模式
 
         String[] modeStrArr = {
-                "只看图片", "只看文字"
+                "默认",  //
+                "无图"
         };
-
+        
+        int defaultSelectIndex = 0;
+        int readMode = mSettingsModel.getWeiboReadMode();
+        if(SettingsModel.WEIBO_READ_MODE_DEFAULT == readMode){
+            defaultSelectIndex = 0;
+        }
+        
+        if(SettingsModel.WEIBO_READ_MODE_NO_IMAGE == readMode){
+            defaultSelectIndex = 1;
+        }
         SettingsItemOptions itemMode = new SettingsItemOptions("阅读模式", "亲！请根据流量切换模式哦", modeStrArr,
-                0);
+                defaultSelectIndex);
         itemMode.setListener(new SettingsItemListener<Integer>() {
             @Override
-            public void onSettingsAction(SettingsItem item, Integer params) {
-                Log.d(TAG, "onSettingsAction = " + params);
+            public void onSettingsAction(SettingsItem item, Integer selectedIndex) {
+                Log.d(TAG, "onSettingsAction = " + selectedIndex);
+                
+                
+                // 默认
+                if(selectedIndex == 0){
+                    mSettingsModel.setWeiboReadMode(SettingsModel.WEIBO_READ_MODE_DEFAULT);
+                } 
+                
+                // 无图
+                if(selectedIndex == 1){
+                    mSettingsModel.setWeiboReadMode(SettingsModel.WEIBO_READ_MODE_NO_IMAGE);
+                }
+                
             }
         });
         group.addItem(itemMode);

@@ -11,5 +11,7 @@
 
             <corners android:bottomLeftRadius="@dimen/radius_szie" android:bottomRightRadius="@dimen/radius_szie" />
         </shape></item>
+        
+    
 
 </selector>

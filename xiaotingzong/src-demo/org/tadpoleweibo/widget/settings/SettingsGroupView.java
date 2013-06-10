@@ -9,10 +9,8 @@ import org.tadpoleweibo.common.StringUtil;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnTouchListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,8 +19,6 @@ class SettingsGroupView extends LinearLayout {
     private LayoutInflater mInflater;
 
     private ViewGroup mHeader;
-
-    private LinearLayout mContent;
 
     public SettingsGroupView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -38,7 +34,6 @@ class SettingsGroupView extends LinearLayout {
         setOrientation(LinearLayout.VERTICAL);
         mInflater = LayoutInflater.from(getContext());
         mHeader = (ViewGroup)mInflater.inflate(R.layout.tp_settings_group_header, this);
-        mContent = (LinearLayout)mInflater.inflate(R.layout.tp_settings_group_content, this);
     }
 
     public void setGroup(SettingsGroup group) {
@@ -63,7 +58,6 @@ class SettingsGroupView extends LinearLayout {
     }
 
     private void addSingleItem(SettingsItem item) {
-        SettingsItem settingsItem = item;
         createAndAddItemView(R.drawable.selector_setting_item_bg_single, item);
     }
 
@@ -120,4 +114,19 @@ class SettingsGroupView extends LinearLayout {
         return itemView;
     }
 
+    /**
+     * 覆盖父类方法，不让press的状态往子项传递。避免导致多个item处于pressed状态
+     * @see android.view.ViewGroup#dispatchSetPressed(boolean)
+     */
+    @Override
+    protected void dispatchSetPressed(boolean pressed) {
+    }
+    
+    /**
+     * 同上
+     * @see android.view.ViewGroup#dispatchSetSelected(boolean)
+     */
+    @Override
+    public void dispatchSetSelected(boolean selected) {
+    }
 }

@@ -1,5 +1,5 @@
 
-package com.xiaotingzhong.model;
+package com.xiaotingzhong.model.cache;
 
 import com.xiaotingzhong.app.XTZApplication;
 
