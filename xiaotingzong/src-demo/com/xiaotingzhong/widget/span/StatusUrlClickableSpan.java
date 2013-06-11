@@ -13,12 +13,14 @@
 
 package com.xiaotingzhong.widget.span;
 
+import com.xiaotingzhong.app.BrowserActivity;
 import com.xiaotingzhong.app.XTZApplication;
 import com.xiaotingzhong.model.SettingsModel;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -30,6 +32,8 @@ import android.view.View;
  */
 public class StatusUrlClickableSpan extends ClickableSpan {
 
+    private static final String TAG = "StatusUrlClickableSpan";
+
     private String mMatch = null;
 
     public StatusUrlClickableSpan(String match) {
@@ -38,13 +42,15 @@ public class StatusUrlClickableSpan extends ClickableSpan {
 
     @Override
     public void onClick(View v) {
-
         SettingsModel settingsModel = XTZApplication.getSettingsModel();
         boolean useInnerBrowser = settingsModel.getUseInnerBrowser();
 
+        Log.d(TAG, "url = " + mMatch + ", useInnerBrowser = " + useInnerBrowser);
+        
+        
         // 使用内置浏览器
         if (useInnerBrowser) {
-
+            BrowserActivity.start(v.getContext(), mMatch);
         }
         // 使用外部浏览器
         else {

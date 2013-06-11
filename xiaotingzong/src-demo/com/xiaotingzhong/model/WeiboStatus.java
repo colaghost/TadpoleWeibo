@@ -1,11 +1,9 @@
 
 package com.xiaotingzhong.model;
 
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.xiaotingzhong.app.XTZApplication;
+import com.xiaotingzhong.widget.span.StatusAtClickableSpan;
+import com.xiaotingzhong.widget.span.StatusUrlClickableSpan;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,10 +13,8 @@ import org.tadpoleweibo.common.StringUtil;
 import org.tadpoleweibo.widget.image.ImageHelper;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ClickableSpan;
@@ -27,9 +23,11 @@ import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.View;
 
-import com.xiaotingzhong.app.XTZApplication;
-import com.xiaotingzhong.widget.WeiboStatusesListAdapter.ShowUserAsyncTask;
-import com.xiaotingzhong.widget.span.StatusAtClickableSpan;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * https://api.weibo.com/2/statuses
@@ -226,13 +224,8 @@ public class WeiboStatus {
 
             // 匹配网址
             else if (match.startsWith("http://")) {
-                spannableString.setSpan(new ClickableSpan() {
-                    // 在onClick方法中可以编写单击链接时要执行的动作
-                    @Override
-                    public void onClick(View v) {
-                       
-                    }
-                }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(new StatusUrlClickableSpan(match), start, end,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannableString.setSpan(new ForegroundColorSpan(0xff0077ff), start, end,
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             } else if (match.startsWith("[")) { // 表情

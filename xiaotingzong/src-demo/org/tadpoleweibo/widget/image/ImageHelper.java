@@ -39,12 +39,11 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.weibo.sdk.android.net.NetStateManager;
+import com.xiaotingzhong.app.XTZApplication;
 
 public class ImageHelper {
 
     static final String TAG = "ImageHelper";
-
-    private static ImageDiskCache sDiskCache = new ImageDiskCache(null);
 
     private static final String[] PROJECTIONS = {
             MediaStore.Images.ImageColumns._ID, MediaStore.Images.ImageColumns.DISPLAY_NAME,
@@ -90,7 +89,7 @@ public class ImageHelper {
             b = safeDecodeStream(context, uri, 60, 60);
             final BitmapDrawable bd = new BitmapDrawable(b);
             sMemCache.put(path, new SoftReference<BitmapDrawable>(bd));
-            
+
             return bd;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -262,14 +261,16 @@ public class ImageHelper {
     }
 
     private static BitmapDrawable getBitmapDrawable(Resources res, String url, ImageView imgView) {
+        ImageDiskCache imageCache = XTZApplication.getImageDiskCache();
+        
         String hash = url.hashCode() + "";
         try {
             byte[] data = null;
-            if (sDiskCache.hasCache(hash)) {
-                data = sDiskCache.readFromDisk(hash);
+            if (imageCache.hasCache(hash)) {
+                data = imageCache.readFromDisk(hash);
             } else {
                 data = openUrl(url);
-                sDiskCache.writeToDisk(hash, data);
+                imageCache.writeToDisk(hash, data);
             }
             Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
 
@@ -281,7 +282,7 @@ public class ImageHelper {
         } catch (Exception e) {
             e.printStackTrace();
 
-            sDiskCache.deleteFromDish(hash);
+            imageCache.deleteFromDisk(hash);
         }
         return null;
     }
@@ -358,6 +359,7 @@ public class ImageHelper {
      * @param roundPixels
      * @return Result bitmap with rounded corners
      */
+    @Deprecated
     public static Bitmap roundCorners(Bitmap bitmap, ImageView imageView, int roundPixels) {
         Bitmap roundBitmap;
 
@@ -460,6 +462,7 @@ public class ImageHelper {
         return roundBitmap;
     }
 
+    @Deprecated
     private static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int roundPixels, Rect srcRect,
             Rect destRect, int width, int height) {
         Bitmap output = Bitmap.createBitmap(width, height, Config.ARGB_8888);

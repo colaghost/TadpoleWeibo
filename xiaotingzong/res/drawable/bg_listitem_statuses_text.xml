@@ -3,7 +3,7 @@
 
     <item>
         <shape>
-            <solid android:color="@color/simple_grey_trans" />
+            <solid android:color="@color/simple_grey" />
         </shape>
     </item>
     <item android:left="@dimen/padding_small">

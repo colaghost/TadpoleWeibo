@@ -4,6 +4,8 @@ package org.tadpoleweibo.widget;
 import org.tadpole.R;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -30,24 +32,19 @@ public abstract class AbsPageListView<T> extends PullToRefreshListView {
 
     public void setAdapter(ListAdapter adapter) {
         super.setAdapter(adapter);
-        ListView listView = (ListView)this.getRefreshableView();
-        listView.setDividerHeight(DIVIDER_HEIGHT);
-        listView.setDivider(getResources().getDrawable(R.drawable.divider));
-        listView.setVerticalScrollBarEnabled(false);
-        listView.setFadingEdgeLength(FADING_LENGTH);
     }
 
     public void firePullDownToRefresh() {
         this.postDelayed(new Runnable() {
             @Override
             public void run() {
-                
-                if(getHeaderSize() == 0){
+
+                if (getHeaderSize() == 0) {
                     firePullDownToRefresh();
                 } else {
                     setRefreshing();
                 }
-               
+
             }
         }, getContext().getResources().getInteger(R.integer.tp_config_animationDuration));
     }
@@ -65,6 +62,13 @@ public abstract class AbsPageListView<T> extends PullToRefreshListView {
     private void init() {
         setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
                 LayoutParams.FILL_PARENT));
+        ListView listView = (ListView)this.getRefreshableView();
+        listView.setDividerHeight(DIVIDER_HEIGHT);
+        listView.setDivider(getResources().getDrawable(R.drawable.divider));
+        listView.setVerticalScrollBarEnabled(false);
+        listView.setFadingEdgeLength(FADING_LENGTH);
+        listView.setCacheColorHint(Color.TRANSPARENT);
+        listView.setSelector(new ColorDrawable(Color.TRANSPARENT));
     }
 
 }

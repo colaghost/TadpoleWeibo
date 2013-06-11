@@ -1,15 +1,16 @@
 
 package org.tadpoleweibo.widget.image;
 
+import org.tadpoleweibo.common.FileUtil;
+import org.tadpoleweibo.common.SDCardUtil;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.tadpoleweibo.common.FileUtil;
+public final class ImageDiskCache {
 
-import android.os.Environment;
-
-public class ImageDiskCache {
+    private boolean mImageDiskCacheEnable = true;
 
     private String mDirPath;
 
@@ -17,53 +18,47 @@ public class ImageDiskCache {
         mDirPath = dirPath;
         if (mDirPath == null) {
             try {
-                mDirPath = getSDPath() + "/xxxx/";
+                mDirPath = SDCardUtil.getSDPath() + "/xxxx/";
                 File file = new File(mDirPath);
                 if (!file.exists()) {
                     file.mkdirs();
                 }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+                mImageDiskCacheEnable = false;
             }
         }
     }
 
+    public String getDirPath(String key) {
+        return mDirPath + File.separator + key;
+    }
+
     public boolean hasCache(String key) {
-        return FileUtil.exists(mDirPath + key);
+        if (!mImageDiskCacheEnable) {
+            return false;
+        }
+        return FileUtil.exists(getDirPath(key));
     }
 
     public void writeToDisk(String key, byte[] bitmapBytes) {
-
-        System.out.println("mDirPath = " + mDirPath + key);
+        if (!mImageDiskCacheEnable) {
+            return;
+        }
+        System.out.println("mDirPath = " + getDirPath(key));
 
         boolean succ = FileUtil.createFile(mDirPath + key);
         if (succ) {
-            FileUtil.writeFile(mDirPath + key, bitmapBytes, false);
+            FileUtil.writeFile(getDirPath(key), bitmapBytes, false);
         }
     }
 
     public byte[] readFromDisk(String key) throws IOException {
-        return FileUtil.readFile(mDirPath + key);
+        return FileUtil.readFile(getDirPath(key));
     }
 
-    public String getSDPath() throws FileNotFoundException {
-        File sdDir = null;
-        boolean sdCardExist = Environment.getExternalStorageState().equals(
-                android.os.Environment.MEDIA_MOUNTED); // 判断sd卡是否存在
-        if (sdCardExist) {
-            sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
-        }
-
-        if (sdDir == null) {
-            throw new FileNotFoundException("not sd card found");
-        }
-
-        return sdDir.toString();
-
-    }
-
-    public void deleteFromDish(String key) {
-        FileUtil.delete(mDirPath + key);
+    public void deleteFromDisk(String key) {
+        FileUtil.delete(getDirPath(key));
     }
 
 }

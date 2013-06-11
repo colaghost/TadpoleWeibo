@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="5"
+        android:minSdkVersion="7"
         android:targetSdkVersion="15" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -54,6 +54,12 @@
         </activity>
         <activity
             android:name="com.xiaotingzhong.app.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Tadpole" >
+        </activity>
+        <activity
+            android:name="com.xiaotingzhong.app.BrowserActivity"
             android:label="@string/title_activity_settings"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Tadpole" >

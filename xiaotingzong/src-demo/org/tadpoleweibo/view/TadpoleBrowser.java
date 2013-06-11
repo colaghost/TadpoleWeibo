@@ -17,6 +17,7 @@ import org.tadpole.R;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,8 @@ public class TadpoleBrowser extends FrameLayout implements OnClickListener {
 
     private View mRefresh = null;
 
+    private View mBottomBar = null;
+
     private TadpoleWebView mWebview;
 
     public TadpoleBrowser(Context context) {
@@ -62,8 +65,8 @@ public class TadpoleBrowser extends FrameLayout implements OnClickListener {
         super(context, attrs, defStyle);
         init();
     }
-    
-    public WebView getWebView(){
+
+    public WebView getWebView() {
         return mWebview;
     }
 
@@ -76,34 +79,48 @@ public class TadpoleBrowser extends FrameLayout implements OnClickListener {
         mViewGroup = (ViewGroup)mInflater.inflate(R.layout.tp_browser, this, false);
         this.addView(mViewGroup);
 
-        mBack = mViewGroup.findViewById(R.id.back);
+        mBack = mViewGroup.findViewById(R.id.tp_back);
         mBack.setOnClickListener(this);
 
-        mPrev = mViewGroup.findViewById(R.id.previous);
+        mPrev = mViewGroup.findViewById(R.id.tp_previous);
         mPrev.setOnClickListener(this);
 
-        mForward = mViewGroup.findViewById(R.id.forward);
+        mForward = mViewGroup.findViewById(R.id.tp_forward);
         mForward.setOnClickListener(this);
 
-        mRefresh = mViewGroup.findViewById(R.id.refresh);
+        mRefresh = mViewGroup.findViewById(R.id.tp_refresh);
         mRefresh.setOnClickListener(this);
 
-        mWebview = (TadpoleWebView)mViewGroup.findViewById(R.id.webview);
+        mBottomBar = mViewGroup.findViewById(R.id.tp_bottom_bar);
+
+        mWebview = (TadpoleWebView)mViewGroup.findViewById(R.id.tp_webview);
+        mWebview.setWebViewClient(new TadpoleWebViewClient());
+        mWebview.setWebChromeClient(new TadpoleWebChomeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                Drawable bgDrawable = mBottomBar.getBackground();
+                if (bgDrawable == null) {
+                    return;
+                }
+                bgDrawable.setLevel(newProgress * 100);
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back:
+            case R.id.tp_back:
                 ((Activity)getContext()).finish();
                 break;
-            case R.id.previous:
+            case R.id.tp_previous:
                 mWebview.goBack();
                 break;
-            case R.id.forward:
+            case R.id.tp_forward:
                 mWebview.goForward();
                 break;
-            case R.id.refresh:
+            case R.id.tp_refresh:
                 mWebview.reload();
                 break;
             default:

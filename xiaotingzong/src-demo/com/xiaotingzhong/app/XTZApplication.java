@@ -1,9 +1,13 @@
+
 package com.xiaotingzhong.app;
 
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.provider.MediaStore.Files;
 import android.util.Log;
+
+import java.io.File;
 
 import com.weibo.sdk.android.Oauth2AccessToken;
 import com.weibo.sdk.android.api.AccountAPI;
@@ -15,82 +19,106 @@ import com.xiaotingzhong.model.Emotion;
 import com.xiaotingzhong.model.SettingsModel;
 import com.xiaotingzhong.model.User;
 
+import org.tadpoleweibo.common.SDCardUtil;
+import org.tadpoleweibo.widget.image.ImageDiskCache;
+
 public class XTZApplication extends Application {
-	public static XTZApplication sApp;
 
-	private static SharedPreferences sSharedPref;
+    public static final String SD_FOLDER_NAME = "xiaotingzong";
 
-	static final String PREF_XTZ = "com_xiaotingzhong.pref";
+    public static XTZApplication sApp;
 
-	private long mCurUid;
+    private SharedPreferences mSharedPref;
 
-	private User mCurUser = null;
+    static final String PREF_XTZ = "com_xiaotingzhong.pref";
 
-	public void onCreate() {
-		super.onCreate();
-		sApp = this;
-		sSharedPref = getSharedPreferences(PREF_XTZ, MODE_PRIVATE);
-	}
+    private long mCurUid = 0;
 
-	public static SharedPreferences getGlobalSharedPref() {
-		return sSharedPref;
-	}
+    private User mCurUser = null;
 
-	public static Emotion getEmotionByPhrase(String p) {
-		return Emotion.MAP.get(p);
-	}
+    private ImageDiskCache mImageDiskCache;
 
-	public static long getCurUid() {
-		return sApp.mCurUid;
-	}
+    public void onCreate() {
+        super.onCreate();
+        sApp = this;
+        mSharedPref = getSharedPreferences(PREF_XTZ, MODE_PRIVATE);
+        initImageDiskCache();
+    }
 
-	public static User getCurUser() {
-		return sApp.mCurUser;
-	}
+    private void initImageDiskCache() {
+        String relatviePath = File.separator + SD_FOLDER_NAME + File.separator + "imageDiskCache";
+        String imageDiskCachePath = null;
+        try {
+            imageDiskCachePath = SDCardUtil.getSDPath() + relatviePath;
+        } catch (Exception e) {
+            imageDiskCachePath = sApp.getFilesDir().getAbsolutePath() + relatviePath;
+        }
+        mImageDiskCache = new ImageDiskCache(imageDiskCachePath);
+    }
 
-	public static void setCurUser(User u) {
-		sApp.mCurUser = u;
-		sApp.mCurUid = u.id;
-	}
-	
-	public static void debug(String TAG, String msg){
+    public static SharedPreferences getGlobalSharedPref() {
+        return sApp.mSharedPref;
+    }
+
+    public static Emotion getEmotionByPhrase(String p) {
+        return Emotion.MAP.get(p);
+    }
+
+    public static long getCurUid() {
+        return sApp.mCurUid;
+    }
+
+    public static User getCurUser() {
+        return sApp.mCurUser;
+    }
+
+    public static void setCurUser(User u) {
+        sApp.mCurUser = u;
+        sApp.mCurUid = u.id;
+    }
+
+    public static void debug(String TAG, String msg) {
         Log.d(TAG, msg);
     }
 
-	public static Oauth2AccessToken getWeiboAccessToken() {
-		return AccessTokenKeeper.readAccessToken(sApp);
-	}
+    public static Oauth2AccessToken getWeiboAccessToken() {
+        return AccessTokenKeeper.readAccessToken(sApp);
+    }
 
-	public static FriendshipsAPI getFriendshipsAPI() {
-		return new FriendshipsAPI(AccessTokenKeeper.readAccessToken(sApp));
-	}
+    public static FriendshipsAPI getFriendshipsAPI() {
+        return new FriendshipsAPI(AccessTokenKeeper.readAccessToken(sApp));
+    }
 
-	public static UsersAPI getUsersAPI() {
-		return new UsersAPI(AccessTokenKeeper.readAccessToken(sApp));
-	}
+    public static UsersAPI getUsersAPI() {
+        return new UsersAPI(AccessTokenKeeper.readAccessToken(sApp));
+    }
 
-	public static StatusesAPI getStatusesAPI() {
-		return new StatusesAPI(AccessTokenKeeper.readAccessToken(sApp));
-	}
+    public static StatusesAPI getStatusesAPI() {
+        return new StatusesAPI(AccessTokenKeeper.readAccessToken(sApp));
+    }
 
-	public static AccountAPI getAccountAPI() {
-		return new AccountAPI(AccessTokenKeeper.readAccessToken(sApp));
-	}
+    public static AccountAPI getAccountAPI() {
+        return new AccountAPI(AccessTokenKeeper.readAccessToken(sApp));
+    }
 
-	public void onConfigurationChanged(Configuration paramConfiguration) {
-		super.onConfigurationChanged(paramConfiguration);
-	}
+    public void onConfigurationChanged(Configuration paramConfiguration) {
+        super.onConfigurationChanged(paramConfiguration);
+    }
 
-	public void onLowMemory() {
-		super.onLowMemory();
-	}
+    public void onLowMemory() {
+        super.onLowMemory();
+    }
 
-	public void onTerminate() {
-		super.onTerminate();
-	}
+    public void onTerminate() {
+        super.onTerminate();
+    }
 
     public static SettingsModel getSettingsModel() {
-        return new SettingsModel(sSharedPref);
+        return new SettingsModel(getGlobalSharedPref());
+    }
+
+    public static ImageDiskCache getImageDiskCache() {
+        return sApp.mImageDiskCache;
     }
 
 }
