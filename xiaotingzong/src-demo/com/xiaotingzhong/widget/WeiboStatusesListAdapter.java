@@ -18,9 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiaotingzhong.app.StatusesActivity;
+import com.xiaotingzhong.app.XTZApplication;
+import com.xiaotingzhong.model.SettingsModel;
 import com.xiaotingzhong.model.User;
 import com.xiaotingzhong.model.WeiboStatus;
-import com.xiaotingzhong.model.state.UserState;
+import com.xiaotingzhong.model.state.UserToCurrUserShip;
 
 public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatus> {
     private static final String TAG = null;
@@ -57,11 +59,11 @@ public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatus> {
                     .findViewById(R.id.asyncimgview_retweeted_pic);
             holder.asycnImgViewRetweetedPic.setCornerRadius(0);
 
-            holder.txtViewCreateAt = (TextView) view.findViewById(R.id.txtview_create_at);
-            
-            holder.txtViewRepostsCount = (TextView) view.findViewById(R.id.txtview_reposts_count);
-            holder.txtViewCommentsCount = (TextView) view.findViewById(R.id.txtview_comments_count);
-            
+            holder.txtViewCreateAt = (TextView)view.findViewById(R.id.txtview_create_at);
+
+            holder.txtViewRepostsCount = (TextView)view.findViewById(R.id.txtview_reposts_count);
+            holder.txtViewCommentsCount = (TextView)view.findViewById(R.id.txtview_comments_count);
+
             view.setTag(holder);
         } else {
             holder = (ViewHolder)view.getTag();
@@ -74,7 +76,7 @@ public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatus> {
         holder.txtViewRepostsCount.setText("" + weiboStatus.reposts_count);
         holder.txtViewCommentsCount.setText("" + weiboStatus.comments_count);
 
-        if (!StringUtil.isEmpty(weiboStatus.thumbnail_pic)) {
+        if (!StringUtil.isEmpty(weiboStatus.thumbnail_pic) && isShowImage()) {
             holder.asycnImgViewPic.setVisibility(View.VISIBLE);
             holder.asycnImgViewPic.setImageURL(weiboStatus.thumbnail_pic);
         } else {
@@ -92,7 +94,7 @@ public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatus> {
             holder.asycnImgViewRetweetedPic.setVisibility(View.VISIBLE);
             holder.txtViewRetweetedText.setText(retweeted.getTextSpannaleString());
 
-            if (StringUtil.isNotEmpty(retweeted.thumbnail_pic)) {
+            if (StringUtil.isNotEmpty(retweeted.thumbnail_pic) && isShowImage()) {
                 holder.asycnImgViewRetweetedPic.setVisibility(View.VISIBLE);
                 holder.asycnImgViewRetweetedPic.setImageURL(retweeted.thumbnail_pic);
             } else {
@@ -109,6 +111,15 @@ public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatus> {
     }
 
     /**
+     * 通过{@link SettingsModel}的阅读模式。判断是否只显示图片
+     * 
+     * @return
+     */
+    private boolean isShowImage() {
+        return XTZApplication.getSettingsModel().getWeiboReadMode() != SettingsModel.WEIBO_READ_MODE_NO_IMAGE;
+    }
+
+    /**
      * j use holder to avoid calling findViewById . Make Code Speed Up <br>=
      * ========================= <br>
      * author：Zenip <br>
@@ -117,11 +128,11 @@ public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatus> {
      * =========================
      */
     static class ViewHolder {
-        
+
         public TextView txtViewRepostsCount;
-        
+
         public TextView txtViewCommentsCount;
-        
+
         public TextView txtViewCreateAt;
 
         TextView txtViewScreenName;
@@ -182,8 +193,7 @@ public class WeiboStatusesListAdapter extends PageListViewAdapter<WeiboStatus> {
             if (resultUser == null) {
                 Toast.makeText(mContext, "用户不存在", Toast.LENGTH_LONG).show();
             } else {
-                UserState userState = mCurUser.getRelateUserState(resultUser);
-                StatusesActivity.start(mContext, resultUser, userState);
+                StatusesActivity.start(mContext, resultUser);
             }
         }
     }

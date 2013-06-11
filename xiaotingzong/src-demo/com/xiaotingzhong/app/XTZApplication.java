@@ -18,6 +18,7 @@ import com.weibo.sdk.android.keep.AccessTokenKeeper;
 import com.xiaotingzhong.model.Emotion;
 import com.xiaotingzhong.model.SettingsModel;
 import com.xiaotingzhong.model.User;
+import com.xiaotingzhong.model.state.UserToCurrUserShip;
 
 import org.tadpoleweibo.common.SDCardUtil;
 import org.tadpoleweibo.widget.image.ImageDiskCache;
@@ -70,6 +71,10 @@ public class XTZApplication extends Application {
 
     public static User getCurUser() {
         return sApp.mCurUser;
+    }
+
+    public static UserToCurrUserShip getUserToCurrUserShip(User user) {
+        return sApp.mCurUser.getUserToCurrUserShip(user);
     }
 
     public static void setCurUser(User u) {

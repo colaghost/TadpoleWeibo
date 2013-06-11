@@ -73,6 +73,10 @@ public class FileUtil {
     }
 
     public static boolean createFile(String paramString) {
+        if (StringUtil.isBlank(paramString)) {
+            return false;
+        }
+
         File f = new File(paramString);
         if (f.exists()) {
             if (f.isDirectory()) {
@@ -83,7 +87,6 @@ public class FileUtil {
         }
 
         try {
-            f.mkdirs();
             return f.createNewFile();
         } catch (Exception exception) {
             exception.printStackTrace();

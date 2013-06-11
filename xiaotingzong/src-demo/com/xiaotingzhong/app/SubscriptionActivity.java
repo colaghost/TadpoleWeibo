@@ -21,9 +21,13 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -31,7 +35,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubscriptionActivity extends NavBarActivity {
+public class SubscriptionActivity extends NavBarActivity implements OnItemClickListener {
     static final String TAG = "SubscriptionActivity";
 
     static final String USER = "user";
@@ -77,9 +81,10 @@ public class SubscriptionActivity extends NavBarActivity {
 
         setContentView(R.layout.activity_subscription);
         final SubscriptionActivity me = this;
-        
+
         getNavBar().setTitle("好友列表");
-        
+        getNavBar().getBtnRight().setVisibility(View.INVISIBLE);
+
         this.mEditTxtSearch = ((EditText)findViewById(R.id.edittext_search));
         this.mEditTxtSearch.addTextChangedListener(new TextWatcher() {
 
@@ -112,29 +117,15 @@ public class SubscriptionActivity extends NavBarActivity {
             }
         });
         this.mListViewFriends.setAdapter(this.mAdapterFriends);
+        mListViewFriends.setOnItemClickListener(this);
+
         // TODO 将这些设置转移到xml配置文件。
         ListView listView = (ListView)this.mListViewFriends.getRefreshableView();
         listView.setDivider(getResources().getDrawable(R.drawable.divider));
         listView.setVerticalScrollBarEnabled(false);
+        listView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
         mListViewFriends.firePullDownToRefresh();
-        
-//        final ViewTreeObserver vto = mListViewFriends.getViewTreeObserver();  
-//
-//        vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {  
-//
-//            @Override  
-//
-//            public void onGlobalLayout() {  
-//
-//                mListViewFriends.getViewTreeObserver().removeGlobalOnLayoutListener(this); 
-//                
-//                System.out
-//                        .println("SubscriptionActivity.onCreate(...).new OnGlobalLayoutListener() {...}.onGlobalLayout()");
-//                mListViewFriends.setRefreshing();
-//            }  
-//
-//        });  
     }
 
     /**
@@ -237,6 +228,17 @@ public class SubscriptionActivity extends NavBarActivity {
             }
         }
         onFriendListLoad(newList, true);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.d(TAG, "onItemClick");
+        if (mAdapterFriends == null) {
+            return;
+        }
+
+        User user = mAdapterFriends.getItemData(position);
+        StatusesActivity.start(this, user);
     }
 
 }

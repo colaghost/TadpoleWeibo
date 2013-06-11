@@ -5,7 +5,7 @@ import com.xiaotingzhong.app.XTZApplication;
 import com.xiaotingzhong.model.dao.IFriendsDao;
 import com.xiaotingzhong.model.dao.ISubscriptionDao;
 import com.xiaotingzhong.model.dao.IUserDao;
-import com.xiaotingzhong.model.state.UserState;
+import com.xiaotingzhong.model.state.UserToCurrUserShip;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,8 +35,17 @@ public class User implements Serializable {
      * @param relateUser
      * @return
      */
-    public UserState getRelateUserState(User relateUser) {
-        UserState userState = new UserState();
+    public UserToCurrUserShip getUserToCurrUserShip(User relateUser) {
+
+        if (null == relateUser) {
+            return new UserToCurrUserShip();
+        }
+
+        UserToCurrUserShip userState = new UserToCurrUserShip();
+        if (id == relateUser.id) {
+            userState.isMySelf = true;
+        }
+
         userState.isMyFriend = isMyFriend(relateUser.id);
         userState.hasSubscript = hasSubcript(relateUser.id);
         return userState;

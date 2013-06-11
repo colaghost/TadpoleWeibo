@@ -159,7 +159,7 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
                 SubscriptionActivity.startForResult(this, mUserSelf, REQUEST_CODE_SUBSCRIPT);
                 break;
             case R.id.asyncimgview_my:
-                StatusesActivity.start(this, mUserSelf, mUserSelf.getRelateUserState(mUserSelf));
+                StatusesActivity.start(this, mUserSelf);
                 break;
             default:
                 break;
@@ -239,7 +239,7 @@ public class LauncherActivity extends Activity implements AdapterView.OnItemClic
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         User user = mUserList.get(position);
         Log.d(TAG, "onItemClick  position =  " + position + " userId =  " + user.id);
-        StatusesActivity.start(this, user, mUserSelf.getRelateUserState(user));
+        StatusesActivity.start(this, user);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

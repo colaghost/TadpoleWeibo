@@ -20,13 +20,13 @@ import com.xiaotingzhong.model.cache.BaseUserPrivateDir;
 import com.xiaotingzhong.model.dao.ISubscriptionDao;
 
 public class SubscriptionCache extends BaseUserPrivateDir implements ISubscriptionDao {
-    static final String SUBSCRIPT_DIR = "subscript";
+    static final String SUBSCRIPT_FILE = "subscript";
 
     private File mSubscriptFile = null;
 
     public SubscriptionCache(Context context, long uid) {
         super(context, uid);
-        mSubscriptFile = createSubFile(SUBSCRIPT_DIR);
+        mSubscriptFile = createSubFile(SUBSCRIPT_FILE);
     }
 
     public ArrayList<Long> getSubscriptedUids() {

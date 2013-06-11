@@ -5,12 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import org.tadpole.R;
 import org.tadpoleweibo.app.NavBarActivity;
-import org.tadpoleweibo.app.NavBarActivity.NavBar;
 import org.tadpoleweibo.widget.PageList;
 import org.tadpoleweibo.widget.PageListView;
 
@@ -18,11 +16,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -35,7 +33,7 @@ import com.xiaotingzhong.broadcast.SubscriptReceiver;
 import com.xiaotingzhong.model.User;
 import com.xiaotingzhong.model.WeiboStatus;
 import com.xiaotingzhong.model.cache.userprivate.StatusesCache;
-import com.xiaotingzhong.model.state.UserState;
+import com.xiaotingzhong.model.state.UserToCurrUserShip;
 import com.xiaotingzhong.widget.WeiboStatusesListAdapter;
 
 /**
@@ -43,35 +41,36 @@ import com.xiaotingzhong.widget.WeiboStatusesListAdapter;
  * 
  * @author chenzh
  */
-public class StatusesActivity extends NavBarActivity implements OnRefreshListener2<ListView> {
+public class StatusesActivity extends NavBarActivity implements OnRefreshListener2<ListView>,
+        OnItemClickListener {
     static final String TAG = "StatuesActivity";
 
     static final String EXTRA_USER = "user";
 
-    static final String EXTRA_USER_STATE = "userState";
+    static final String EXTRA_USER_TO_CURR_USER_SHIP = "userState";
 
     /**
      * Use Explicit Intent start Activity
      * 
      * @param activity
-     * @param user
-     * @param
+     * @param user 微博列表所属用户
+     * @param userState
      */
-    public static void start(Context activity, User user, UserState userState) {
+    public static void start(Context activity, User user) {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_USER, user);
-        intent.putExtra(EXTRA_USER_STATE, userState);
+        intent.putExtra(EXTRA_USER_TO_CURR_USER_SHIP, XTZApplication.getUserToCurrUserShip(user));
         intent.setClass(activity, StatusesActivity.class);
         activity.startActivity(intent);
     }
 
-    private WeiboStatusesListAdapter mPageAdapter = null;
+    private WeiboStatusesListAdapter mListAdapter = null;
 
     private PageListView<WeiboStatus> mListStatuses = null;
 
     private User mUserSelf = null;
 
-    private UserState mUserState = null;
+    private UserToCurrUserShip mUserToCurrUserShip = null;
 
     // state
     private boolean mHasSubscriptChange = false;
@@ -82,11 +81,12 @@ public class StatusesActivity extends NavBarActivity implements OnRefreshListene
         Intent intent = getIntent();
         Bundle extra = intent.getExtras();
         mUserSelf = (User)extra.getSerializable(EXTRA_USER);
-        mUserState = (UserState)extra.getSerializable(EXTRA_USER_STATE);
+        mUserToCurrUserShip = (UserToCurrUserShip)extra
+                .getSerializable(EXTRA_USER_TO_CURR_USER_SHIP);
 
         setContentView(R.layout.activity_statuses);
 
-        getNavBar().setTitle("微博列表");
+        getNavBar().setTitle(mUserSelf.screen_name);
         getNavBar().setListener(new NavBarListener() {
             @Override
             public void onDefaultLeftBtnClick(NavBar navBar, View v) {
@@ -99,26 +99,34 @@ public class StatusesActivity extends NavBarActivity implements OnRefreshListene
 
                 Log.d(TAG, " getCurUser = " + XTZApplication.getCurUser());
 
-                if (mUserState.hasSubscript) {
+                if (mUserToCurrUserShip.hasSubscript) {
                     XTZApplication.getCurUser().unSubscript(mUserSelf);
                 } else {
                     XTZApplication.getCurUser().subscript(mUserSelf);
                 }
-                mUserState.hasSubscript = !mUserState.hasSubscript;
+                mUserToCurrUserShip.hasSubscript = !mUserToCurrUserShip.hasSubscript;
                 updateImgBtnRightImage();
             }
 
         });
+
+        if (mUserSelf.id == XTZApplication.getCurUser().id) {
+            getNavBar().getBtnRight().setVisibility(View.INVISIBLE);
+        }
         updateImgBtnRightImage();
 
-        this.mPageAdapter = new WeiboStatusesListAdapter(this, mUserSelf);
+        this.mListAdapter = new WeiboStatusesListAdapter(this, mUserSelf);
         this.mListStatuses = ((PageListView<WeiboStatus>)findViewById(R.id.listview_statuses));
         this.mListStatuses.setOnRefreshListener(this);
 
-        this.mListStatuses.setAdapter(this.mPageAdapter);
-        mListStatuses.getRefreshableView().setFastScrollEnabled(true);
-        mListStatuses.setMode(Mode.BOTH);
+        this.mListStatuses.setAdapter(this.mListAdapter);
 
+        //
+        ListView listView = mListStatuses.getRefreshableView();
+        listView.setFastScrollEnabled(true);
+        listView.setOnItemClickListener(this);
+
+        mListStatuses.setMode(Mode.BOTH);
         mListStatuses.firePullDownToRefresh();
     }
 
@@ -133,7 +141,7 @@ public class StatusesActivity extends NavBarActivity implements OnRefreshListene
 
     public void updateImgBtnRightImage() {
         // 根据是否好友显示右边按钮的内容
-        if (mUserState.hasSubscript) {
+        if (mUserToCurrUserShip.hasSubscript) {
             getNavBar().getBtnRight().setImageResource(
                     R.drawable.selector_rootblock_add_toolbar_added);
         } else {
@@ -194,8 +202,8 @@ public class StatusesActivity extends NavBarActivity implements OnRefreshListene
     }
 
     void fetchStatusesFromRemote(final long uid, final boolean isAdd) {
-        Log.d(TAG, "fetchStatusesFromRemote since statuesId = " + mPageAdapter.getLastItemData().id);
-        XTZApplication.getStatusesAPI().userTimeline(uid, 0, mPageAdapter.getLastItemData().id - 1,
+        Log.d(TAG, "fetchStatusesFromRemote since statuesId = " + mListAdapter.getLastItemData().id);
+        XTZApplication.getStatusesAPI().userTimeline(uid, 0, mListAdapter.getLastItemData().id - 1,
                 30, 1, false, FEATURE.ALL, false, new RequestListener() {
                     @Override
                     public void onIOException(IOException e) {
@@ -240,15 +248,15 @@ public class StatusesActivity extends NavBarActivity implements OnRefreshListene
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                List<WeiboStatus> adapterList = mPageAdapter.getList();
+                List<WeiboStatus> adapterList = mListAdapter.getList();
                 if (isAdd && list != null) {
                     adapterList.addAll(list);
                 } else {
                     adapterList = list;
                 }
                 Collections.sort(adapterList, mComparator);
-                mPageAdapter.setList(adapterList);
-                mPageAdapter.notifyDataSetChanged();
+                mListAdapter.setList(adapterList);
+                mListAdapter.notifyDataSetChanged();
                 mListStatuses.proxyOnRefreshComplete();
             }
         });
@@ -266,10 +274,16 @@ public class StatusesActivity extends NavBarActivity implements OnRefreshListene
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         return super.onOptionsItemSelected(item);
     }
 
     private Handler mHandler = new Handler();
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (mListAdapter == null) {
+            return;
+        }
+    }
 
 }

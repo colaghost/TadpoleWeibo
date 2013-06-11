@@ -16,21 +16,21 @@ public final class ImageDiskCache {
 
     public ImageDiskCache(String dirPath) {
         mDirPath = dirPath;
-        if (mDirPath == null) {
-            try {
+        try {
+            if (mDirPath == null) {
                 mDirPath = SDCardUtil.getSDPath() + "/xxxx/";
-                File file = new File(mDirPath);
-                if (!file.exists()) {
-                    file.mkdirs();
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                mImageDiskCacheEnable = false;
             }
+            File file = new File(mDirPath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            mImageDiskCacheEnable = false;
         }
     }
 
-    public String getDirPath(String key) {
+    public String getImageCacheFilePath(String key) {
         return mDirPath + File.separator + key;
     }
 
@@ -38,27 +38,27 @@ public final class ImageDiskCache {
         if (!mImageDiskCacheEnable) {
             return false;
         }
-        return FileUtil.exists(getDirPath(key));
+        return FileUtil.exists(getImageCacheFilePath(key));
     }
 
     public void writeToDisk(String key, byte[] bitmapBytes) {
         if (!mImageDiskCacheEnable) {
             return;
         }
-        System.out.println("mDirPath = " + getDirPath(key));
+        System.out.println("mDirPath = " + getImageCacheFilePath(key));
 
         boolean succ = FileUtil.createFile(mDirPath + key);
         if (succ) {
-            FileUtil.writeFile(getDirPath(key), bitmapBytes, false);
+            FileUtil.writeFile(getImageCacheFilePath(key), bitmapBytes, false);
         }
     }
 
     public byte[] readFromDisk(String key) throws IOException {
-        return FileUtil.readFile(getDirPath(key));
+        return FileUtil.readFile(getImageCacheFilePath(key));
     }
 
     public void deleteFromDisk(String key) {
-        FileUtil.delete(getDirPath(key));
+        FileUtil.delete(getImageCacheFilePath(key));
     }
 
 }
