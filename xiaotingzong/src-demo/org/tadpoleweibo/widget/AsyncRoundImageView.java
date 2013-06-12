@@ -65,6 +65,8 @@ public class AsyncRoundImageView extends ImageView {
     }
 
     private void init() {
+        mCornerRadius = getContext().getResources().getDimensionPixelOffset(
+                R.dimen.tp_corner_radius);
         ViewCompat.setLayerType(this, ViewCompat.LAYER_TYPE_SOFTWARE, null);
         this.mMaskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
         this.mMaskPaint.setColor(Color.RED);

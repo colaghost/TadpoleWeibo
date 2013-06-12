@@ -2,8 +2,8 @@
 package com.xiaotingzhong.app;
 
 import org.tadpole.R;
-import org.tadpoleweibo.app.NavBarActivity;
-import org.tadpoleweibo.app.NavBarActivity.NavBarListener;
+import org.tadpoleweibo.framework.TpNavigationActivity;
+import org.tadpoleweibo.framework.TpNavigationActivity.NavBarListener;
 import org.tadpoleweibo.widget.settings.SettingsGroup;
 import org.tadpoleweibo.widget.settings.SettingsItem;
 import org.tadpoleweibo.widget.settings.SettingsItem.SettingsItemListener;
@@ -23,7 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class SettingsActivity extends NavBarActivity {
+public class SettingsActivity extends TpNavigationActivity {
 
     public static final String TAG = "SettingsActivity";
 

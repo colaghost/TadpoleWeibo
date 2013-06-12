@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.tadpole.R;
-import org.tadpoleweibo.app.NavBarActivity;
+import org.tadpoleweibo.framework.TpNavigationActivity;
 import org.tadpoleweibo.widget.PageList;
 import org.tadpoleweibo.widget.PageListView;
 
@@ -41,7 +41,7 @@ import com.xiaotingzhong.widget.WeiboStatusesListAdapter;
  * 
  * @author chenzh
  */
-public class StatusesActivity extends NavBarActivity implements OnRefreshListener2<ListView>,
+public class StatusesActivity extends TpNavigationActivity implements OnRefreshListener2<ListView>,
         OnItemClickListener {
     static final String TAG = "StatuesActivity";
 
@@ -89,12 +89,12 @@ public class StatusesActivity extends NavBarActivity implements OnRefreshListene
         getNavBar().setTitle(mUserSelf.screen_name);
         getNavBar().setListener(new NavBarListener() {
             @Override
-            public void onDefaultLeftBtnClick(NavBar navBar, View v) {
+            public void onDefaultLeftBtnClick(ITpNavBar navBar, View v) {
                 finish();
             }
 
             @Override
-            public void onDefaultRightBtnClick(NavBar navBar, View v) {
+            public void onDefaultRightBtnClick(ITpNavBar navBar, View v) {
                 mHasSubscriptChange = true;
 
                 Log.d(TAG, " getCurUser = " + XTZApplication.getCurUser());

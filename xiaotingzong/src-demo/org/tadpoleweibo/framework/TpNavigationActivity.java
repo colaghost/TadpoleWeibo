@@ -1,5 +1,5 @@
 
-package org.tadpoleweibo.app;
+package org.tadpoleweibo.framework;
 
 import org.tadpole.R;
 
@@ -14,19 +14,24 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class NavBarActivity extends Activity {
+import java.util.ArrayList;
+import java.util.Stack;
+
+public class TpNavigationActivity extends Activity {
+
+    private static final String TAG = "TpNavBarActivity";
 
     private static final ViewGroup.LayoutParams LP_F_F = new LayoutParams(LayoutParams.FILL_PARENT,
             LayoutParams.FILL_PARENT);
 
     private NavBarImpl mNavBar;
 
-    private LinearLayout mLinearLayout;;
+    private LinearLayout mRootLayout;;
 
-    public static interface NavBar {
-        public NavBar setTitle(String title);
+    public static interface ITpNavBar {
+        public ITpNavBar setTitle(String title);
 
-        public NavBar setListener(NavBarListener l);
+        public ITpNavBar setListener(NavBarListener l);
 
         public NavButton getBtnLeft();
 
@@ -35,9 +40,9 @@ public class NavBarActivity extends Activity {
     }
 
     public static interface NavBarListener {
-        public void onDefaultLeftBtnClick(NavBar navBar, View v);
+        public void onDefaultLeftBtnClick(ITpNavBar navBar, View v);
 
-        public void onDefaultRightBtnClick(NavBar navBar, View v);
+        public void onDefaultRightBtnClick(ITpNavBar navBar, View v);
     }
 
     public static final class NavButton {
@@ -71,21 +76,8 @@ public class NavBarActivity extends Activity {
 
     @Override
     public void setContentView(View view, LayoutParams params) {
-        if (null == mLinearLayout) {
-            mLinearLayout = new LinearLayout(this);
-            mLinearLayout.setOrientation(LinearLayout.VERTICAL);
-            mLinearLayout.setBackgroundColor(Color.RED);
-            mLinearLayout.setLayoutParams(LP_F_F);
-        }
-   
-        if (null != mLinearLayout.getParent()) {
-            ((ViewGroup)(mLinearLayout.getParent())).removeView(mLinearLayout);
-        }
-
-        super.setContentView(mLinearLayout);
-        getNavBarImpl().createAndAttacthTo(mLinearLayout);
-        mLinearLayout.addView(view, LP_F_F);
-
+        ensureRootLayout();
+        addViewToRootLayout(view, params);
     }
 
     @Override
@@ -93,8 +85,60 @@ public class NavBarActivity extends Activity {
         setContentView(view, null);
     }
 
-    public NavBar getNavBar() {
+    private Stack<AbstractTpWindow> mWindowList = new Stack<AbstractTpWindow>();
+
+    public void pushWindow(AbstractTpWindow window) {
+        ensureRootLayout();
+
+        mWindowList.push(window);
+
+        //
+        window.setActivity(this);
+        window.setNavBar(mNavBar);
+
+        // add Window view
+        View view = window.onCreate();
+        if (null == view) {
+            Log.w(TAG, "view can't not be null");
+        }
+        addViewToRootLayout(view, null);
+    }
+
+    public void popWindow() {
+        AbstractTpWindow window = mWindowList.pop();
+    }
+
+    public ITpNavBar getNavBar() {
         return getNavBarImpl();
+    }
+
+    private void ensureRootLayout() {
+        if (null == mRootLayout) {
+            mRootLayout = new LinearLayout(this);
+            mRootLayout.setOrientation(LinearLayout.VERTICAL);
+            mRootLayout.setBackgroundColor(Color.RED);
+            mRootLayout.setLayoutParams(LP_F_F);
+            super.setContentView(mRootLayout);
+            getNavBarImpl().createAndAttacthTo(mRootLayout);
+        }
+    }
+
+    private void addViewToRootLayout(View view, LayoutParams params) {
+
+        // remvoe other
+        int childCount = mRootLayout.getChildCount();
+        if (childCount >= 2) {
+            for (int i = childCount; i > 1; i--) {
+                mRootLayout.removeViewAt(i);
+            }
+        }
+
+        if (null == params) {
+            params = LP_F_F;
+        }
+
+        // add view
+        mRootLayout.addView(view, params);
     }
 
     private NavBarImpl getNavBarImpl() {
@@ -104,7 +148,7 @@ public class NavBarActivity extends Activity {
         return mNavBar;
     }
 
-    private static class NavBarImpl implements NavBar, View.OnClickListener {
+    private static class NavBarImpl implements ITpNavBar, View.OnClickListener {
 
         private static final String TAG = "NavBarImpl";
 
@@ -137,7 +181,7 @@ public class NavBarActivity extends Activity {
         }
 
         @Override
-        public NavBar setTitle(String title) {
+        public ITpNavBar setTitle(String title) {
             mTextViewTitle.setText(title);
             return this;
         }
@@ -163,7 +207,7 @@ public class NavBarActivity extends Activity {
         }
 
         @Override
-        public NavBar setListener(NavBarListener l) {
+        public ITpNavBar setListener(NavBarListener l) {
             mListener = l;
             return this;
         }
@@ -178,5 +222,16 @@ public class NavBarActivity extends Activity {
             return new NavButton(mBtnRight);
         }
     }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        if (null == mWindowList) {
+            return;
+        }
+
+        for (AbstractTpWindow window : mWindowList) {
+            window.onDestroy();
+        }
+    };
 
 }

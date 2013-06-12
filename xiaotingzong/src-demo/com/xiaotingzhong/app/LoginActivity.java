@@ -20,7 +20,7 @@ import com.xiaotingzhong.widget.WeiboLoginWebView;
 
 import org.tadpole.R;
 import org.tadpoleweibo.app.LoadDialogAsyncTask;
-import org.tadpoleweibo.app.NavBarActivity;
+import org.tadpoleweibo.framework.TpNavigationActivity;
 import org.tadpoleweibo.view.TadpoleWebView;
 import org.tadpoleweibo.widget.AsyncRoundImageView;
 import org.tadpoleweibo.widget.Launcher;
@@ -54,7 +54,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class LoginActivity extends NavBarActivity implements WeiboLoginListener {
+public class LoginActivity extends TpNavigationActivity implements WeiboLoginListener {
     static final String TAG = "LoginActivity";
 
 
