@@ -1,14 +1,23 @@
 
 package com.xiaotingzhong.app;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
+import com.weibo.sdk.android.WeiboException;
+import com.weibo.sdk.android.api.WeiboAPI.FEATURE;
+import com.weibo.sdk.android.net.RequestListener;
+import com.xiaotingzhong.broadcast.SubscriptReceiver;
+import com.xiaotingzhong.model.User;
+import com.xiaotingzhong.model.WeiboStatus;
+import com.xiaotingzhong.model.cache.userprivate.StatusesCache;
+import com.xiaotingzhong.model.state.UserToCurrUserShip;
+import com.xiaotingzhong.widget.WeiboStatusesListAdapter;
 
 import org.tadpole.R;
-import org.tadpoleweibo.framework.TpNavigationActivity;
+import org.tadpoleweibo.framework.INavBar;
+import org.tadpoleweibo.framework.NavBarListener;
+import org.tadpoleweibo.framework.NavgationActivity;
 import org.tadpoleweibo.widget.PageList;
 import org.tadpoleweibo.widget.PageListView;
 
@@ -23,25 +32,18 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.weibo.sdk.android.WeiboException;
-import com.weibo.sdk.android.api.WeiboAPI.FEATURE;
-import com.weibo.sdk.android.net.RequestListener;
-import com.xiaotingzhong.broadcast.SubscriptReceiver;
-import com.xiaotingzhong.model.User;
-import com.xiaotingzhong.model.WeiboStatus;
-import com.xiaotingzhong.model.cache.userprivate.StatusesCache;
-import com.xiaotingzhong.model.state.UserToCurrUserShip;
-import com.xiaotingzhong.widget.WeiboStatusesListAdapter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * diplay single user weibo statues
  * 
  * @author chenzh
  */
-public class StatusesActivity extends TpNavigationActivity implements OnRefreshListener2<ListView>,
+public class StatusesActivity extends NavgationActivity implements OnRefreshListener2<ListView>,
         OnItemClickListener {
     static final String TAG = "StatuesActivity";
 
@@ -89,12 +91,12 @@ public class StatusesActivity extends TpNavigationActivity implements OnRefreshL
         getNavBar().setTitle(mUserSelf.screen_name);
         getNavBar().setListener(new NavBarListener() {
             @Override
-            public void onDefaultLeftBtnClick(ITpNavBar navBar, View v) {
+            public void onDefaultLeftBtnClick(INavBar navBar, View v) {
                 finish();
             }
 
             @Override
-            public void onDefaultRightBtnClick(ITpNavBar navBar, View v) {
+            public void onDefaultRightBtnClick(INavBar navBar, View v) {
                 mHasSubscriptChange = true;
 
                 Log.d(TAG, " getCurUser = " + XTZApplication.getCurUser());

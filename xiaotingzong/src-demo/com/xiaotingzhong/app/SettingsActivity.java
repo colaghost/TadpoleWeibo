@@ -1,9 +1,10 @@
 
 package com.xiaotingzhong.app;
 
+import com.xiaotingzhong.model.SettingsModel;
+
 import org.tadpole.R;
-import org.tadpoleweibo.framework.TpNavigationActivity;
-import org.tadpoleweibo.framework.TpNavigationActivity.NavBarListener;
+import org.tadpoleweibo.framework.NavgationActivity;
 import org.tadpoleweibo.widget.settings.SettingsGroup;
 import org.tadpoleweibo.widget.settings.SettingsItem;
 import org.tadpoleweibo.widget.settings.SettingsItem.SettingsItemListener;
@@ -13,8 +14,6 @@ import org.tadpoleweibo.widget.settings.item.SettingsItemNormal;
 import org.tadpoleweibo.widget.settings.item.SettingsItemOptions;
 import org.tadpoleweibo.widget.settings.item.SettingsItemSwitcher;
 
-import com.xiaotingzhong.model.SettingsModel;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,12 +22,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class SettingsActivity extends TpNavigationActivity {
+public class SettingsActivity extends NavgationActivity {
 
     public static final String TAG = "SettingsActivity";
 
     private SettingsListView mSettingsView;
-    
+
     private SettingsModel mSettingsModel;
 
     /**
@@ -46,9 +45,9 @@ public class SettingsActivity extends TpNavigationActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         mSettingsModel = XTZApplication.getSettingsModel();
-        
+
         setContentView(R.layout.activity_settings);
         mSettingsView = (SettingsListView)this.findViewById(R.id.settingsview);
 
@@ -77,7 +76,7 @@ public class SettingsActivity extends TpNavigationActivity {
             public void onSettingsAction(SettingsItem<Boolean> item, Boolean params) {
                 Log.d(TAG, "onSettingsAction = " + params);
                 mSettingsModel.setUseInnerBrowser(params);
-                
+
             }
         });
         group.addItem(itemBrowser);
@@ -85,17 +84,17 @@ public class SettingsActivity extends TpNavigationActivity {
         // 图片模式
 
         String[] modeStrArr = {
-                "默认",  //
+                "默认", //
                 "无图"
         };
-        
+
         int defaultSelectIndex = 0;
         int readMode = mSettingsModel.getWeiboReadMode();
-        if(SettingsModel.WEIBO_READ_MODE_DEFAULT == readMode){
+        if (SettingsModel.WEIBO_READ_MODE_DEFAULT == readMode) {
             defaultSelectIndex = 0;
         }
-        
-        if(SettingsModel.WEIBO_READ_MODE_NO_IMAGE == readMode){
+
+        if (SettingsModel.WEIBO_READ_MODE_NO_IMAGE == readMode) {
             defaultSelectIndex = 1;
         }
         SettingsItemOptions itemMode = new SettingsItemOptions("阅读模式", "亲！请根据流量切换模式哦", modeStrArr,
@@ -104,18 +103,17 @@ public class SettingsActivity extends TpNavigationActivity {
             @Override
             public void onSettingsAction(SettingsItem item, Integer selectedIndex) {
                 Log.d(TAG, "onSettingsAction = " + selectedIndex);
-                
-                
+
                 // 默认
-                if(selectedIndex == 0){
+                if (selectedIndex == 0) {
                     mSettingsModel.setWeiboReadMode(SettingsModel.WEIBO_READ_MODE_DEFAULT);
-                } 
-                
+                }
+
                 // 无图
-                if(selectedIndex == 1){
+                if (selectedIndex == 1) {
                     mSettingsModel.setWeiboReadMode(SettingsModel.WEIBO_READ_MODE_NO_IMAGE);
                 }
-                
+
             }
         });
         group.addItem(itemMode);

@@ -1,29 +1,38 @@
 
 package org.tadpoleweibo.framework;
 
-import org.tadpoleweibo.framework.TpNavigationActivity.ITpNavBar;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
-public abstract class AbstractTpWindow {
+public abstract class AbstractTpWindow implements NavBarListener {
 
-    private ITpNavBar mNavBar;
+    private INavBar mNavBar;
 
-    private Activity mActivity;
+    private ViewGroup mRoot;
 
-    void setActivity(Activity activity) {
+    private NavgationActivity mActivity;
+
+    void setActivity(NavgationActivity activity) {
         mActivity = activity;
     }
 
-    void setNavBar(ITpNavBar navBar) {
+    void setNavBar(INavBar navBar) {
         mNavBar = navBar;
     }
 
-    protected ITpNavBar getNavBar() {
+    void setRoot(ViewGroup root) {
+        mRoot = root;
+    }
+
+    ViewGroup getRoot() {
+        return mRoot;
+    }
+
+    protected INavBar getNavBar() {
         return mNavBar;
     }
 
@@ -49,10 +58,24 @@ public abstract class AbstractTpWindow {
 
     public abstract View onCreate();
 
+    public void pushWindow(AbstractTpWindow window) {
+        mActivity.pushWindow(window);
+    }
+
     /**
      * 销毁
      */
     public void onDestroy() {
+
+    }
+
+    @Override
+    public void onDefaultLeftBtnClick(INavBar navBar, View v) {
+        mActivity.popWindow();
+    }
+
+    @Override
+    public void onDefaultRightBtnClick(INavBar navBar, View v) {
 
     }
 

@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="@dimen/list_item_size_large"
     android:background="@android:color/white"
-    android:clickable="true"
+    android:descendantFocusability="blocksDescendants"
     android:minHeight="@dimen/list_item_size_large"
     android:orientation="horizontal" >
 

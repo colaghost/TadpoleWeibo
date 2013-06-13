@@ -24,6 +24,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -61,7 +62,12 @@ public class FriendsWindow extends AbstractTpWindow implements OnItemClickListen
         View view = getLayoutInflater().inflate(R.layout.activity_subscription, null);
 
         getNavBar().setTitle("好友列表");
-        getNavBar().getBtnRight().setVisibility(View.INVISIBLE);
+        getNavBar().getBtnRight().setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pushWindow(new HelloWindow());
+            }
+        });
 
         this.mEditTxtSearch = ((EditText)view.findViewById(R.id.edittext_search));
         this.mEditTxtSearch.addTextChangedListener(new TextWatcher() {
@@ -214,6 +220,9 @@ public class FriendsWindow extends AbstractTpWindow implements OnItemClickListen
         if (mAdapterFriends == null) {
             return;
         }
+
+        // has HeaderView
+        position = position - 1;
 
         User user = mAdapterFriends.getItemData(position);
         StatusesActivity.start(getActivity(), user);

@@ -11,7 +11,7 @@ import com.xiaotingzhong.model.cache.userprivate.FriendsCache;
 import com.xiaotingzhong.widget.SubscriptFriendListAdapter;
 
 import org.tadpole.R;
-import org.tadpoleweibo.framework.TpNavigationActivity;
+import org.tadpoleweibo.framework.NavgationActivity;
 import org.tadpoleweibo.widget.PageList;
 import org.tadpoleweibo.widget.PageListView;
 import org.tadpoleweibo.widget.PageListViewAdapter;
@@ -36,7 +36,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubscriptionActivity extends TpNavigationActivity {
+public class SubscriptionActivity extends NavgationActivity {
     static final String TAG = "SubscriptionActivity";
 
     static final String USER = "user";

@@ -33,7 +33,6 @@ public class SubscriptFriendListAdapter extends PageListViewAdapter<User> {
         final User user = (User)getItemData(position);
         View view = convertView; // reuse cache view
         ViewHolder holder = null;
-
         if (view == null) {
             view = LayoutInflater.from(getContext()).inflate(R.layout.listitem_subscription, null);
             holder = new ViewHolder();
@@ -45,7 +44,7 @@ public class SubscriptFriendListAdapter extends PageListViewAdapter<User> {
         } else {
             holder = (ViewHolder)view.getTag();
         }
-        
+
         view.setBackgroundResource(R.drawable.selector_setting_item_bg_single);
 
         holder.asyncImgViewProfile.setImageURL(user.profile_image_url);
